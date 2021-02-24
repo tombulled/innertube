@@ -1,15 +1,21 @@
 import requests
 
 from . import utils
+from . import exceptions
 
 # Typing
 from .services import Service
+from typing import Union
 
 class Client(object):
+    # Public attributes
     service: Service
 
     # Properties
     __session: requests.Session
+
+    # Private attributes
+    __visitor_data: Union[str, None] = None
 
     def __init__(self, service: Service):
         self.service = service
@@ -23,12 +29,17 @@ class Client(object):
     def session(self):
         self.__session.headers.update \
         (
-            {
-                'Referer': utils.url \
-                (
-                    domain = self.service.adaptor.origin,
-                )
-            }
+            utils.filter \
+            (
+                {
+                    'User-Agent': self.service.adaptor.user_agent,
+                    'Referer': utils.url \
+                    (
+                        domain = self.service.adaptor.origin,
+                    ),
+                    'X-Goog-Visitor-Id': self.__visitor_data,
+                }
+            )
         )
 
         return self.__session
@@ -79,8 +90,6 @@ class Client(object):
     def dispatch(self, *fragments: str, params: dict = {}, payload: dict = {}):
         url = self._url(*fragments)
 
-        print(self.params)
-
         params  = {**self.params,  **params}
         payload = {**self.payload, **payload}
 
@@ -89,27 +98,21 @@ class Client(object):
             url     = url,
             params  = params,
             json    = payload,
-            # timeout = 5, # This should be a constant/configurable
+            timeout = 5, # NOTE: This should be a constant/configurable
         )
 
-        return response.json()
+        try:
+            data = response.json()
+        except json.JSONDecodeError:
+            raise # TODO: Handle gracefully
 
-        # try:
-        #     data = response.json()
-        # except json.JSONDecodeError:
-        #     raise # Raise custom exception?
-        #
-        # error = data.get('error')
-        #
-        # if error:
-        #     raise exceptions.ApiError(error)
-        #
-        # if 'responseContext' in data:
-        #     response_context = data['responseContext']
-        #
-        #     if 'visitorData' in response_context:
-        #         visitor_data = response_context['visitorData']
-        #
-        #         self.visitor_data = visitor_data
-        #
-        # return data
+        error = data.get('error')
+
+        if error:
+            raise exceptions.InnertubeException(error)
+
+        visitor_data = data.get('responseContext', {}).get('visitorData')
+
+        if visitor_data: self.__visitor_data = visitor_data
+
+        return data
