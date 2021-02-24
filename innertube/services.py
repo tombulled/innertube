@@ -18,7 +18,7 @@ class Service(BaseModel):
     api:     Api
     adaptor: Adaptor
 
-Web = Service \
+WEB = Service \
 (
     client = Client \
     (
@@ -38,7 +38,7 @@ Web = Service \
     ),
 )
 
-WebRemix = Service \
+WEB_REMIX = Service \
 (
     client = Client \
     (

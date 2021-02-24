@@ -1,6 +1,7 @@
 import innertube
 
 from innertube import clients
+from innertube import adaptor
 from innertube import services
 
-c = clients.Client(services.Web)
+c = clients.Web()
