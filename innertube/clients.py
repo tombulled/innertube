@@ -20,3 +20,19 @@ class Web(BaseClient):
 class WebRemix(BaseClient):
     def __init__(self):
         self.adaptor = adaptor.Adaptor(services.WEB_REMIX)
+
+class Android(BaseClient):
+    def __init__(self):
+        self.adaptor = adaptor.Adaptor(services.ANDROID)
+
+class AndroidMusic(BaseClient):
+    def __init__(self):
+        self.adaptor = adaptor.Adaptor(services.ANDROID_MUSIC)
+
+class Ios(BaseClient):
+    def __init__(self):
+        self.adaptor = adaptor.Adaptor(services.IOS)
+
+class IosMusic(BaseClient):
+    def __init__(self):
+        self.adaptor = adaptor.Adaptor(services.IOS_MUSIC)
