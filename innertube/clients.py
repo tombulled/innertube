@@ -16,6 +16,9 @@ class Client(object):
 
         self.session = requests.Session()
 
+    def __repr__(self):
+        return f'<{self.__class__.__name__}({self.service.client.to_string()})>'
+
     @property
     def session(self):
         self.__session.headers.update \
