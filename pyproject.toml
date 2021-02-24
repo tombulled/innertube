@@ -5,10 +5,9 @@ description = ""
 authors = ["Tom Bulled <26026015+tombulled@users.noreply.github.com>"]
 
 [tool.poetry.dependencies]
-python = "^2.7"
-
-[tool.poetry.dev-dependencies]
-pytest = "^4.6"
+python = "^3.6"
+pydantic = "^1.7.3"
+requests = "^2.25.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
