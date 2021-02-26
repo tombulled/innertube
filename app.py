@@ -1,33 +1,20 @@
 import innertube
 from pprint import pprint as pp
 
-web       = innertube.Web()
-web_remix = innertube.WebRemix()
+from innertube import utils, types
 
-android       = innertube.Android()
-android_music = innertube.AndroidMusic()
+from typing import Union
 
-ios       = innertube.Ios()
-ios_music = innertube.IosMusic()
+from innertube import maps, info
 
-import pydantic
-import enum
+def get_client(*, service: Union[info.ServiceInfo, types.ServiceType], device: Union[info.DeviceInfo, types.DeviceType]):
+    service_type = service if isinstance(service, types.ServiceType) else service.type
+    device_type  = device  if isinstance(device, types.DeviceType)   else device.type
 
-class Device(enum.Enum):
-    Web     = 'web'
-    Android = 'android'
-    Ios     = 'ios'
+    # for
 
-class Service(enum.Enum):
-    YouTube       = 'youtube'
-    YouTubeMusic  = 'youtube.music'
-    YouTubeKids   = 'youtube.kids'
-    YouTubeStudio = 'youtube.creator'
-
-# from innertube.services import *
-# from innertube import adaptor
-
-# a = adaptor.Adaptor(ANDROID_CREATOR)
-
-# pp(a.dispatch('browse', payload = {'browseId': 'FEvideo_manager'}))
-# pp(a.dispatch('guide'))
+c = get_client \
+(
+    service = innertube.services.YouTubeMusic,
+    device  = innertube.devices.Android,
+)

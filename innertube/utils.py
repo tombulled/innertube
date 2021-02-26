@@ -1,4 +1,33 @@
-from typing import Union
+from . import types
+from . import info
+from . import infos
+from . import maps
+
+from typing import Union, Callable, Iterable
+
+def get_client_info(*, service_type: types.ServiceType, device_type: types.DeviceType):
+    for client_info in maps.CLIENTS.values():
+        if client_info.service.type == service_type \
+                and client_info.device.type == device_type:
+            return client_info
+
+def build_user_agent(client_info: info.ClientInfo):
+    builders = \
+    {
+        types.DeviceType.Web: lambda: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:77.0) Gecko/20100101 Firefox/77.0',
+        types.DeviceType.Android: lambda: '{package}/{client_version}(Linux; U; Android 9; en_GB; VirtualBox Build/PI)'.format \
+        (
+            package = client_info.service.packages.get(client_info.device.type),
+            client_version = client_info.version,
+        ),
+        types.DeviceType.Ios: lambda: '{package}/{client_version} (iPhone10,5; U; CPU iOS 14_4 like Mac OS X; en_GB)'.format \
+        (
+            package = client_info.service.packages.get(client_info.device.type),
+            client_version = client_info.version,
+        ),
+    }
+
+    return builders.get(client_info.device.type)()
 
 def url(*, domain: str, scheme: str = 'https', port: Union[int, None] = None, endpoint: Union[str, None] = None):
     return '{scheme}://{domain}{sep_port}{port}/{endpoint}'.format \
@@ -9,12 +38,6 @@ def url(*, domain: str, scheme: str = 'https', port: Union[int, None] = None, en
         port     = port or '',
         endpoint = endpoint.lstrip(r'\/') if endpoint else '',
     )
-
-'''
-Module containing the utility function: filter
-'''
-
-from typing import Callable, Iterable
 
 def filter \
         (

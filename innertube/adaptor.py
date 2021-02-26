@@ -2,14 +2,13 @@ import requests
 
 from . import utils
 from . import exceptions
+from . import info
 
-# Typing
-from .services import Service
 from typing import Union
 
 class Adaptor(object):
     # Public attributes
-    service: Service
+    client_info: info.ClientInfo
 
     # Properties
     __session: requests.Session
@@ -17,13 +16,13 @@ class Adaptor(object):
     # Private attributes
     __visitor_data: Union[str, None] = None
 
-    def __init__(self, service: Service):
-        self.service = service
+    def __init__(self, client_info: info.ClientInfo):
+        self.client_info = client_info
 
         self.session = requests.Session()
 
     def __repr__(self):
-        return f'<{self.__class__.__name__}({self.service.client.name}@{self.service.api.domain})>'
+        return f'<{self.__class__.__name__}({self.client_info.name}@{self.client_info.api.domain})>'
 
     @property
     def session(self):
@@ -32,10 +31,10 @@ class Adaptor(object):
             utils.filter \
             (
                 {
-                    'User-Agent': self.service.adaptor.user_agent,
+                    'User-Agent': self.user_agent,
                     'Referer': utils.url \
                     (
-                        domain = self.service.adaptor.origin,
+                        domain = self.client_info.service.domain,
                     ),
                     'X-Goog-Visitor-Id': self.__visitor_data,
                 }
@@ -49,10 +48,14 @@ class Adaptor(object):
         self.__session = value
 
     @property
+    def user_agent(self):
+        return utils.build_user_agent(self.client_info)
+
+    @property
     def params(self):
         return \
         {
-            'key': self.service.api.key,
+            'key': self.client_info.api.key,
             'alt': 'json',
         }
 
@@ -64,31 +67,31 @@ class Adaptor(object):
             {
                 'client': \
                 {
-                    'clientName':    self.service.client.name,
-                    'clientVersion': self.service.client.version,
+                    'clientName':    self.client_info.name,
+                    'clientVersion': self.client_info.version,
                     'gl': 'US',
                     'hl': 'en',
                 },
             },
         }
 
-    def _url(self, *fragments: str):
+    def url(self, *fragments: str):
         return utils.url \
         (
-            domain   = self.service.api.domain,
+            domain   = self.client_info.api.domain,
             endpoint = '/'.join \
             (
                 fragment.lstrip(r'\/')
                 for fragment in \
                 (
-                    f'youtubei/v{self.service.api.version}',
+                    f'youtubei/v{self.client_info.api.version}',
                     *fragments,
                 )
             ),
         )
 
     def dispatch(self, *fragments: str, params: dict = {}, payload: dict = {}):
-        url = self._url(*fragments)
+        url = self.url(*fragments)
 
         params  = {**self.params,  **params}
         payload = {**self.payload, **payload}

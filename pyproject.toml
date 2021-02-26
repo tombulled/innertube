@@ -5,7 +5,7 @@ description = ""
 authors = ["Tom Bulled <26026015+tombulled@users.noreply.github.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.6"
+python = "^3.8"
 pydantic = "^1.7.3"
 requests = "^2.25.1"
 

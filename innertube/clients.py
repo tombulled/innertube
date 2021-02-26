@@ -1,59 +1,94 @@
 from . import adaptor
-from . import services
+from . import info
+from . import infos
+import functools
 
-class BaseClient(object):
+class Client(object):
     adaptor: adaptor.Adaptor
 
-    def __init__(self, service: services.Service):
-        self.adaptor = adaptor.Adaptor(service)
+    def __init__(self, client_info: info.ClientInfo):
+        self.adaptor = adaptor.Adaptor(client_info)
 
     def __repr__(self):
-        return f'<Client({self.adaptor.service.client.to_string()})>'
+        return f'<Client(device={self.info.device.name!r}, service={self.info.service.name!r})>'
 
-class Web(BaseClient):
-    def __init__(self):
-        super().__init__(services.WEB)
+    @functools.wraps(adaptor.Adaptor.dispatch)
+    def __call__(self, *args, **kwargs):
+        return self.adaptor.dispatch(*args, **kwargs)
 
-class WebRemix(BaseClient):
-    def __init__(self):
-        super().__init__(services.WEB_REMIX)
+    @property
+    def info(self):
+        return self.adaptor.client_info
 
-class WebKids(BaseClient):
-    def __init__(self):
-        super().__init__(services.WEB_KIDS)
+class YouTubeClient(Client):
+    def guide(self):
+        return self('guide')
 
-class WebCreator(BaseClient):
-    def __init__(self):
-        super().__init__(services.WEB_CREATOR)
+class YouTubeMusicClient(Client):
+    def guide(self):
+        return self('guide')
 
-class Android(BaseClient):
-    def __init__(self):
-        super().__init__(services.ANDROID)
+class YouTubeKidsClient(Client):
+    # Not implemented: guide
 
-class AndroidMusic(BaseClient):
-    def __init__(self):
-        super().__init__(services.ANDROID_MUSIC)
+    pass
 
-class AndroidKids(BaseClient):
-    def __init__(self):
-        super().__init__(services.ANDROID_KIDS)
+class YouTubeStudioClient(Client):
+    pass
 
-class AndroidCreator(BaseClient):
-    def __init__(self):
-        super().__init__(services.ANDROID_CREATOR)
+class WebClient(Client):
+    pass
 
-class Ios(BaseClient):
-    def __init__(self):
-        super().__init__(services.IOS)
+class AndroidClient(Client):
+    pass
 
-class IosMusic(BaseClient):
-    def __init__(self):
-        super().__init__(services.IOS_MUSIC)
+class IosClient(Client):
+    pass
 
-class IosKids(BaseClient):
+class Web(WebClient, YouTubeClient):
     def __init__(self):
-        super().__init__(services.IOS_KIDS)
+        super().__init__(infos.Web)
 
-class IosCreator(BaseClient):
+class WebMusic(WebClient, YouTubeMusicClient):
     def __init__(self):
-        super().__init__(services.IOS_CREATOR)
+        super().__init__(infos.WebMusic)
+
+class WebKids(WebClient, YouTubeKidsClient):
+    def __init__(self):
+        super().__init__(infos.WebKids)
+
+class WebStudio(WebClient, YouTubeStudioClient):
+    def __init__(self):
+        super().__init__(infos.WebStudio)
+
+class Android(AndroidClient, YouTubeClient):
+    def __init__(self):
+        super().__init__(infos.Android)
+
+class AndroidMusic(AndroidClient, YouTubeMusicClient):
+    def __init__(self):
+        super().__init__(infos.AndroidMusic)
+
+class AndroidKids(AndroidClient, YouTubeKidsClient):
+    def __init__(self):
+        super().__init__(infos.AndroidKids)
+
+class AndroidStudio(AndroidClient, YouTubeStudioClient):
+    def __init__(self):
+        super().__init__(infos.AndroidStudio)
+
+class Ios(IosClient, YouTubeClient):
+    def __init__(self):
+        super().__init__(infos.Ios)
+
+class IosMusic(IosClient, YouTubeMusicClient):
+    def __init__(self):
+        super().__init__(infos.IosMusic)
+
+class IosKids(IosClient, YouTubeKidsClient):
+    def __init__(self):
+        super().__init__(infos.IosKids)
+
+class IosStudio(IosClient, YouTubeStudioClient):
+    def __init__(self):
+        super().__init__(infos.IosStudio)
