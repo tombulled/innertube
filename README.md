@@ -12,7 +12,6 @@ Python Client for Google's InnerTube API (works with YouTube, YouTube Music etc.
 ### Authentication
 The InnerTube API uses OAuth2, however I have been unable to successfully request tokens.
 Therefore, this library provides unauthenticated access to the API.
-As YouTube Studio requires authentication, it is inaccessible.
 
 
 # NOTES

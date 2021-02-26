@@ -31,23 +31,25 @@ Endpoints:
     next:
         Yes:
             All except IosStudio and AndoidStudio (400 - CONDITION_NOT_MET, INVALID_ARGUMENT)
+    player:
+        Yes:
+            All
+    log_event:
+        Yes:
+            All
 
-TODO:
-    Backlog:
-        search # client('search', payload = {'query': 'foo'})
-        next # client('next', payload = {'videoId': 'XXYlFuWEuKI'})
-
+TODO Endpoints:
     feedback
-    offline
+    offline (requires authentication)
     notification_registration/get_settings
     notification_registration/set_registration
-    visitor_id
+    visitor_id (works on all, what's it used for?)
 
     deviceregistration/v1/devices (root-level endpoint)
 
     # Account related?
     account/accounts_list
-    account/get_setting
+    account/get_setting (can be requested unauthenticated)
     /account/account_menu
     ypc/get_offline_upsell
     ypc/log_payment_server_analytics
@@ -64,12 +66,13 @@ TODO:
 
 from innertube import maps, utils
 
-c = maps.CLIENTS['Web']()
+web = maps.CLIENTS['Web']()
+ps4 = maps.CLIENTS['Tv']()
+
+def dispatch(client):
+    return client('next', payload = {'videoId': 'XXYlFuWEuKI'})
 
 '''
-def dispatch(client):
-    return client('log_event', payload = {'events': []})
-
 for client in maps.CLIENTS.values():
     client = client()
 
@@ -79,10 +82,9 @@ for client in maps.CLIENTS.values():
         resp = dispatch(client)
 
         print(str(resp)[:100])
+        # pp(resp)
     except Exception as error:
         print(error)
 
     print()
 '''
-
-ps4 = maps.CLIENTS['Tv']()
