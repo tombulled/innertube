@@ -6,10 +6,20 @@ from . import maps
 from typing import Union, Callable, Iterable
 
 def get_client_info(*, service_type: types.ServiceType, device_type: types.DeviceType):
-    for client_info in maps.CLIENTS.values():
+    for client_info in maps.CLIENT_INFOS.values():
         if client_info.service.type == service_type \
                 and client_info.device.type == device_type:
             return client_info
+
+def get_client(*, service: Union[info.ServiceInfo, types.ServiceType], device: Union[info.DeviceInfo, types.DeviceType]):
+    service_type = service if isinstance(service, types.ServiceType) else service.type
+    device_type  = device  if isinstance(device, types.DeviceType)   else device.type
+
+    for client_class in maps.CLIENTS.values():
+        client = client_class()
+
+        if client.info.service.type == service_type and client.info.device.type == device_type:
+            return client
 
 def build_user_agent(client_info: info.ClientInfo):
     builders = \
@@ -27,7 +37,12 @@ def build_user_agent(client_info: info.ClientInfo):
         ),
     }
 
-    return builders.get(client_info.device.type)()
+    device_type = client_info.device.type
+
+    if device_type not in builders:
+        device_type = types.DeviceType.Web
+
+    return builders.get(device_type)()
 
 def url(*, domain: str, scheme: str = 'https', port: Union[int, None] = None, endpoint: Union[str, None] = None):
     return '{scheme}://{domain}{sep_port}{port}/{endpoint}'.format \

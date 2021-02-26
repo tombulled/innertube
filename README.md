@@ -16,6 +16,6 @@ As YouTube Studio requires authentication, it is inaccessible.
 
 # NOTES
 TODO:
-* Get OAuth working this time
-* Can the protobuf be decoded?
-* Will installing an old apk version still use the json api?
+* Get OAuth working this time -- nope :/
+* Can the protobuf be decoded? -- not going to try :/
+* Will installing an old apk version still use the json api? -- hopefully!
