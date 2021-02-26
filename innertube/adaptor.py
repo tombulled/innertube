@@ -2,13 +2,13 @@ import requests
 
 from . import utils
 from . import exceptions
-from . import info
 
+from .infos.models import ClientInfo
 from typing import Union
 
 class Adaptor(object):
     # Public attributes
-    client_info: info.ClientInfo
+    client_info: ClientInfo
 
     # Properties
     __session: requests.Session
@@ -16,7 +16,7 @@ class Adaptor(object):
     # Private attributes
     __visitor_data: Union[str, None] = None
 
-    def __init__(self, client_info: info.ClientInfo):
+    def __init__(self, client_info: ClientInfo):
         self.client_info = client_info
 
         self.session = requests.Session()

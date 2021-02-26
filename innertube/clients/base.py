@@ -1,11 +1,11 @@
-from .. import adaptor
-from .. import info
 import functools
+from .. import adaptor
+from ..infos import models
 
 class Client(object):
     adaptor: adaptor.Adaptor
 
-    def __init__(self, client_info: info.ClientInfo):
+    def __init__(self, client_info: models.ClientInfo):
         self.adaptor = adaptor.Adaptor(client_info)
 
     def __repr__(self):

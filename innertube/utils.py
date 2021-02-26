@@ -1,19 +1,20 @@
-from . import types
-from . import info
-from . import infos
 from . import maps
-
+from .infos.models import ServiceInfo, DeviceInfo, ClientInfo
+from .infos.types import ServiceType, DeviceType
 from typing import Union, Callable, Iterable
 
-def get_client_info(*, service_type: types.ServiceType, device_type: types.DeviceType):
+def get_client_info(*, service: Union[ServiceInfo, ServiceType], device: Union[DeviceInfo, DeviceType]):
+    service_type = service if isinstance(service, ServiceType) else service.type
+    device_type  = device  if isinstance(device,  DeviceType)  else device.type
+
     for client_info in maps.CLIENT_INFOS.values():
         if client_info.service.type == service_type \
                 and client_info.device.type == device_type:
             return client_info
 
-def get_client(*, service: Union[info.ServiceInfo, types.ServiceType], device: Union[info.DeviceInfo, types.DeviceType]):
-    service_type = service if isinstance(service, types.ServiceType) else service.type
-    device_type  = device  if isinstance(device, types.DeviceType)   else device.type
+def get_client(*, service: Union[ServiceInfo, ServiceType], device: Union[DeviceInfo, DeviceType]):
+    service_type = service if isinstance(service, ServiceType) else service.type
+    device_type  = device  if isinstance(device,  DeviceType)  else device.type
 
     for client_class in maps.CLIENTS.values():
         client = client_class()
@@ -21,16 +22,16 @@ def get_client(*, service: Union[info.ServiceInfo, types.ServiceType], device: U
         if client.info.service.type == service_type and client.info.device.type == device_type:
             return client
 
-def build_user_agent(client_info: info.ClientInfo):
+def build_user_agent(client_info: ClientInfo):
     builders = \
     {
-        types.DeviceType.Web: lambda: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:77.0) Gecko/20100101 Firefox/77.0',
-        types.DeviceType.Android: lambda: '{package}/{client_version}(Linux; U; Android 9; en_GB; VirtualBox Build/PI)'.format \
+        DeviceType.Web: lambda: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:77.0) Gecko/20100101 Firefox/77.0',
+        DeviceType.Android: lambda: '{package}/{client_version}(Linux; U; Android 9; en_GB; VirtualBox Build/PI)'.format \
         (
             package = client_info.service.packages.get(client_info.device.type),
             client_version = client_info.version,
         ),
-        types.DeviceType.Ios: lambda: '{package}/{client_version} (iPhone10,5; U; CPU iOS 14_4 like Mac OS X; en_GB)'.format \
+        DeviceType.Ios: lambda: '{package}/{client_version} (iPhone10,5; U; CPU iOS 14_4 like Mac OS X; en_GB)'.format \
         (
             package = client_info.service.packages.get(client_info.device.type),
             client_version = client_info.version,
@@ -40,7 +41,7 @@ def build_user_agent(client_info: info.ClientInfo):
     device_type = client_info.device.type
 
     if device_type not in builders:
-        device_type = types.DeviceType.Web
+        device_type = DeviceType.Web
 
     return builders.get(device_type)()
 

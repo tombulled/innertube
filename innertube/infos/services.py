@@ -1,7 +1,7 @@
-from . import info
+from . import models
 from . import types
 
-YouTube = info.ServiceInfo \
+YouTube = models.ServiceInfo \
 (
     name   = 'YouTube',
     type   = types.ServiceType.YouTube,
@@ -13,7 +13,7 @@ YouTube = info.ServiceInfo \
     },
 )
 
-YouTubeMusic = info.ServiceInfo \
+YouTubeMusic = models.ServiceInfo \
 (
     name   = 'YouTube Music',
     type   = types.ServiceType.YouTubeMusic,
@@ -25,7 +25,7 @@ YouTubeMusic = info.ServiceInfo \
     },
 )
 
-YouTubeKids = info.ServiceInfo \
+YouTubeKids = models.ServiceInfo \
 (
     name   = 'YouTube Kids',
     type   = types.ServiceType.YouTubeKids,
@@ -37,7 +37,7 @@ YouTubeKids = info.ServiceInfo \
     },
 )
 
-YouTubeStudio = info.ServiceInfo \
+YouTubeStudio = models.ServiceInfo \
 (
     name   = 'YouTube Studio',
     type   = types.ServiceType.YouTubeStudio,

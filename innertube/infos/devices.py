@@ -1,19 +1,19 @@
-from . import info
+from . import models
 from . import types
 
-Web = info.DeviceInfo \
+Web = models.DeviceInfo \
 (
     name = 'Web',
     type = types.DeviceType.Web,
 )
 
-Android = info.DeviceInfo \
+Android = models.DeviceInfo \
 (
     name = 'Android',
     type = types.DeviceType.Android,
 )
 
-Ios = info.DeviceInfo \
+Ios = models.DeviceInfo \
 (
     name = 'IOS',
     type = types.DeviceType.Ios,

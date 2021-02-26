@@ -1,111 +1,111 @@
-from . import info
+from . import models
 from . import services
 from . import devices
 
-Web = info.ClientInfo \
+Web = models.ClientInfo \
 (
     name    = 'WEB',
     version = '2.20210223.09.00',
     device  = devices.Web,
     service = services.YouTube,
-    api     = info.ApiInfo(key = 'AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8'),
+    api     = models.ApiInfo(key = 'AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8'),
 )
 
-WebMusic = info.ClientInfo \
+WebMusic = models.ClientInfo \
 (
     name    = 'WEB_REMIX',
     version = '0.1',
     device  = devices.Web,
     service = services.YouTubeMusic,
-    api     = info.ApiInfo(key = 'AIzaSyC9XL3ZjWddXya6X74dJoCTL-WEYFDNX30'),
+    api     = models.ApiInfo(key = 'AIzaSyC9XL3ZjWddXya6X74dJoCTL-WEYFDNX30'),
 )
 
-WebKids = info.ClientInfo \
+WebKids = models.ClientInfo \
 (
     name    = 'WEB_KIDS',
     version = '2.1.3',
     device  = devices.Web,
     service = services.YouTubeKids,
-    api     = info.ApiInfo(key = 'AIzaSyBbZV_fZ3an51sF-mvs5w37OqqbsTOzwtU'),
+    api     = models.ApiInfo(key = 'AIzaSyBbZV_fZ3an51sF-mvs5w37OqqbsTOzwtU'),
 )
 
-WebStudio = info.ClientInfo \
+WebStudio = models.ClientInfo \
 (
     name    = 'WEB_CREATOR',
     version = '1.20210223.01.00',
     device  = devices.Web,
     service = services.YouTubeStudio,
-    api     = info.ApiInfo(key = 'AIzaSyBUPetSUmoZL-OhlxA7wSac5XinrygCqMo'),
+    api     = models.ApiInfo(key = 'AIzaSyBUPetSUmoZL-OhlxA7wSac5XinrygCqMo'),
 )
 
-Android = info.ClientInfo \
+Android = models.ClientInfo \
 (
     name    = 'ANDROID',
     version = '16.07.34',
     device  = devices.Android,
     service = services.YouTube,
-    api     = info.ApiInfo(key = 'AIzaSyA8eiZmM1FaDVjRy-df2KTyQ_vz_yYM39w'),
+    api     = models.ApiInfo(key = 'AIzaSyA8eiZmM1FaDVjRy-df2KTyQ_vz_yYM39w'),
 )
 
-AndroidMusic = info.ClientInfo \
+AndroidMusic = models.ClientInfo \
 (
     name    = 'ANDROID_MUSIC',
     version = '4.16.51',
     device  = devices.Android,
     service = services.YouTubeMusic,
-    api     = info.ApiInfo(key = 'AIzaSyAOghZGza2MQSZkY_zfZ370N-PUdXEo8AI'),
+    api     = models.ApiInfo(key = 'AIzaSyAOghZGza2MQSZkY_zfZ370N-PUdXEo8AI'),
 )
 
-AndroidKids = info.ClientInfo \
+AndroidKids = models.ClientInfo \
 (
     name    = 'ANDROID_KIDS',
     version = '6.02.3',
     device  = devices.Android,
     service = services.YouTubeKids,
-    api     = info.ApiInfo(key = 'AIzaSyAxxQKWYcEX8jHlflLt2Qcbb-rlolzBhhk'),
+    api     = models.ApiInfo(key = 'AIzaSyAxxQKWYcEX8jHlflLt2Qcbb-rlolzBhhk'),
 )
 
-AndroidStudio = info.ClientInfo \
+AndroidStudio = models.ClientInfo \
 (
     name    = 'ANDROID_CREATOR',
     version = '21.06.103',
     device  = devices.Android,
     service = services.YouTubeStudio,
-    api     = info.ApiInfo(key = 'AIzaSyD_qjV8zaaUMehtLkrKFgVeSX_Iqbtyws8'),
+    api     = models.ApiInfo(key = 'AIzaSyD_qjV8zaaUMehtLkrKFgVeSX_Iqbtyws8'),
 )
 
-Ios = info.ClientInfo \
+Ios = models.ClientInfo \
 (
     name    = 'IOS',
     version = '16.05.7',
     device  = devices.Ios,
     service = services.YouTube,
-    api     = info.ApiInfo(key = 'AIzaSyB-63vPrdThhKuerbB2N_l7Kwwcxj6yUAc'),
+    api     = models.ApiInfo(key = 'AIzaSyB-63vPrdThhKuerbB2N_l7Kwwcxj6yUAc'),
 )
 
-IosMusic = info.ClientInfo \
+IosMusic = models.ClientInfo \
 (
     name    = 'IOS_MUSIC',
     version = '4.16.1',
     device  = devices.Ios,
     service = services.YouTubeMusic,
-    api     = info.ApiInfo(key = 'AIzaSyBAETezhkwP0ZWA02RsqT1zu78Fpt0bC_s'),
+    api     = models.ApiInfo(key = 'AIzaSyBAETezhkwP0ZWA02RsqT1zu78Fpt0bC_s'),
 )
 
-IosKids = info.ClientInfo \
+IosKids = models.ClientInfo \
 (
     name    = 'IOS_KIDS',
     version = '5.42.2',
     device  = devices.Ios,
     service = services.YouTubeKids,
-    api     = info.ApiInfo(key = 'AIzaSyA6_JWXwHaVBQnoutCv1-GvV97-rJ949Bc'),
+    api     = models.ApiInfo(key = 'AIzaSyA6_JWXwHaVBQnoutCv1-GvV97-rJ949Bc'),
 )
 
-IosStudio = info.ClientInfo \
+IosStudio = models.ClientInfo \
 (
     name    = 'IOS_CREATOR',
     version = '20.47.100',
     device  = devices.Ios,
     service = services.YouTubeStudio,
-    api     = info.ApiInfo(key = 'AIzaSyAPyF5GfQI-kOa6nZwO8EsNrGdEx9bioNs'),
+    api     = models.ApiInfo(key = 'AIzaSyAPyF5GfQI-kOa6nZwO8EsNrGdEx9bioNs'),
 )
