@@ -36,6 +36,7 @@ def build_user_agent(client_info: ClientInfo):
             package = client_info.service.packages.get(client_info.device.type),
             client_version = client_info.version,
         ),
+        DeviceType.Tv: lambda: 'Mozilla/5.0 (PlayStation; PlayStation 4/8.03) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.0 Safari/605.1.15',
     }
 
     device_type = client_info.device.type

@@ -18,3 +18,9 @@ Ios = models.DeviceInfo \
     name = 'IOS',
     type = types.DeviceType.Ios,
 )
+
+Tv = models.DeviceInfo \
+(
+    name = 'TV',
+    type = types.DeviceType.Tv,
+)

@@ -109,3 +109,12 @@ IosStudio = models.ClientInfo \
     service = services.YouTubeStudio,
     api     = models.ApiInfo(key = 'AIzaSyAPyF5GfQI-kOa6nZwO8EsNrGdEx9bioNs'),
 )
+
+Tv = models.ClientInfo \
+(
+    name    = 'TVHTML5',
+    version = '7.20210224.00.00',
+    device  = devices.Tv,
+    service = services.YouTube,
+    api     = models.ApiInfo(key = 'AIzaSyDCU8hByM-4DrUqRUYnGn-3llEO78bcxq8'),
+)

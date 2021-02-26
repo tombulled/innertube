@@ -49,3 +49,7 @@ class IosKids(devices.IosClient, services.YouTubeKidsClient):
 class IosStudio(devices.IosClient, services.YouTubeStudioClient):
     def __init__(self):
         super().__init__(infos.clients.IosStudio)
+
+class Tv(devices.TvClient, services.YouTubeClient):
+    def __init__(self):
+        super().__init__(infos.clients.Tv)

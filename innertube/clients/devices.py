@@ -8,3 +8,6 @@ class AndroidClient(base.Client):
 
 class IosClient(base.Client):
     pass
+
+class TvClient(base.Client):
+    pass
