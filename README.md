@@ -1,6 +1,31 @@
 # innertube
 Python Client for Google's InnerTube API (works with YouTube, YouTube Music etc.)
 
+### Installation
+```shell
+$ foo...
+```
+
+### Usage
+```python
+>>> import innertube
+>>>
+>>> # Create a client
+>>> client = innertube.client \
+(
+    service = innertube.services.YouTube, # Could also be YouTubeMusic etc.
+    device  = innertube.devices.Web,      # Could also be Android etc.
+)
+>>>
+>>> # View the client
+>>> client
+<Client(device='Web', service='YouTube')>
+>>>
+>>> # Get some data!
+>>> data = client.search(query = 'foo fighters')
+>>>
+```
+
 ### Clients
 |         | YouTube | YouTube Music | YouTube Kids | YouTube Studio  |
 | ------- | ------- | ------------- | ------------ | --------------- |
@@ -14,10 +39,6 @@ The InnerTube API uses OAuth2, however I have been unable to successfully reques
 Therefore, this library provides unauthenticated access to the API.
 
 
-# NOTES
+# TEMP NOTES
 TODO:
-* Get OAuth working this time -- nope :/
-* Can the protobuf be decoded? -- not going to try :/
-* Will installing an old apk version still use the json api? -- hopefully!
-* Need to take out free trials again
-* Can't seem to get JSON requests any more :/
+* Take out free trials again?
