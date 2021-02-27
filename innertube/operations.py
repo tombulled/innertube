@@ -4,7 +4,9 @@ import re
 import urllib.parse
 from . import utils
 from .infos import services
-from typing import List
+from .infos.types import ServiceType
+from .infos.models import ServiceInfo
+from typing import List, Union
 
 def video_info(video_id: str) -> dict:
     response = requests.get \
@@ -92,7 +94,19 @@ def video_info(video_id: str) -> dict:
 
     return data
 
-def complete_search(query: str) -> List[str]:
+def complete_search(query: str, *, service: Union[ServiceInfo, ServiceType] = ServiceType.YouTube) -> List[str]:
+    service_type = service if isinstance(service, ServiceType) else service.type
+
+    clients = \
+    {
+        ServiceType.YouTube:      'youtube-lr',               # Uses Device: Tv
+        ServiceType.YouTubeMusic: 'youtube-music-android-v2', # Uses Device: Android
+        ServiceType.YouTubeKids:  'youtube-pegasus-web',      # Uses Device: Web
+    }
+
+    if service_type not in clients:
+        service_type = ServiceType.YouTube
+
     response = requests.get \
     (
         url = utils.url \
@@ -103,7 +117,7 @@ def complete_search(query: str) -> List[str]:
         params = \
         {
             'q':      query,
-            'client': 'youtube-lr',
+            'client': clients.get(service_type),
             'hl':     'en',
             'gl':     'gb',
             'ds':     'yt',

@@ -4,6 +4,10 @@ from pprint import pprint as pp
 '''
 NOTES:
 * Fix clash between Client and ClientInfo properly :/
+
+To explore:
+    att/get (sends off channel id, found in YouTube Studio - signed in): ids: [{externalChannelId: 'UC...'}]
+    att/esr ^ see above
 '''
 
 from innertube import clients, utils
