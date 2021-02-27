@@ -1,3 +1,20 @@
+'''
+Library containing non-innertube related operations
+
+These operations are used by the various YouTube services, but do not go through
+the InnerTube API. These operations are included for convenience.
+
+Usage:
+    >>> from innertube import operations
+    >>>
+    >>> dir(operations)
+    ...
+    >>>
+    >>> operations.video_info
+    <function video_info at 0x7fd5476ec670>
+    >>>
+'''
+
 import requests
 import json
 import re
@@ -17,6 +34,10 @@ def watch \
             playlist_id: Union[None, str] = None,
             index:       Union[None, int] = None,
         ) -> dict:
+    '''
+    Dispatch a 'watch' request to YouTube
+    '''
+
     client = clients.Web()
 
     response = client.adaptor.session.get \
@@ -60,6 +81,10 @@ def watch \
     return response.json()
 
 def video_info(video_id: str) -> dict:
+    '''
+    Dispatch a 'video_info' request to YouTube
+    '''
+
     response = requests.get \
     (
         url = utils.url \
@@ -152,7 +177,16 @@ def video_info(video_id: str) -> dict:
 
     return data
 
-def complete_search(query: str, *, service: Union[ServiceInfo, ServiceType] = ServiceType.YouTube) -> List[str]:
+def complete_search \
+        (
+            query: str,
+            *,
+            service: Union[ServiceInfo, ServiceType] = ServiceType.YouTube,
+        ) -> List[str]:
+    '''
+    Dispatch a 'complete/search' request to suggestqueries.google.com
+    '''
+
     service_type = service if isinstance(service, ServiceType) else service.type
 
     clients = \

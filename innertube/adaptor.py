@@ -1,3 +1,14 @@
+'''
+Library containing an `Adaptor` for use dispatching requests to the InnerTube API
+
+Usage:
+    >>> from innertube.adaptor import Adaptor
+    >>>
+    >>> Adaptor(my_client_info)
+    ...
+    >>>
+'''
+
 import requests
 import bs4
 import simplejson.errors
@@ -9,17 +20,36 @@ from . import errors
 from .infos.models import ClientInfo
 
 class Adaptor(object):
+    '''
+    An adaptor for use dispatching requests to the InnerTube API
+
+    Unlike a `Client`, the adaptor is responsible for facilitating the communication
+    process with the API. This includes, setting appropriate headers, applying the
+    client context to the request and other such tasks.
+
+    This class allows Clients to remain purely client-focused and not have to
+    worry about managing the requests themselves.
+    '''
+
     client_info: ClientInfo
 
     __session: requests.Session
     __visitor_data: Union[str, None] = None
 
     def __init__(self, client_info: ClientInfo):
+        '''
+        Initialise the adaptor with the provided ClientInfo
+        '''
+
         self.client_info = client_info
 
         self.session = requests.Session()
 
-    def __repr__(self):
+    def __repr__(self) -> str:
+        '''
+        Return a string representation of the adaptor
+        '''
+
         return '<{class_name}(client={client_name!r}, host={api_domain!r})>'.format \
         (
             class_name  = self.__class__.__name__,
@@ -28,19 +58,26 @@ class Adaptor(object):
         )
 
     @property
-    def session(self):
+    def session(self) -> requests.Session:
+        '''
+        Return the adaptor's Session (requests.Session)
+
+        Updates the headers used by the session with information such as the
+        client name and version
+        '''
+
         self.__session.headers.update \
         (
             utils.filter \
             (
                 {
+                    # Native Headers
                     'User-Agent': self.client_info.user_agent,
-                    'Referer': utils.url \
-                    (
-                        domain = self.client_info.service.domain,
-                    ),
-                    'X-Goog-Visitor-Id': self.__visitor_data,
-                    'X-YouTube-Client-Name': str(self.client_info.service.id),
+                    'Referer':    utils.url(domain = self.client_info.service.domain),
+
+                    # Custom Headers
+                    'X-Goog-Visitor-Id':        self.__visitor_data,
+                    'X-YouTube-Client-Name':    str(self.client_info.service.id),
                     'X-YouTube-Client-Version': self.client_info.version,
                 }
             )
@@ -50,10 +87,18 @@ class Adaptor(object):
 
     @session.setter
     def session(self, value: requests.Session):
+        '''
+        Set the adaptor's Session (requests.Session)
+        '''
+
         self.__session = value
 
     @property
-    def params(self):
+    def params(self) -> dict:
+        '''
+        Generate request parameters including the Client's API Key
+        '''
+
         return \
         {
             'key': self.client_info.api.key,
@@ -61,7 +106,11 @@ class Adaptor(object):
         }
 
     @property
-    def client_context(self):
+    def client_context(self) -> dict:
+        '''
+        Generate the client's context, which is used in the request payload
+        '''
+
         return \
         {
             'clientName':    self.client_info.name,
@@ -70,7 +119,11 @@ class Adaptor(object):
             'hl': 'en',
         }
 
-    def url(self, endpoint: str):
+    def url(self, endpoint: str) -> str:
+        '''
+        Generate an API URL using the provided endpoint
+        '''
+
         return utils.url \
         (
             domain   = self.client_info.api.domain,
@@ -81,7 +134,15 @@ class Adaptor(object):
             ),
         )
 
-    def dispatch(self, endpoint: str, payload: dict = {}, params: dict = {}):
+    def dispatch(self, endpoint: str, payload: dict = {}, params: dict = {}) -> dict:
+        '''
+        Dispatch a request to the API
+
+        Notes:
+            * The client's context is automatically added to the payload
+            * If the response is not JSON, an InnerTubeException is raised
+        '''
+
         payload = copy.deepcopy(payload)
         params  = copy.deepcopy(params)
 

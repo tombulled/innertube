@@ -1,14 +1,28 @@
+'''
+Library containing general utility functions
+
+Usage:
+    >>> from innertube import utils
+    >>>
+    >>> dir(utils)
+    ...
+    >>>
+    >>> utils.url
+    <function url at 0x7fd546a173a0>
+    >>>
+'''
+
 import urllib.parse
 from typing import Union, Callable, Iterable, Dict, Any
 
 def url \
         (
             *,
-            domain: str,
-            scheme: str = 'https',
-            port: Union[None, int] = None,
-            endpoint: Union[None, str] = None,
-            params: Union[None, Dict[str, Any]] = None,
+            domain:   str,
+            scheme:   str                         = 'https',
+            port:     Union[None, int]            = None,
+            endpoint: Union[None, str]            = None,
+            params:   Union[None, Dict[str, Any]] = None,
         ):
     '''
     Construct a URL
@@ -18,13 +32,15 @@ def url \
             Example: 'google.com'
         scheme:  Request scheme
             Example: 'http'
+        port: Request port
+            Example: 8080
         endpoint: URI endpoint
             Example: 'api/v1/users'
         params: Query string parameters
             Example: {'username': 'admin', 'password': 'Password1'}
 
     Returns:
-        A URL
+        A constructed URL
 
     Example:
         >>> url \

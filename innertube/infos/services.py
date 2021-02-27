@@ -1,3 +1,17 @@
+'''
+Library containing Info objects of type: ServiceInfo
+
+Usage:
+    >>> from innertube.infos import services
+    >>>
+    >>> dir(services)
+    ...
+    >>>
+    >>> services.YouTube
+    ServiceInfo(...)
+    >>>
+'''
+
 from . import models
 from . import types
 

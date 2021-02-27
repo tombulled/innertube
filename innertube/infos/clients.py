@@ -1,3 +1,20 @@
+'''
+Library containing Info objects of type: ClientInfo
+
+Notes:
+    * Client information last updated: 27/02/2021
+
+Usage:
+    >>> from innertube.infos import clients
+    >>>
+    >>> dir(clients)
+    ...
+    >>>
+    >>> clients.Web
+    ClientInfo(...)
+    >>>
+'''
+
 from . import models
 from . import services
 from . import devices

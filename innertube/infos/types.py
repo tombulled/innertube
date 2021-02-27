@@ -1,3 +1,17 @@
+'''
+Library containing Type enums
+
+Usage:
+    >>> from innertube.infos import types
+    >>>
+    >>> dir(types)
+    ...
+    >>>
+    >>> types.DeviceType
+    <class 'innertube.infos.types.DeviceType'>
+    >>>
+'''
+
 import enum
 
 class DeviceType(enum.Enum):

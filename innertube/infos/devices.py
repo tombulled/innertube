@@ -1,3 +1,17 @@
+'''
+Library containing Info objects of type: DeviceInfo
+
+Usage:
+    >>> from innertube.infos import devices
+    >>>
+    >>> dir(devices)
+    ...
+    >>>
+    >>> devices.Web
+    DeviceInfo(...)
+    >>>
+'''
+
 from . import models
 from . import types
 

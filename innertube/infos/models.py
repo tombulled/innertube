@@ -1,23 +1,54 @@
+'''
+Library containing Info models
+
+Usage:
+    >>> from innertube.infos import models
+    >>>
+    >>> dir(models)
+    ...
+    >>>
+    >>> models.DeviceInfo
+    <class 'innertube.infos.models.DeviceInfo'>
+    >>>
+'''
+
 import pydantic
 from typing import Union
 from . import types
 
+
 class DeviceInfo(pydantic.BaseModel):
+    '''
+    Info Model for storing information about a Device
+    '''
+
     name: str
     type: types.DeviceType
 
 class ServiceInfo(pydantic.BaseModel):
+    '''
+    Info Model for storing information about a Service
+    '''
+
     name:     str
     type:     types.ServiceType
     domain:   str
     id:       int
 
 class ApiInfo(pydantic.BaseModel):
+    '''
+    Info Model for storing information about an Api
+    '''
+
     key:     str
     domain:  str = 'youtubei.googleapis.com'
     version: int = 1
 
 class ClientInfo(pydantic.BaseModel):
+    '''
+    Info Model for storing information about a Client
+    '''
+
     name:    str
     version: str
 
@@ -28,7 +59,14 @@ class ClientInfo(pydantic.BaseModel):
     package: Union[None, str]
 
     @property
-    def user_agent(self):
+    def user_agent(self) -> str:
+        '''
+        Generate a User Agent for use sending requests
+
+        Notes:
+            * Defaults to a Web User Agent if no builder exists
+        '''
+
         builders = \
         {
             types.DeviceType.Web:     lambda info: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:77.0) Gecko/20100101 Firefox/77.0',
