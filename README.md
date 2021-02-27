@@ -2,11 +2,24 @@
 Python Client for Google's Private InnerTube API. Works with: **YouTube**, **YouTube Music**, **YouTube Kids**, **YouTube Studio**
 
 ### About
-I initially created a [YouTube Music Web API Client](https://github.com/tombulled/python-youtube-music), however I failed miserably to follow the [KISS](https://en.m.wikipedia.org/wiki/KISS_principle) principle. Therefore, I created this package to handle low-level interactions with the InnerTube API that works with each of the YouTube services!
+This library handles low-level interactions with the InnerTube API that is used by each of the YouTube services.
+Google hasn't made much public about the API, and recently all App interactions use [protobuf](https://github.com/protocolbuffers/protobuf) making them hard to reverse-engineer. The only articles I could find online are:
+* [Gizmodo - How Project InnerTube Helped Pull YouTube Out of the Gutter](https://gizmodo.com/how-project-innertube-helped-pull-youtube-out-of-the-gu-1704946491)
+* [Fast Company - To Take On HBO And Netflix, YouTube Had To Rewire Itself](https://www.fastcompany.com/3044995/to-take-on-hbo-and-netflix-youtube-had-to-rewire-itself)
 
 ### Installation
+The `innertube` uses [Poetry](https://github.com/python-poetry/poetry) and can easily be installed from source, or using Pip
+
+#### From Source
 ```shell
-$ foo...
+user@host:/$ git clone https://github.com/tombulled/innertube.git
+Cloning into 'innertube'...
+done.
+user@host:/$ cd innertube
+user@host:/innertube$ poetry install
+Installing dependencies from lock file
+Installing the current project: innertube
+user@host:/innertube$
 ```
 
 ### Usage
