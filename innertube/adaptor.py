@@ -32,7 +32,7 @@ class Adaptor(object):
             utils.filter \
             (
                 {
-                    'User-Agent': self.user_agent,
+                    'User-Agent': self.client_info.user_agent,
                     'Referer': utils.url \
                     (
                         domain = self.client_info.service.domain,
@@ -47,10 +47,6 @@ class Adaptor(object):
     @session.setter
     def session(self, value: requests.Session):
         self.__session = value
-
-    @property
-    def user_agent(self):
-        return utils.build_user_agent(self.client_info)
 
     @property
     def params(self):

@@ -11,4 +11,4 @@ def get_client(*, service: Union[ServiceInfo, ServiceType], device: Union[Device
         client = client_class()
 
         if client.info.service.type == service_type and client.info.device.type == device_type:
-            return clien
+            return client
