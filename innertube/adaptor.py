@@ -1,9 +1,12 @@
 import requests
-import json
+import bs4
+# import json
+import simplejson.errors
 import copy
 from typing import Union
+import http.client
 from . import utils
-from . import exceptions
+from . import errors
 from .infos.models import ClientInfo
 
 class Adaptor(object):
@@ -101,13 +104,30 @@ class Adaptor(object):
 
         try:
             data = response.json()
-        except json.JSONDecodeError:
-            raise # TODO: Handle gracefully (normally thrown when no response body?)
+        except simplejson.errors.JSONDecodeError:
+            message = http.client.responses[response.status_code]
+
+            try:
+                soup = bs4.BeautifulSoup(response.text, 'html.parser')
+
+                if (title := soup.find('title')):
+                    message = title.text
+            except:
+                pass
+
+            raise errors.InnerTubeException \
+            (
+                {
+                    'code':    response.status_code,
+                    'status':  response.reason,
+                    'message': message
+                }
+            ) from None
 
         error = data.get('error')
 
         if error:
-            raise exceptions.InnertubeException(error)
+            raise errors.InnerTubeException(error)
 
         if (visitor_data := data.get('responseContext', {}).get('visitorData')):
             self.__visitor_data = visitor_data

@@ -8,6 +8,7 @@ authors = ["Tom Bulled <26026015+tombulled@users.noreply.github.com>"]
 python = "^3.8"
 pydantic = "^1.7.3"
 requests = "^2.25.1"
+beautifulsoup4 = "^4.9.3"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
