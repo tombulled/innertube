@@ -1,23 +1,10 @@
 # innertube
-Python Client for Google's Private InnerTube API (works with YouTube, YouTube Music etc.)
+Python Client for Google's Private InnerTube API. Works with: **YouTube**, **YouTube Music**, **YouTube Kids**, **YouTube Studio**
 
 ### Installation
 ```shell
 $ foo...
 ```
-
-### But, what about the [YouTube Data API](https://developers.google.com/youtube/v3/)?
-|                                       | This Library | YouTube Data API |
-| ------------------------------------- | ------------ | ---------------- |
-| No Google account required            | &check;      | &cross;          |
-| No request limit                      | &check;      | &cross;          |
-| Clean, reliable, well-structured data | &cross;      | &check;          |
-
-#### Wait a sec! What do you mean it's not clean, reliable and well-structured??
-Well, the private InnerTube API is not designed for consumption by users, it is used to render and operate the various YouTube services.
-
-#### What does that mean?
-Simply put, the data returned by the InnerTube API will need to be parsed and sanitised to extract the usable data as it will contain a lot of fluff that is unlikely to be of any use. These higher-level clients are in the works!
 
 ### Usage
 ```python
@@ -38,6 +25,19 @@ Simply put, the data returned by the InnerTube API will need to be parsed and sa
 >>> data = client.search(query = 'foo fighters')
 >>>
 ```
+
+### But, what about the [YouTube Data API](https://developers.google.com/youtube/v3/)?
+|                                       | This Library | YouTube Data API |
+| ------------------------------------- | ------------ | ---------------- |
+| No Google account required            | &check;      | &cross;          |
+| No request limit                      | &check;      | &cross;          |
+| Clean, reliable, well-structured data | &cross;      | &check;          |
+
+#### Wait a sec! What do you mean it's not clean, reliable and well-structured??
+Well, the private InnerTube API is not designed for consumption by users, it is used to render and operate the various YouTube services.
+
+#### What does that mean?
+Simply put, the data returned by the InnerTube API will need to be parsed and sanitised to extract the usable data as it will contain a lot of fluff that is unlikely to be of any use. These higher-level clients are in the works!
 
 ### Clients
 |         | YouTube | YouTubeMusic | YouTubeKids | YouTubeStudio |

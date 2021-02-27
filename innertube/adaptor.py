@@ -1,12 +1,10 @@
 import requests
 import json
 import copy
-
+from typing import Union
 from . import utils
 from . import exceptions
-
 from .infos.models import ClientInfo
-from typing import Union
 
 class Adaptor(object):
     client_info: ClientInfo

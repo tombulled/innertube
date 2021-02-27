@@ -1,6 +1,6 @@
+from .. import infos
 from . import services
 from . import devices
-from .. import infos
 from .decorators import info
 
 @info(infos.clients.Web)

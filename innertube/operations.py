@@ -2,11 +2,11 @@ import requests
 import json
 import re
 import urllib.parse
+from typing import List, Union
 from . import utils
 from .infos import services
 from .infos.types import ServiceType
 from .infos.models import ServiceInfo
-from typing import List, Union
 
 def video_info(video_id: str) -> dict:
     response = requests.get \

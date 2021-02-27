@@ -1,8 +1,6 @@
 import functools
-
 from ..adaptor import Adaptor
 from ..infos.models import ClientInfo
-
 from . import methods
 from .decorators import method
 
@@ -16,7 +14,11 @@ class Client(object):
         self.adaptor = Adaptor(client_info)
 
     def __repr__(self):
-        return f'<Client(device={self.info.device.name!r}, service={self.info.service.name!r})>'
+        return '<Client(device={device_name!r}, service={service_name!r})>'.format \
+        (
+            device_name  = self.info.device.name,
+            service_name = self.info.service.name,
+        )
 
     @functools.wraps(Adaptor.dispatch)
     def __call__(self, *args, **kwargs):
