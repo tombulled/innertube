@@ -1,6 +1,5 @@
 import requests
 import bs4
-# import json
 import simplejson.errors
 import copy
 from typing import Union
@@ -101,7 +100,7 @@ class Adaptor(object):
             url     = self.url(endpoint),
             params  = params,
             json    = payload,
-            timeout = 5, # NOTE: This should probably be a constant/configurable (is it still needed?)
+            timeout = 5,
         )
 
         try:

@@ -77,8 +77,8 @@ def next \
             *,
             video_id:     Union[None, str] = None,
             playlist_id:  Union[None, str] = None,
-            params:       Union[None, str] = None, # For 'radio' mode etc.
-            index:        Union[None, int] = None, # Potentially not needed?
+            params:       Union[None, str] = None,
+            index:        Union[None, int] = None,
             continuation: Union[None, str] = None,
         ) -> dict:
     return dispatch \

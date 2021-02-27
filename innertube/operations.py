@@ -5,6 +5,7 @@ import urllib.parse
 from typing import List, Union
 from . import utils
 from . import clients
+from . import errors
 from .infos import services
 from .infos.types import ServiceType
 from .infos.models import ServiceInfo
@@ -22,7 +23,7 @@ def watch \
     (
         url = utils.url \
         (
-            domain = client.info.service.domain,
+            domain   = client.info.service.domain,
             endpoint = 'watch',
         ),
         params = utils.filter \
@@ -79,7 +80,14 @@ def video_info(video_id: str) -> dict:
     data = dict(urllib.parse.parse_qsl(response.text))
 
     if 'errorcode' in data:
-        raise Exception(data) # Return a custom exception?
+        raise errors.InnerTubeException \
+        (
+            {
+                'code':    data.get('errorcode'),
+                'status':  data.get('status'),
+                'message': data.get('reason'),
+            }
+        )
 
     def fflags(data):
         fflags = query_string(data)
@@ -166,8 +174,8 @@ def complete_search(query: str, *, service: Union[ServiceInfo, ServiceType] = Se
         ),
         params = \
         {
-            'q':      query,
             'client': clients.get(service_type),
+            'q':      query,
             'hl':     'en',
             'gl':     'gb',
             'ds':     'yt',
