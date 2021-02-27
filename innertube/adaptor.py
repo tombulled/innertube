@@ -8,13 +8,9 @@ from .infos.models import ClientInfo
 from typing import Union
 
 class Adaptor(object):
-    # Public attributes
     client_info: ClientInfo
 
-    # Properties
     __session: requests.Session
-
-    # Private attributes
     __visitor_data: Union[str, None] = None
 
     def __init__(self, client_info: ClientInfo):

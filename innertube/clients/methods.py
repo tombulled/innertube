@@ -21,9 +21,9 @@ def browse \
         (
             dispatch: Callable,
             *,
-            browse_id:    Union[str, None] = None,
-            params:       Union[str, None] = None,
-            continuation: Union[str, None] = None,
+            browse_id:    Union[None, str] = None,
+            params:       Union[None, str] = None,
+            continuation: Union[None, str] = None,
         ):
     return dispatch \
     (
@@ -48,9 +48,9 @@ def search \
         (
             dispatch: Callable,
             *,
-            query:        Union[str, None] = None,
-            params:       Union[str, None] = None,
-            continuation: Union[str, None] = None,
+            query:        Union[None, str] = None,
+            params:       Union[None, str] = None,
+            continuation: Union[None, str] = None,
         ) -> dict:
     return dispatch \
     (
@@ -74,11 +74,12 @@ def search \
 def next \
         (
             dispatch: Callable,
-            video_id:     str    = None, # NOTE: These should all use typing.Union
-            playlist_id:  str    = None,
-            params:       str    = None, # For 'radio' mode etc.
-            index:        int    = None, # Potentially not needed?
-            continuation: str    = None,
+            *,
+            video_id:     Union[None, str] = None,
+            playlist_id:  Union[None, str] = None,
+            params:       Union[None, str] = None, # For 'radio' mode etc.
+            index:        Union[None, int] = None, # Potentially not needed?
+            continuation: Union[None, str] = None,
         ) -> dict:
     return dispatch \
     (
@@ -109,8 +110,8 @@ def music_get_queue \
         (
             dispatch: Callable,
             *,
-            video_ids: Union[List[str], None] = None,
-            playlist_id: Union[str, None] = None,
+            video_ids:   Union[None, List[str]] = None,
+            playlist_id: Union[None, str]       = None,
         ):
     return dispatch \
     (

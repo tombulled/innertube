@@ -70,7 +70,7 @@ web = maps.CLIENTS['Web']()
 ps4 = maps.CLIENTS['Tv']()
 
 def dispatch(client):
-    return client('next', payload = {'videoId': 'XXYlFuWEuKI'})
+    return client('search', payload = {'query': 'foo'})
 
 '''
 for client in maps.CLIENTS.values():
@@ -178,4 +178,4 @@ def complete_search(query, music=True):
 
     return suggestions
 
-print(complete_search('foo'))
+# print(complete_search('foo'))

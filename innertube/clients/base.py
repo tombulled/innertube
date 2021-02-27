@@ -6,7 +6,10 @@ from ..infos.models import ClientInfo
 from . import methods
 from .decorators import method
 
-class BaseClient(object):
+@method(methods.config)
+@method(methods.browse)
+@method(methods.player)
+class Client(object):
     adaptor: Adaptor
 
     def __init__(self, client_info: ClientInfo):
@@ -22,8 +25,3 @@ class BaseClient(object):
     @property
     def info(self):
         return self.adaptor.client_info
-
-@method(methods.config)
-@method(methods.browse)
-@method(methods.player)
-class Client(BaseClient): ...
