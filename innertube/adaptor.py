@@ -41,6 +41,8 @@ class Adaptor(object):
                         domain = self.client_info.service.domain,
                     ),
                     'X-Goog-Visitor-Id': self.__visitor_data,
+                    'X-YouTube-Client-Name': str(self.client_info.service.id),
+                    'X-YouTube-Client-Version': self.client_info.version,
                 }
             )
         )

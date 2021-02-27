@@ -10,6 +10,7 @@ class ServiceInfo(pydantic.BaseModel):
     name:     str
     type:     types.ServiceType
     domain:   str
+    id:       int
 
 class ApiInfo(pydantic.BaseModel):
     key:     str
