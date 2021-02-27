@@ -47,6 +47,18 @@ Simply put, the data returned by the InnerTube API will need to be parsed and sa
 | Ios     | &check; | &check;      | &check;     | &check;       |
 | Tv      | &check; | &cross;      | &cross;     | &cross;       |
 
+### Endpoints
+|                                | YouTube | YouTubeMusic | YouTubeKids | YouTubeStudio |
+| ------------------------------ | ------- | ------------ | ----------- | ------------- |
+| config                         | &check; | &check;      | &check;     | &check;       |
+| browse                         | &check; | &check;      | &check;     | &check;       |
+| player                         | &check; | &check;      | &check;     | &check;       |
+| next                           | &check; | &check;      | &check;     | &cross;       |
+| search                         | &check; | &check;      | &check;     | &cross;       |
+| guide                          | &check; | &check;      | &cross;     | &cross;       |
+| music/get_search_suggestions   | &cross; | &check;      | &cross;     | &cross;       |
+| music/get_queue                | &cross; | &check;      | &cross;     | &cross;       |
+
 ### Authentication
 The InnerTube API uses OAuth2, however I have been unable to successfully implement authentication.
 Therefore, this library currently only provides unauthenticated access to the API.

@@ -20,7 +20,12 @@ class Adaptor(object):
         self.session = requests.Session()
 
     def __repr__(self):
-        return f'<{self.__class__.__name__}({self.client_info.name}@{self.client_info.api.domain})>'
+        return '<{class_name}(client={client_name!r}, host={api_domain!r})>'.format \
+        (
+            class_name  = self.__class__.__name__,
+            client_name = self.client_info.name,
+            api_domain  = self.client_info.api.domain,
+        )
 
     @property
     def session(self):
@@ -110,8 +115,7 @@ class Adaptor(object):
         if error:
             raise exceptions.InnertubeException(error)
 
-        visitor_data = data.get('responseContext', {}).get('visitorData')
-
-        if visitor_data: self.__visitor_data = visitor_data
+        if (visitor_data := data.get('responseContext', {}).get('visitorData')):
+            self.__visitor_data = visitor_data
 
         return data
