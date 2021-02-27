@@ -4,9 +4,58 @@ import re
 import urllib.parse
 from typing import List, Union
 from . import utils
+from . import clients
 from .infos import services
 from .infos.types import ServiceType
 from .infos.models import ServiceInfo
+
+def watch \
+        (
+            *,
+            video_id:    Union[None, str],
+            playlist_id: Union[None, str],
+            index:       Union[None, int],
+        ) -> dict:
+    client = clients.Web()
+
+    response = client.adaptor.session.get \
+    (
+        url = utils.url \
+        (
+            domain = client.info.service.domain,
+        ),
+        params = utils.filter \
+        (
+            {
+                'v':     video_id,
+                'list':  playlist_id,
+                'index': index,
+                'pbj':   1,
+            },
+        ),
+        cookies = \
+        {
+            'ST-ito1wm': urllib.parse.urlencode \
+            (
+                {
+                    'endpoint': json.dumps \
+                    (
+                        {
+                            'watchEndpoint': utils.filter \
+                            (
+                                {
+                                    'videoId':    video_id,
+                                    'playlistId': playlist_id,
+                                }
+                            ),
+                        },
+                    ),
+                },
+            ),
+        },
+    )
+
+    return response.json()
 
 def video_info(video_id: str) -> dict:
     response = requests.get \
