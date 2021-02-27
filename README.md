@@ -35,9 +35,5 @@ $ foo...
 | Tv      | &check; | &cross;      | &cross;     | &cross;       |
 
 ### Authentication
-The InnerTube API uses OAuth2, however I have been unable to successfully request tokens.
-Therefore, this library provides unauthenticated access to the API.
-
-# TEMP NOTES
-TODO:
-* Take out free trials again?
+The InnerTube API uses OAuth2, however I have been unable to successfully implement authentication.
+Therefore, this library currently only provides unauthenticated access to the API.

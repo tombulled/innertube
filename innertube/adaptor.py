@@ -61,54 +61,50 @@ class Adaptor(object):
         }
 
     @property
-    def payload(self):
+    def context(self):
         return \
         {
-            'context': \
+            'client': \
             {
-                'client': \
-                {
-                    'clientName':    self.client_info.name,
-                    'clientVersion': self.client_info.version,
-                    'gl': 'US',
-                    'hl': 'en',
-                },
+                'clientName':    self.client_info.name,
+                'clientVersion': self.client_info.version,
+                'gl': 'US',
+                'hl': 'en',
             },
         }
 
-    def url(self, *fragments: str):
+    def url(self, endpoint: str):
         return utils.url \
         (
             domain   = self.client_info.api.domain,
-            endpoint = '/'.join \
+            endpoint = 'youtubei/v{api_version}/{endpoint}'.format \
             (
-                fragment.lstrip(r'\/')
-                for fragment in \
-                (
-                    f'youtubei/v{self.client_info.api.version}',
-                    *fragments,
-                )
+                api_version = self.client_info.api.version,
+                endpoint    = endpoint.lstrip(r'\/'),
             ),
         )
 
-    def dispatch(self, *fragments: str, params: dict = {}, payload: dict = {}):
-        url = self.url(*fragments)
-
-        params  = {**self.params,  **params}
-        payload = {**self.payload, **payload}
-
+    def dispatch(self, endpoint: str, payload: dict = {}, params: dict = {}):
         response = self.session.post \
         (
-            url     = url,
-            params  = params,
-            json    = payload,
-            timeout = 5, # NOTE: This should be a constant/configurable
+            url = self.url(endpoint),
+            params = \
+            {
+                **params,
+                **self.params,
+            },
+            json = \
+            {
+                **payload,
+                'context': self.context,
+            },
+            timeout = 5, # NOTE: This should probably be a constant/configurable (is it still needed?)
         )
 
         try:
             data = response.json()
         except json.JSONDecodeError:
-            raise # TODO: Handle gracefully
+            raise # TODO: Handle gracefully (normally thrown when no response body?)
 
         error = data.get('error')
 

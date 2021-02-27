@@ -1,7 +1,8 @@
 from . import maps
 from .infos.models import ServiceInfo, DeviceInfo, ClientInfo
 from .infos.types import ServiceType, DeviceType
-from typing import Union, Callable, Iterable
+from typing import Union, Callable, Iterable, Dict, Any
+import urllib.parse
 
 def get_client_info(*, service: Union[ServiceInfo, ServiceType], device: Union[DeviceInfo, DeviceType]):
     service_type = service if isinstance(service, ServiceType) else service.type
@@ -46,14 +47,52 @@ def build_user_agent(client_info: ClientInfo):
 
     return builders.get(device_type)()
 
-def url(*, domain: str, scheme: str = 'https', port: Union[int, None] = None, endpoint: Union[str, None] = None):
-    return '{scheme}://{domain}{sep_port}{port}/{endpoint}'.format \
+def url \
+        (
+            *,
+            domain: str,
+            scheme: str = 'https',
+            port: Union[None, int] = None,
+            endpoint: Union[None, str] = None,
+            params: Union[None, Dict[str, Any]] = None,
+        ):
+    '''
+    Construct a URL
+
+    Args:
+        domain: Domain name
+            Example: 'google.com'
+        scheme:  Request scheme
+            Example: 'http'
+        endpoint: URI endpoint
+            Example: 'api/v1/users'
+        params: Query string parameters
+            Example: {'username': 'admin', 'password': 'Password1'}
+
+    Returns:
+        A URL
+
+    Example:
+        >>> url \
+        (
+            domain   = 'www.google.com',
+            scheme   = 'https',
+            endpoint = 'search',
+            params   = {'q': 'test'},
+        )
+        'https://www.google.com/search?q=test'
+        >>>
+    '''
+
+    return '{scheme}://{domain}{sep_port}{port}/{endpoint}{sep_params}{params}'.format \
     (
-        scheme   = scheme,
-        domain   = domain,
-        sep_port = ':' if port else '',
-        port     = port or '',
-        endpoint = endpoint.lstrip(r'\/') if endpoint else '',
+        scheme     = scheme,
+        domain     = domain,
+        sep_port   = ':' if port else '',
+        port       = port or '',
+        endpoint   = endpoint.lstrip(r'\/') if endpoint else '',
+        sep_params = '?' if params else '',
+        params     = urllib.parse.urlencode(params) if params else '',
     )
 
 def filter \
