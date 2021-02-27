@@ -6,10 +6,10 @@ NOTES:
 * Fix clash between Client and ClientInfo properly :/
 '''
 
-from innertube import maps, utils
+from innertube import clients, utils
 
-web = maps.CLIENTS['Web']()
-ps4 = maps.CLIENTS['Tv']()
+web = clients.CLIENTS['Web']()
+ps4 = clients.CLIENTS['Tv']()
 
 def dispatch(client):
     return client('search', payload = {'query': 'foo'})

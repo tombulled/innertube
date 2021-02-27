@@ -1,4 +1,5 @@
-from . import maps
+from . import infos
+from . import clients
 from .infos.models import ServiceInfo, DeviceInfo, ClientInfo
 from .infos.types import ServiceType, DeviceType
 from typing import Union, Callable, Iterable, Dict, Any
@@ -8,7 +9,7 @@ def get_client_info(*, service: Union[ServiceInfo, ServiceType], device: Union[D
     service_type = service if isinstance(service, ServiceType) else service.type
     device_type  = device  if isinstance(device,  DeviceType)  else device.type
 
-    for client_info in maps.CLIENT_INFOS.values():
+    for client_info in infos.CLIENTS.values():
         if client_info.service.type == service_type \
                 and client_info.device.type == device_type:
             return client_info
@@ -17,7 +18,7 @@ def get_client(*, service: Union[ServiceInfo, ServiceType], device: Union[Device
     service_type = service if isinstance(service, ServiceType) else service.type
     device_type  = device  if isinstance(device,  DeviceType)  else device.type
 
-    for client_class in maps.CLIENTS.values():
+    for client_class in clients.CLIENTS.values():
         client = client_class()
 
         if client.info.service.type == service_type and client.info.device.type == device_type:
