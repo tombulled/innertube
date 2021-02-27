@@ -1,5 +1,6 @@
 import requests
 import json
+import copy
 
 from . import utils
 from . import exceptions
@@ -57,16 +58,13 @@ class Adaptor(object):
         }
 
     @property
-    def context(self):
+    def client_context(self):
         return \
         {
-            'client': \
-            {
-                'clientName':    self.client_info.name,
-                'clientVersion': self.client_info.version,
-                'gl': 'US',
-                'hl': 'en',
-            },
+            'clientName':    self.client_info.name,
+            'clientVersion': self.client_info.version,
+            'gl': 'US',
+            'hl': 'en',
         }
 
     def url(self, endpoint: str):
@@ -81,19 +79,24 @@ class Adaptor(object):
         )
 
     def dispatch(self, endpoint: str, payload: dict = {}, params: dict = {}):
+        payload = copy.deepcopy(payload)
+        params  = copy.deepcopy(params)
+
+        params.update(self.params)
+
+        payload.setdefault('context', {})
+
+        payload['context']['client'] = \
+        {
+            **self.client_context,
+            **payload.get('context').get('client', {}),
+        }
+
         response = self.session.post \
         (
-            url = self.url(endpoint),
-            params = \
-            {
-                **params,
-                **self.params,
-            },
-            json = \
-            {
-                **payload,
-                'context': self.context,
-            },
+            url     = self.url(endpoint),
+            params  = params,
+            json    = payload,
             timeout = 5, # NOTE: This should probably be a constant/configurable (is it still needed?)
         )
 
