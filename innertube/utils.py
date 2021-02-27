@@ -26,18 +26,10 @@ def get_client(*, service: Union[ServiceInfo, ServiceType], device: Union[Device
 def build_user_agent(client_info: ClientInfo):
     builders = \
     {
-        DeviceType.Web: lambda: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:77.0) Gecko/20100101 Firefox/77.0',
-        DeviceType.Android: lambda: '{package}/{client_version}(Linux; U; Android 9; en_GB; VirtualBox Build/PI)'.format \
-        (
-            package = client_info.service.packages.get(client_info.device.type),
-            client_version = client_info.version,
-        ),
-        DeviceType.Ios: lambda: '{package}/{client_version} (iPhone10,5; U; CPU iOS 14_4 like Mac OS X; en_GB)'.format \
-        (
-            package = client_info.service.packages.get(client_info.device.type),
-            client_version = client_info.version,
-        ),
-        DeviceType.Tv: lambda: 'Mozilla/5.0 (PlayStation; PlayStation 4/8.03) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.0 Safari/605.1.15',
+        DeviceType.Web:     lambda: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:77.0) Gecko/20100101 Firefox/77.0',
+        DeviceType.Android: lambda: f'{client_info.package}/{client_info.version}(Linux; U; Android 9; en_GB; VirtualBox Build/PI)',
+        DeviceType.Ios:     lambda: f'{client_info.package}/{client_info.version} (iPhone10,5; U; CPU iOS 14_4 like Mac OS X; en_GB)',
+        DeviceType.Tv:      lambda: 'Mozilla/5.0 (PlayStation; PlayStation 4/8.03) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.0 Safari/605.1.15',
     }
 
     device_type = client_info.device.type

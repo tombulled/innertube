@@ -45,6 +45,7 @@ Android = models.ClientInfo \
     device  = devices.Android,
     service = services.YouTube,
     api     = models.ApiInfo(key = 'AIzaSyA8eiZmM1FaDVjRy-df2KTyQ_vz_yYM39w'),
+    package = 'com.google.android.youtube',
 )
 
 AndroidMusic = models.ClientInfo \
@@ -54,6 +55,7 @@ AndroidMusic = models.ClientInfo \
     device  = devices.Android,
     service = services.YouTubeMusic,
     api     = models.ApiInfo(key = 'AIzaSyAOghZGza2MQSZkY_zfZ370N-PUdXEo8AI'),
+    package = 'com.google.android.apps.youtube.music',
 )
 
 AndroidKids = models.ClientInfo \
@@ -63,6 +65,7 @@ AndroidKids = models.ClientInfo \
     device  = devices.Android,
     service = services.YouTubeKids,
     api     = models.ApiInfo(key = 'AIzaSyAxxQKWYcEX8jHlflLt2Qcbb-rlolzBhhk'),
+    package = 'com.google.android.apps.youtube.kids',
 )
 
 AndroidStudio = models.ClientInfo \
@@ -72,6 +75,7 @@ AndroidStudio = models.ClientInfo \
     device  = devices.Android,
     service = services.YouTubeStudio,
     api     = models.ApiInfo(key = 'AIzaSyD_qjV8zaaUMehtLkrKFgVeSX_Iqbtyws8'),
+    package = 'com.google.android.apps.youtube.creator',
 )
 
 Ios = models.ClientInfo \
@@ -81,6 +85,7 @@ Ios = models.ClientInfo \
     device  = devices.Ios,
     service = services.YouTube,
     api     = models.ApiInfo(key = 'AIzaSyB-63vPrdThhKuerbB2N_l7Kwwcxj6yUAc'),
+    package = 'com.google.ios.youtube',
 )
 
 IosMusic = models.ClientInfo \
@@ -90,6 +95,7 @@ IosMusic = models.ClientInfo \
     device  = devices.Ios,
     service = services.YouTubeMusic,
     api     = models.ApiInfo(key = 'AIzaSyBAETezhkwP0ZWA02RsqT1zu78Fpt0bC_s'),
+    package = 'com.google.ios.youtubemusic',
 )
 
 IosKids = models.ClientInfo \
@@ -99,6 +105,7 @@ IosKids = models.ClientInfo \
     device  = devices.Ios,
     service = services.YouTubeKids,
     api     = models.ApiInfo(key = 'AIzaSyA6_JWXwHaVBQnoutCv1-GvV97-rJ949Bc'),
+    package = 'com.google.ios.youtubekids',
 )
 
 IosStudio = models.ClientInfo \
@@ -108,6 +115,7 @@ IosStudio = models.ClientInfo \
     device  = devices.Ios,
     service = services.YouTubeStudio,
     api     = models.ApiInfo(key = 'AIzaSyAPyF5GfQI-kOa6nZwO8EsNrGdEx9bioNs'),
+    package = 'com.google.ios.ytcreator',
 )
 
 Tv = models.ClientInfo \

@@ -1,7 +1,7 @@
 import pydantic
 
 from . import types
-from typing import Dict
+from typing import Union
 
 class DeviceInfo(pydantic.BaseModel):
     name: str
@@ -11,7 +11,6 @@ class ServiceInfo(pydantic.BaseModel):
     name:     str
     type:     types.ServiceType
     domain:   str
-    packages: Dict[types.DeviceType, str]
 
 class ApiInfo(pydantic.BaseModel):
     key:     str
@@ -25,3 +24,5 @@ class ClientInfo(pydantic.BaseModel):
     device:  DeviceInfo
     service: ServiceInfo
     api:     ApiInfo
+
+    package: Union[None, str]
