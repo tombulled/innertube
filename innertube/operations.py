@@ -12,9 +12,9 @@ from .infos.models import ServiceInfo
 def watch \
         (
             *,
-            video_id:    Union[None, str],
-            playlist_id: Union[None, str],
-            index:       Union[None, int],
+            video_id:    Union[None, str] = None,
+            playlist_id: Union[None, str] = None,
+            index:       Union[None, int] = None,
         ) -> dict:
     client = clients.Web()
 
@@ -23,6 +23,7 @@ def watch \
         url = utils.url \
         (
             domain = client.info.service.domain,
+            endpoint = 'watch',
         ),
         params = utils.filter \
         (
