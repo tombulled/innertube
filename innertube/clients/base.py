@@ -3,7 +3,8 @@ import functools
 from ..adaptor import Adaptor
 from ..infos.models import ClientInfo
 
-from typing import Union
+from . import methods
+from .decorators import method
 
 class BaseClient(object):
     adaptor: Adaptor
@@ -22,43 +23,7 @@ class BaseClient(object):
     def info(self):
         return self.adaptor.client_info
 
-class Client(BaseClient):
-    def config(self):
-        return self('config')
-
-    def browse \
-            (
-                self,
-                *,
-                browse_id:    Union[str, None] = None,
-                params:       Union[str, None] = None,
-                continuation: Union[str, None] = None,
-            ):
-        return self.dispatch \
-        (
-            'browse',
-            params = utils.filter \
-            (
-                {
-                    'continuation': continuation,
-                    'ctoken':       continuation,
-                }
-            ),
-            payload = utils.filter \
-            (
-                {
-                    'browseId': browse_id,
-                    'params':   params,
-                }
-            ),
-        )
-
-    def player(self, video_id: str):
-        return self \
-        (
-            'player',
-            payload = \
-            {
-                'videoId': video_id,
-            }
-        )
+@method(methods.config)
+@method(methods.browse)
+@method(methods.player)
+class Client(BaseClient): ...

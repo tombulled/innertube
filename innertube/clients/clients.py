@@ -1,55 +1,43 @@
 from . import services
 from . import devices
 from .. import infos
+from .decorators import info
 
-class Web(devices.WebClient, services.YouTubeClient):
-    def __init__(self):
-        super().__init__(infos.clients.Web)
+@info(infos.clients.Web)
+class Web(devices.WebClient, services.YouTubeClient): ...
 
-class WebMusic(devices.WebClient, services.YouTubeMusicClient):
-    def __init__(self):
-        super().__init__(infos.clients.WebMusic)
+@info(infos.clients.WebMusic)
+class WebMusic(devices.WebClient, services.YouTubeMusicClient): ...
 
-class WebKids(devices.WebClient, services.YouTubeKidsClient):
-    def __init__(self):
-        super().__init__(infos.clients.WebKids)
+@info(infos.clients.WebKids)
+class WebKids(devices.WebClient, services.YouTubeKidsClient): ...
 
-class WebStudio(devices.WebClient, services.YouTubeStudioClient):
-    def __init__(self):
-        super().__init__(infos.clients.WebStudio)
+@info(infos.clients.WebStudio)
+class WebStudio(devices.WebClient, services.YouTubeStudioClient): ...
 
-class Android(devices.AndroidClient, services.YouTubeClient):
-    def __init__(self):
-        super().__init__(infos.clients.Android)
+@info(infos.clients.Android)
+class Android(devices.AndroidClient, services.YouTubeClient): ...
 
-class AndroidMusic(devices.AndroidClient, services.YouTubeMusicClient):
-    def __init__(self):
-        super().__init__(infos.clients.AndroidMusic)
+@info(infos.clients.AndroidMusic)
+class AndroidMusic(devices.AndroidClient, services.YouTubeMusicClient): ...
 
-class AndroidKids(devices.AndroidClient, services.YouTubeKidsClient):
-    def __init__(self):
-        super().__init__(infos.clients.AndroidKids)
+@info(infos.clients.AndroidKids)
+class AndroidKids(devices.AndroidClient, services.YouTubeKidsClient): ...
 
-class AndroidStudio(devices.AndroidClient, services.YouTubeStudioClient):
-    def __init__(self):
-        super().__init__(infos.clients.AndroidStudio)
+@info(infos.clients.AndroidStudio)
+class AndroidStudio(devices.AndroidClient, services.YouTubeStudioClient): ...
 
-class Ios(devices.IosClient, services.YouTubeClient):
-    def __init__(self):
-        super().__init__(infos.clients.Ios)
+@info(infos.clients.Ios)
+class Ios(devices.IosClient, services.YouTubeClient): ...
 
-class IosMusic(devices.IosClient, services.YouTubeMusicClient):
-    def __init__(self):
-        super().__init__(infos.clients.IosMusic)
+@info(infos.clients.IosMusic)
+class IosMusic(devices.IosClient, services.YouTubeMusicClient): ...
 
-class IosKids(devices.IosClient, services.YouTubeKidsClient):
-    def __init__(self):
-        super().__init__(infos.clients.IosKids)
+@info(infos.clients.IosKids)
+class IosKids(devices.IosClient, services.YouTubeKidsClient): ...
 
-class IosStudio(devices.IosClient, services.YouTubeStudioClient):
-    def __init__(self):
-        super().__init__(infos.clients.IosStudio)
+@info(infos.clients.IosStudio)
+class IosStudio(devices.IosClient, services.YouTubeStudioClient): ...
 
-class Tv(devices.TvClient, services.YouTubeClient):
-    def __init__(self):
-        super().__init__(infos.clients.Tv)
+@info(infos.clients.Tv)
+class Tv(devices.TvClient, services.YouTubeClient): ...

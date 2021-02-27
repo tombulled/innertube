@@ -1,13 +1,9 @@
 from . import base
 
-class WebClient(base.Client):
-    pass
+class WebClient(base.Client): ...
 
-class AndroidClient(base.Client):
-    pass
+class AndroidClient(base.Client): ...
 
-class IosClient(base.Client):
-    pass
+class IosClient(base.Client): ...
 
-class TvClient(base.Client):
-    pass
+class TvClient(base.Client): ...
