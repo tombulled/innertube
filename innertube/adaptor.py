@@ -186,9 +186,7 @@ class Adaptor(object):
                 }
             ) from None
 
-        error = data.get('error')
-
-        if error:
+        if (error := data.get('error')):
             raise errors.InnerTubeException(error)
 
         if (visitor_data := data.get('responseContext', {}).get('visitorData')):
