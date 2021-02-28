@@ -11,14 +11,14 @@ Google hasn't made much public about the API, and recently all App interactions 
 The `innertube` library uses [Poetry](https://github.com/python-poetry/poetry) and can easily be installed from source, or using *pip*
 
 ### From PyPi (using pip)
-```shell
+```console
 $ # TODO!
 ```
 
 ### From Source
 
 #### First, clone the repository
-```shell
+```console
 $ # Clone the repository
 $ git clone https://github.com/tombulled/innertube.git
 Cloning into 'innertube'...
@@ -30,10 +30,11 @@ $
 ```
 
 #### Installation directly into site-packages
-```shell
+```console
 $ # Build the library
 $ poetry build
-Successfully installed innertube
+Building innertube
+    - Build innertube wheel
 $
 $ # Install the built wheel
 $ pip3 install dist/innertube*.whl
