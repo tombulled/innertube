@@ -43,7 +43,7 @@ $
 ```
 
 #### Installation inside a virtualenv
-```
+```console
 $ # Install project dependencies
 $ poetry install
 Installing dependencies from lock file
