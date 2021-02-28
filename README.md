@@ -10,9 +10,16 @@ Google hasn't made much public about the API, and recently all App interactions 
 ## Installation
 The `innertube` library uses [Poetry](https://github.com/python-poetry/poetry) and can easily be installed from source, or using *pip*
 
-### From PyPi (using pip)
+### From PyPi
 ```console
-$ # TODO!
+$ # Hopefully to come!
+```
+
+### From Source, using pip (recommended)
+```console
+$ python3 -m pip install git+https://github.com/tombulled/innertube
+Successfully installed innertube
+$
 ```
 
 ### From Source
