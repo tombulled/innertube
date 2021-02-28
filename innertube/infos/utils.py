@@ -13,7 +13,7 @@ Usage:
 '''
 
 from typing import Union
-from . import CLIENTS
+from . import CLIENTS, SERVICES, DEVICES
 from .models import ServiceInfo, DeviceInfo, ClientInfo
 from .types import ServiceType, DeviceType
 
@@ -50,3 +50,43 @@ def get_client_info \
         if client_info.service.type == service_type \
                 and client_info.device.type == device_type:
             return client_info
+
+def get_service_info(service: ServiceType) -> ServiceInfo:
+    '''
+    Utility function that gets the ServiceInfo with type `service`
+
+    Parameters:
+        service: The ServiceType of the the ServiceInfo
+
+    Returns:
+        The ServiceInfo with type `service`
+
+    Usage:
+        >>> get_service_info(ServiceType.YouTube)
+        ServiceInfo(...)
+        >>>
+    '''
+
+    for service_info in SERVICES.values():
+        if service_info.type == service:
+            return service_info
+
+def get_device_info(device: DeviceType) -> DeviceInfo:
+    '''
+    Utility function that gets the DeviceInfo with type `device`
+
+    Parameters:
+        device: The DeviceType of the the DeviceInfo
+
+    Returns:
+        The DeviceInfo with type `device`
+
+    Usage:
+        >>> get_device_info(DeviceType.Android)
+        DeviceInfo(...)
+        >>>
+    '''
+
+    for device_info in DEVICES.values():
+        if device_info.type == device:
+            return device_info
