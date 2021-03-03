@@ -10,62 +10,10 @@ Google hasn't made much public about the API, and recently all App interactions 
 ## Installation
 The `innertube` library uses [Poetry](https://github.com/python-poetry/poetry) and can easily be installed from source, or using *pip*
 
-### From PyPi
+### From Source (using *pip*)
 ```console
-$ # Hopefully to come!
-```
-
-### From Source, using pip (recommended)
-```console
-$ python3 -m pip install git+https://github.com/tombulled/innertube
+$ pip install git+https://github.com/tombulled/innertube
 Successfully installed innertube
-$
-```
-
-### From Source
-
-#### First, clone the repository
-```console
-$ # Clone the repository
-$ git clone https://github.com/tombulled/innertube.git
-Cloning into 'innertube'...
-done.
-$
-$ # Enter the repository's directory
-$ cd innertube
-$
-```
-
-#### Installation directly into site-packages
-```console
-$ # Build the library
-$ poetry build
-Building innertube
-    - Build innertube wheel
-$
-$ # Install the built wheel
-$ pip3 install dist/innertube*.whl
-Successfully installed innertube
-$
-```
-
-#### Installation inside a virtualenv
-```console
-$ # Install project dependencies
-$ poetry install
-Installing dependencies from lock file
-Installing the current project: innertube
-$
-$ # To use, either spawn a shell in the virtualenv
-$ poetry shell
-(innertube-py3.8) $ python3
->>> import innertube
->>>
-$
-$ # Or... execute Python inside of the virtualenv
-$ poetry run python3
->>> import innertube
->>>
 $
 ```
 
