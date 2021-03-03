@@ -13,6 +13,7 @@ from ..adaptor import Adaptor
 from ..infos.models import ClientInfo
 from . import methods
 from .decorators import method
+from ..types import Language, Location
 
 @method(methods.config)
 @method(methods.browse)
@@ -30,24 +31,45 @@ class Client(object):
 
     adaptor: Adaptor
 
-    def __init__(self, client_info: ClientInfo):
+    def __init__ \
+            (
+                self,
+                client_info: ClientInfo,
+                *,
+                language: Language = Language.EnglishUK,
+                location: Location = Location.UnitedKingdom,
+            ):
         '''
         Initialise the Client
 
         Creates and stores an `Adaptor` for dispatching requests
         '''
 
-        self.adaptor = Adaptor(client_info)
+        self.adaptor = Adaptor \
+        (
+            client_info,
+            language = language,
+            location = location,
+        )
 
     def __repr__(self) -> str:
         '''
         Return a string representation of the Client
         '''
 
-        return '<Client(device={device_name!r}, service={service_name!r})>'.format \
+        return '<Client({params})>'.format \
         (
-            device_name  = self.info.device.name,
-            service_name = self.info.service.name,
+            params = ', '.join \
+            (
+                f'{key}={value!r}'
+                for key, value in \
+                {
+                    'device':   self.info.device.name,
+                    'service':  self.info.service.name,
+                    'language': self.adaptor.language.value,
+                    'location': self.adaptor.location.value,
+                }.items()
+            )
         )
 
     @functools.wraps(Adaptor.dispatch)

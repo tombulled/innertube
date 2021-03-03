@@ -18,6 +18,7 @@ import http.client
 from . import utils
 from . import errors
 from .infos.models import ClientInfo
+from .types import Language, Location
 
 class Adaptor(object):
     '''
@@ -36,25 +37,42 @@ class Adaptor(object):
     __session: requests.Session
     __visitor_data: Union[str, None] = None
 
-    def __init__(self, client_info: ClientInfo):
+    def __init__ \
+            (
+                self,
+                client_info: ClientInfo,
+                *,
+                language: Language = Language.EnglishUK,
+                location: Location = Location.UnitedKingdom,
+            ):
         '''
         Initialise the adaptor with the provided ClientInfo
         '''
 
         self.client_info = client_info
-
-        self.session = requests.Session()
+        self.language    = language
+        self.location    = location
+        self.session     = requests.Session()
 
     def __repr__(self) -> str:
         '''
         Return a string representation of the adaptor
         '''
 
-        return '<{class_name}(client={client_name!r}, host={api_domain!r})>'.format \
+        return '<{class_name}({params})>'.format \
         (
             class_name  = self.__class__.__name__,
-            client_name = self.client_info.name,
-            api_domain  = self.client_info.api.domain,
+            params = ', '.join \
+            (
+                f'{key}={value!r}'
+                for key, value in \
+                {
+                    'client':   self.client_info.name,
+                    'host':     self.client_info.api.domain,
+                    'language': self.language.value,
+                    'location': self.location.value,
+                }.items()
+            )
         )
 
     @property
@@ -115,8 +133,8 @@ class Adaptor(object):
         {
             'clientName':    self.client_info.name,
             'clientVersion': self.client_info.version,
-            'gl': 'US',
-            'hl': 'en',
+            'gl': self.location.value,
+            'hl': self.language.value,
         }
 
     def url(self, endpoint: str) -> str:
