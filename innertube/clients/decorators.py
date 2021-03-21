@@ -92,13 +92,13 @@ def info(client_info: ClientInfo) -> Callable:
         automatically
         '''
 
-        def wrapper(self) -> object:
+        def wrapper(self, **kwargs) -> object:
             '''
             Wrapper that initialises the Client automatically with the provided
             ClientInfo
             '''
 
-            base.Client.__init__(self, client_info)
+            base.Client.__init__(self, client_info, **kwargs)
 
         setattr(cls, '__init__', wrapper)
 
