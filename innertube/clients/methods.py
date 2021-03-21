@@ -14,7 +14,14 @@ Usage:
 '''
 
 from .. import utils
-from typing import Union, Callable, List
+
+from typing import \
+(
+    Union,
+    Callable,
+    List,
+    Optional,
+)
 
 def config(dispatch: Callable) -> dict:
     '''
@@ -54,9 +61,9 @@ def browse \
         (
             dispatch: Callable,
             *,
-            browse_id:    Union[None, str] = None,
-            params:       Union[None, str] = None,
-            continuation: Union[None, str] = None,
+            browse_id:    Optional[str] = None,
+            params:       Optional[str] = None,
+            continuation: Optional[str] = None,
         ) -> dict:
     '''
     Dispatch the endpoint: browse
@@ -87,9 +94,9 @@ def search \
         (
             dispatch: Callable,
             *,
-            query:        Union[None, str] = None,
-            params:       Union[None, str] = None,
-            continuation: Union[None, str] = None,
+            query:        Optional[str] = None,
+            params:       Optional[str] = None,
+            continuation: Optional[str] = None,
         ) -> dict:
     '''
     Dispatch the endpoint: search
@@ -120,11 +127,11 @@ def next \
         (
             dispatch: Callable,
             *,
-            video_id:     Union[None, str] = None,
-            playlist_id:  Union[None, str] = None,
-            params:       Union[None, str] = None,
-            index:        Union[None, int] = None,
-            continuation: Union[None, str] = None,
+            video_id:     Optional[str] = None,
+            playlist_id:  Optional[str] = None,
+            params:       Optional[str] = None,
+            index:        Optional[int] = None,
+            continuation: Optional[str] = None,
         ) -> dict:
     '''
     Dispatch the endpoint: next
@@ -151,7 +158,7 @@ def music_get_search_suggestions \
         (
             dispatch: Callable,
             *,
-            input: Union[str, None] = None,
+            input: Optional[None] = None,
         ) -> dict:
     '''
     Dispatch the endpoint: music/get_search_suggestions
@@ -172,8 +179,8 @@ def music_get_queue \
         (
             dispatch: Callable,
             *,
-            video_ids:   Union[None, List[str]] = None,
-            playlist_id: Union[None, str]       = None,
+            video_ids:   Optional[List[str]] = None,
+            playlist_id: Optional[str]       = None,
         ) -> dict:
     '''
     Dispatch the endpoint: music/get_queue
