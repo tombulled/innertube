@@ -11,14 +11,29 @@ Usage:
 
 import requests
 import bs4
+import babel
+import addict
 import simplejson.errors
 import copy
-from typing import Union
 import http.client
+
 from . import utils
 from . import errors
-from .infos.models import ClientInfo
-from .types import Language, Location
+
+from typing import \
+(
+    Union,
+)
+
+from .infos.models import \
+(
+    ClientInfo,
+)
+
+from babel import \
+(
+    Locale,
+)
 
 class Adaptor(object):
     '''
@@ -33,8 +48,9 @@ class Adaptor(object):
     '''
 
     client_info: ClientInfo
+    locale:      Locale
 
-    __session: requests.Session
+    __session:      requests.Session
     __visitor_data: Union[str, None] = None
 
     def __init__ \
@@ -42,17 +58,15 @@ class Adaptor(object):
                 self,
                 client_info: ClientInfo,
                 *,
-                language: Language = Language.EnglishUK,
-                location: Location = Location.UnitedKingdom,
+                locale: Locale = None,
             ):
         '''
         Initialise the adaptor with the provided ClientInfo
         '''
 
-        self.client_info = client_info
-        self.language    = language
-        self.location    = location
         self.session     = requests.Session()
+        self.locale      = locale or babel.Locale('en', 'GB')
+        self.client_info = client_info
 
     def __repr__(self) -> str:
         '''
@@ -67,10 +81,9 @@ class Adaptor(object):
                 f'{key}={value!r}'
                 for key, value in \
                 {
-                    'client':   self.client_info.name,
-                    'host':     self.client_info.api.domain,
-                    'language': self.language.value,
-                    'location': self.location.value,
+                    'client': self.client_info.name,
+                    'host':   self.client_info.api.domain,
+                    'locale': self.client_context.hl,
                 }.items()
             )
         )
@@ -112,30 +125,42 @@ class Adaptor(object):
         self.__session = value
 
     @property
-    def params(self) -> dict:
+    def params(self) -> addict.Dict:
         '''
         Generate request parameters including the Client's API Key
         '''
 
-        return \
-        {
-            'key': self.client_info.api.key,
-            'alt': 'json',
-        }
+        return addict.Dict \
+        (
+            key = self.client_info.api.key,
+            alt = 'json',
+        )
 
     @property
-    def client_context(self) -> dict:
+    def client_context(self) -> addict.Dict:
         '''
         Generate the client's context, which is used in the request payload
         '''
 
-        return \
-        {
-            'clientName':    self.client_info.name,
-            'clientVersion': self.client_info.version,
-            'gl': self.location.value,
-            'hl': self.language.value,
-        }
+        return addict.Dict \
+        (
+            # Client
+            clientName    = self.client_info.name,
+            clientVersion = self.client_info.version,
+
+            # Localisation
+            gl = self.locale.territory,
+            hl = '-'.join \
+            (
+                utils.filter \
+                (
+                    (
+                        self.locale.language,
+                        self.locale.territory,
+                    ),
+                ),
+            ),
+        )
 
     def url(self, endpoint: str) -> str:
         '''

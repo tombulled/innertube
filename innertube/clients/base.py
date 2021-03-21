@@ -8,12 +8,27 @@ Library containing the base InnerTube `Client` class
 >>>
 '''
 
+import babel
 import functools
-from ..adaptor import Adaptor
-from ..infos.models import ClientInfo
+
 from . import methods
+
 from .decorators import method
-from ..types import Language, Location
+
+from ..adaptor import \
+(
+    Adaptor,
+)
+
+from ..infos.models import \
+(
+    ClientInfo,
+)
+
+from babel import \
+(
+    Locale,
+)
 
 @method(methods.config)
 @method(methods.browse)
@@ -36,8 +51,7 @@ class Client(object):
                 self,
                 client_info: ClientInfo,
                 *,
-                language: Language = Language.EnglishUK,
-                location: Location = Location.UnitedKingdom,
+                locale: Locale = None,
             ):
         '''
         Initialise the Client
@@ -48,8 +62,7 @@ class Client(object):
         self.adaptor = Adaptor \
         (
             client_info,
-            language = language,
-            location = location,
+            locale = locale,
         )
 
     def __repr__(self) -> str:
@@ -64,10 +77,9 @@ class Client(object):
                 f'{key}={value!r}'
                 for key, value in \
                 {
-                    'device':   self.info.device.name,
-                    'service':  self.info.service.name,
-                    'language': self.adaptor.language.value,
-                    'location': self.adaptor.location.value,
+                    'device':  self.info.device.name,
+                    'service': self.info.service.name,
+                    'locale':  self.adaptor.client_context.hl,
                 }.items()
             )
         )
