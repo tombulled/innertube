@@ -96,11 +96,15 @@ class Adaptor(object):
             utils.filter \
             (
                 {
-                    enums.Header.USER_AGENT.value:     self.info.user_agent,
-                    enums.Header.REFERER.value:        utils.url(domain = self.info.service.domain),
-                    enums.Header.VISITOR_ID.value:     self.visitor_data,
                     enums.Header.CLIENT_NAME.value:    str(self.info.service.id),
                     enums.Header.CLIENT_VERSION.value: self.info.client.version,
+                    enums.Header.USER_AGENT.value:     self.info.user_agent,
+                    enums.Header.VISITOR_ID.value:     self.visitor_data,
+                    enums.Header.REFERER.value:        furl.furl \
+                    (
+                        scheme = enums.Scheme.HTTPS.value,
+                        host   = self.info.service.domain,
+                    ),
                 }
             )
         )
