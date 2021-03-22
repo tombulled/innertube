@@ -1,5 +1,32 @@
 import enum
 
+class DeviceType(str, enum.Enum):
+    WEB     = 'WEB'
+    ANDROID = 'ANDROID'
+    IOS     = 'IOS'
+    TV      = 'TV'
+
+class ServiceType(str, enum.Enum):
+    YOUTUBE        = 'YOUTUBE'
+    YOUTUBE_MUSIC  = 'YOUTUBE_MUSIC'
+    YOUTUBE_KIDS   = 'YOUTUBE_KIDS'
+    YOUTUBE_STUDIO = 'YOUTUBE_STUDIO'
+
+class ClientType(str, enum.Enum):
+    WEB            = 'WEB'
+    WEB_MUSIC      = 'WEB_REMIX'
+    WEB_KIDS       = 'WEB_KIDS'
+    WEB_STUDIO     = 'WEB_CREATOR'
+    ANDROID        = 'ANDROID'
+    ANDROID_MUSIC  = 'ANDROID_MUSIC'
+    ANDROID_KIDS   = 'ANDROID_KIDS'
+    ANDROID_STUDIO = 'ANDROID_CREATOR'
+    IOS            = 'IOS'
+    IOS_MUSIC      = 'IOS_MUSIC'
+    IOS_KIDS       = 'IOS_KIDS'
+    IOS_STUDIO     = 'IOS_CREATOR'
+    TV             = 'TV'
+
 class Alt(str, enum.Enum):
     JSON = 'json'
 

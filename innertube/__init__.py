@@ -25,6 +25,12 @@ from .client import \
     Client,
 )
 
+from .enums import \
+(
+    DeviceType,
+    ServiceType,
+)
+
 from .errors import \
 (
     InnerTubeException,

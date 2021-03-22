@@ -25,6 +25,9 @@ from typing import \
 from .enums import \
 (
     ApiEndpoint,
+    DeviceType,
+    ServiceType,
+    ClientType,
 )
 
 class BaseModel(pydantic.BaseModel): pass
@@ -34,6 +37,7 @@ class DeviceInfo(BaseModel):
     Info Model for storing information about a Device
     '''
 
+    type:          DeviceType
     name:          str
     product_token: str
     package:       Optional[str]
@@ -43,6 +47,7 @@ class ServiceInfo(BaseModel):
     Info Model for storing information about a Service
     '''
 
+    type:      ServiceType
     name:      str
     domain:    str
     id:        int
@@ -62,6 +67,7 @@ class ClientInfo(BaseModel):
     Info Model for storing information about a Client
     '''
 
+    type:       ClientType
     name:       str
     version:    str
     identifier: Optional[str]

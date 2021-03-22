@@ -17,6 +17,7 @@ from . import enums
 
 YouTube = models.ServiceInfo \
 (
+    type      = enums.ServiceType.YOUTUBE,
     name      = 'YouTube',
     domain    = 'www.youtube.com',
     id        = 1,
@@ -33,6 +34,7 @@ YouTube = models.ServiceInfo \
 
 YouTubeMusic = models.ServiceInfo \
 (
+    type      = enums.ServiceType.YOUTUBE_MUSIC,
     name      = 'YouTube Music',
     domain    = 'music.youtube.com',
     id        = 67,
@@ -51,6 +53,7 @@ YouTubeMusic = models.ServiceInfo \
 
 YouTubeKids = models.ServiceInfo \
 (
+    type      = enums.ServiceType.YOUTUBE_KIDS,
     name      = 'YouTube Kids',
     domain    = 'www.youtubekids.com',
     id        = 76,
@@ -66,6 +69,7 @@ YouTubeKids = models.ServiceInfo \
 
 YouTubeStudio = models.ServiceInfo \
 (
+    type      = enums.ServiceType.YOUTUBE_STUDIO,
     name      = 'YouTube Studio',
     domain    = 'studio.youtube.com',
     id        = 62,
