@@ -1,8 +1,8 @@
 '''
-Library containing Info objects of type: ServiceInfo
+Library containing info object instances of type: ServiceInfo
 
 Usage:
-    >>> from innertube.infos import services
+    >>> from innertube import services
     >>>
     >>> dir(services)
     ...

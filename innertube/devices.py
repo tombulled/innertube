@@ -1,8 +1,8 @@
 '''
-Library containing Info objects of type: DeviceInfo
+Library containing info object instances of type: DeviceInfo
 
 Usage:
-    >>> from innertube.infos import devices
+    >>> from innertube import devices
     >>>
     >>> dir(devices)
     ...

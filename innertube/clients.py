@@ -1,11 +1,11 @@
 '''
-Library containing Info objects of type: ClientInfo
+Library containing info object instances of type: ClientInfo
 
 Notes:
     * Client information last updated: 27/02/2021
 
 Usage:
-    >>> from innertube.infos import clients
+    >>> from innertube import clients
     >>>
     >>> dir(clients)
     ...

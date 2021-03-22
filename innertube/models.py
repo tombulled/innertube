@@ -1,14 +1,14 @@
 '''
-Library containing Info models
+Library containing info models
 
 Usage:
-    >>> from innertube.infos import models
+    >>> from innertube import models
     >>>
     >>> dir(models)
     ...
     >>>
     >>> models.DeviceInfo
-    <class 'innertube.infos.models.DeviceInfo'>
+    <class 'innertube.models.DeviceInfo'>
     >>>
 '''
 

@@ -4,7 +4,7 @@ Library containing an `Adaptor` for use dispatching requests to the InnerTube AP
 Usage:
     >>> from innertube.adaptor import Adaptor
     >>>
-    >>> Adaptor(my_client_info)
+    >>> Adaptor(my_app_info)
     ...
     >>>
 '''
@@ -163,13 +163,17 @@ class Adaptor(object):
         Generate an API URL using the provided endpoint
         '''
 
-        endpoint = endpoint.lstrip(r'\/')
-
         return furl.furl \
         (
             scheme = enums.Scheme.HTTPS.value,
             host   = self.info.api.domain,
-            path   = furl.Path() / 'youtubei' / f'v{self.info.api.version}' / endpoint,
+            path   = \
+            (
+                furl.Path()
+                / constants.API_MOUNT
+                / f'v{self.info.api.version}'
+                / endpoint.lstrip(r'\/')
+            ),
         )
 
     def dispatch \

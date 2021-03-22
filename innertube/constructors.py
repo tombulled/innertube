@@ -29,7 +29,7 @@ def client \
             locale:  Locale = None,
         ) -> Optional[Client]:
     for app_name in dir(apps):
-        if isinstance(app_info := getattr(app_name, key), AppInfo) \
+        if isinstance(app_info := getattr(apps, app_name), AppInfo) \
                 and app_info.service == service \
                 and app_info.device  == device:
             return Client \

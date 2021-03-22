@@ -86,7 +86,7 @@ def complete_search \
         ),
         headers = \
         {
-            'User-Agent': app.user_agent,
+            enums.Header.USER_AGENT.value: app.user_agent,
         },
     )
 
