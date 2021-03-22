@@ -10,11 +10,7 @@ Usage:
 '''
 
 import requests
-import bs4
 import addict
-import copy
-import simplejson.errors
-import http.client
 
 from . import utils
 from . import errors
@@ -178,17 +174,32 @@ class Adaptor(object):
                 endpoint: str,
                 payload:  Optional[dict] = None,
                 params:   Optional[dict] = None,
-            ) -> dict:
+            ) -> addict.Dict:
         '''
         Dispatch a request to the API
 
         Notes:
             * The client's context is automatically added to the payload
-            * If the response is not JSON, an InnerTubeException is raised
+            * If the response is erroneous, an InnerTubeException is raised
         '''
 
-        params  = addict.Dict(**params or {}, **self.params)
-        payload = addict.Dict(payload or {})
+        params = addict.Dict \
+        (
+            ** \
+            (
+                utils.filter(params)
+                if params
+                else {}
+            ),
+            **self.params,
+        )
+
+        payload = addict.Dict \
+        (
+            utils.filter(payload)
+            if payload
+            else {}
+        )
 
         payload.context.client.update(self.context)
 
@@ -197,37 +208,14 @@ class Adaptor(object):
             url     = self.url(endpoint),
             params  = params,
             json    = payload,
-            timeout = 5,
         )
 
-        # TODO: except: raise errors.InnerTubeException.from_response(...) ?
-        try:
-            data = response.json()
-        except simplejson.errors.JSONDecodeError:
-            message = http.client.responses[response.status_code]
+        if not response.ok:
+            raise errors.InnerTubeException.from_response(response) from None
 
-            try:
-                soup = bs4.BeautifulSoup(response.text, 'html.parser')
+        data = addict.Dict(response.json())
 
-                if (title := soup.find('title')):
-                    message = title.text
-            except:
-                pass
-
-            raise errors.InnerTubeException \
-            (
-                dict \
-                (
-                    code    = response.status_code,
-                    status  = response.reason,
-                    message = message,
-                )
-            ) from None
-
-        if (error := data.get('error')):
-            raise errors.InnerTubeException(error)
-
-        if (visitor_data := data.get('responseContext', {}).get('visitorData')):
+        if (visitor_data := data.responseContext.visitorData):
             self.__visitor_data = visitor_data
 
         return data

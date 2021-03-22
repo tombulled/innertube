@@ -16,6 +16,11 @@ class ApiEndpoint(str, enum.Enum):
 class Header(str, enum.Enum):
     USER_AGENT     = 'User-Agent'
     REFERER        = 'Referer'
+    CONTENT_TYPE   = 'Content-Type'
     VISITOR_ID     = 'X-Goog-Visitor-Id'
     CLIENT_NAME    = 'X-YouTube-Client-Name'
     CLIENT_VERSION = 'X-YouTube-Client-Version'
+
+class Mime(str, enum.Enum):
+    JSON = 'application/json'
+    HTML = 'text/html'
