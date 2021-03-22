@@ -12,3 +12,10 @@ class ApiEndpoint(str, enum.Enum):
     NEXT                         = 'next'
     MUSIC_GET_SEARCH_SUGGESTIONS = 'music/get_search_suggestions'
     MUSIC_GET_QUEUE              = 'music/get_queue'
+
+class Header(str, enum.Enum):
+    USER_AGENT     = 'User-Agent'
+    REFERER        = 'Referer'
+    VISITOR_ID     = 'X-Goog-Visitor-Id'
+    CLIENT_NAME    = 'X-YouTube-Client-Name'
+    CLIENT_VERSION = 'X-YouTube-Client-Version'

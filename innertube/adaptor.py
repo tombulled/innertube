@@ -85,20 +85,6 @@ class Adaptor(object):
             ),
         )
 
-        # return '<Adaptor({params})>'.format \
-        # (
-        #     params = ', '.join \
-        #     (
-        #         f'{key}={value!r}'
-        #         for key, value in dict \
-        #         (
-        #             client = self.info.client.name,
-        #             host   = self.info.api.domain,
-        #             locale = self.context.hl,
-        #         ).items()
-        #     )
-        # )
-
     @property
     def session(self) -> requests.Session:
         '''
@@ -113,14 +99,11 @@ class Adaptor(object):
             utils.filter \
             (
                 {
-                    # Native Headers
-                    'User-Agent': self.info.user_agent,
-                    'Referer':    utils.url(domain = self.info.service.domain),
-
-                    # Custom Headers
-                    'X-Goog-Visitor-Id':        self.visitor_data,
-                    'X-YouTube-Client-Name':    str(self.info.service.id),
-                    'X-YouTube-Client-Version': self.info.client.version,
+                    enums.Header.USER_AGENT.value:     self.info.user_agent,
+                    enums.Header.REFERER.value:        utils.url(domain = self.info.service.domain),
+                    enums.Header.VISITOR_ID.value:     self.visitor_data,
+                    enums.Header.CLIENT_NAME.value:    str(self.info.service.id),
+                    enums.Header.CLIENT_VERSION.value: self.info.client.version,
                 }
             )
         )
@@ -155,13 +138,10 @@ class Adaptor(object):
 
         return addict.Dict \
         (
-            # Client
             clientName    = self.info.client.name,
             clientVersion = self.info.client.version,
-
-            # Localisation
-            gl = self.locale.territory,
-            hl = '-'.join \
+            gl            = self.locale.territory,
+            hl            = '-'.join \
             (
                 utils.filter \
                 (
@@ -192,7 +172,13 @@ class Adaptor(object):
             ),
         )
 
-    def dispatch(self, endpoint: str, payload: dict = {}, params: dict = {}) -> dict:
+    def dispatch \
+            (
+                self,
+                endpoint: str,
+                payload:  Optional[dict] = None,
+                params:   Optional[dict] = None,
+            ) -> dict:
         '''
         Dispatch a request to the API
 
@@ -201,8 +187,8 @@ class Adaptor(object):
             * If the response is not JSON, an InnerTubeException is raised
         '''
 
-        params  = addict.Dict(**params, **self.params)
-        payload = addict.Dict(payload)
+        params  = addict.Dict(**params or {}, **self.params)
+        payload = addict.Dict(payload or {})
 
         payload.context.client.update(self.context)
 
