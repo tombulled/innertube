@@ -76,7 +76,7 @@ class Adaptor(object):
 
         return utils.repr \
         (
-            class_name = 'Adaptor',
+            class_name = self.__class__.__mro__[-2].__name__,
             fields     = dict \
             (
                 client = self.info.client.name,

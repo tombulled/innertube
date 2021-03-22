@@ -80,7 +80,7 @@ class Client(object):
 
         return utils.repr \
         (
-            class_name = 'Client',
+            class_name = self.__class__.__mro__[-2].__name__,
             fields     = dict \
             (
                 service = self.info.service.name,
