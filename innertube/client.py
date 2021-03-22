@@ -6,6 +6,7 @@ import babel
 import functools
 
 from . import utils
+from . import classes
 
 from .decorators import \
 (
@@ -39,7 +40,7 @@ from babel import \
     Locale,
 )
 
-class Client(object):
+class Client(classes.Object):
     '''
     Base InnerTube Client
 
@@ -69,7 +70,7 @@ class Client(object):
 
         self.adaptor = Adaptor \
         (
-            info,
+            info   = info,
             locale = locale,
         )
 
@@ -78,15 +79,11 @@ class Client(object):
         Return a string representation of the Client
         '''
 
-        return utils.repr \
+        return super().__repr__ \
         (
-            class_name = self.__class__.__mro__[-2].__name__,
-            fields     = dict \
-            (
-                service = self.info.service.name,
-                device  = self.info.device.name,
-                locale  = self.adaptor.context.hl,
-            ),
+            service = self.info.service.name,
+            device  = self.info.device.name,
+            locale  = self.adaptor.context.hl,
         )
 
     @functools.wraps(Adaptor.dispatch)
@@ -158,21 +155,15 @@ class Client(object):
 
         return dispatch \
         (
-            params = utils.filter \
+            params = utils.filtered_dict \
             (
-                dict \
-                (
-                    continuation = continuation,
-                    ctoken       = continuation,
-                ),
+                continuation = continuation,
+                ctoken       = continuation,
             ),
-            payload = utils.filter \
+            payload = utils.filtered_dict \
             (
-                dict \
-                (
-                    browseId = browse_id,
-                    params   = params,
-                ),
+                browseId = browse_id,
+                params   = params,
             ),
         )
 
@@ -193,21 +184,15 @@ class Client(object):
 
         return dispatch \
         (
-            params = utils.filter \
+            params = utils.filtered_dict \
             (
-                dict \
-                (
-                    continuation = continuation,
-                    ctoken       = continuation,
-                ),
+                continuation = continuation,
+                ctoken       = continuation,
             ),
-            payload = utils.filter \
+            payload = utils.filtered_dict \
             (
-                dict \
-                (
-                    query  = query or '',
-                    params = params,
-                ),
+                query  = query or '',
+                params = params,
             ),
         )
 
@@ -230,16 +215,13 @@ class Client(object):
 
         return dispatch \
         (
-            payload = utils.filter \
+            payload = utils.filtered_dict \
             (
-                dict \
-                (
-                    params       = params,
-                    playlistId   = playlist_id,
-                    videoId      = video_id,
-                    index        = index,
-                    continuation = continuation,
-                ),
+                params       = params,
+                playlistId   = playlist_id,
+                videoId      = video_id,
+                index        = index,
+                continuation = continuation,
             ),
         )
 
@@ -280,12 +262,9 @@ class Client(object):
 
         return dispatch \
         (
-            payload = utils.filter \
+            payload = utils.filtered_dict \
             (
-                dict \
-                (
-                    playlistId = playlist_id,
-                    videoIds   = video_ids or (None,),
-                ),
+                playlistId = playlist_id,
+                videoIds   = video_ids or (None,),
             ),
         )

@@ -32,15 +32,20 @@ from .enums import \
 
 class BaseModel(pydantic.BaseModel): pass
 
+class ProductInfo(BaseModel):
+    name:    Optional[str]
+    version: Optional[str]
+    token:   str
+
 class DeviceInfo(BaseModel):
     '''
     Info Model for storing information about a Device
     '''
 
-    type:          DeviceType
-    name:          str
-    product_token: str
-    package:       Optional[str]
+    type:    DeviceType
+    name:    str
+    product: ProductInfo
+    package: Optional[str]
 
 class ServiceInfo(BaseModel):
     '''
@@ -81,11 +86,11 @@ class AppInfo(BaseModel):
 
     @property
     def user_agent(self) -> str:
-        return '{product_name}/{product_version} {product_token}'.format \
+        return '{product_name}/{product_version} ({product_token})'.format \
         (
-            product_name    = self.package or constants.DEFAULT_PRODUCT_NAME,
-            product_version = self.package and self.client.version or constants.DEFAULT_PRODUCT_VERSION,
-            product_token   = self.device.product_token,
+            product_name    = self.device.product.name    or self.package,
+            product_version = self.device.product.version or self.client.version,
+            product_token   = self.device.product.token,
         )
 
     @property

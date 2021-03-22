@@ -32,7 +32,7 @@ from .enums import \
 def client \
         (
             service: Union[ServiceInfo, ServiceType],
-            device:  Union[DeviceInfo, DeviceType],
+            device:  Union[DeviceInfo,  DeviceType],
             locale:  Locale = None,
         ) -> Optional[Client]:
     if isinstance(service, ServiceInfo): service = service.type

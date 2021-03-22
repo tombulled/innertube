@@ -55,7 +55,7 @@ def complete_search \
     '''
 
     if not app:
-        app = apps.Tv
+        app = apps.YouTubeTv
 
     if not locale:
         locale = constants.DEFAULT_LOCALE
@@ -70,19 +70,16 @@ def complete_search \
             host   = 'suggestqueries.google.com',
             path   = 'complete/search',
         ),
-        params = utils.filter \
+        params = utils.filtered_dict \
         (
-            dict \
-            (
-                client = app.client.identifier,
-                q      = query,
-                hl     = locale.language,
-                gl     = locale.territory,
-                ds     = 'yt',
-                oe     = 'utf-8',
-                xhr    = 't',
-                hjson  = 't',
-            ),
+            client = app.client.identifier,
+            q      = query,
+            hl     = locale.language,
+            gl     = locale.territory,
+            ds     = 'yt',
+            oe     = 'utf-8',
+            xhr    = 't',
+            hjson  = 't',
         ),
         headers = \
         {

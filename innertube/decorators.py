@@ -10,7 +10,14 @@ def method(endpoint: ApiEndpoint):
         @functools.wraps(func)
         def wrapper(self, *args, **kwargs):
             if endpoint not in self.info.service.endpoints:
-                raise NotImplementedError(f'Service {self.info.service.name!r} doesn\'t implement method for endpoint {endpoint.value!r}')
+                raise NotImplementedError \
+                (
+                    'Service {service!r} doesn\'t implement method for endpoint {endpoint!r}'.format \
+                    (
+                        service  = self.info.service.name,
+                        endpoint = endpoint.value,
+                    )
+                )
 
             return func \
             (

@@ -17,6 +17,7 @@ from . import utils
 from . import errors
 from . import enums
 from . import constants
+from . import classes
 
 from typing import \
 (
@@ -33,7 +34,7 @@ from babel import \
     Locale,
 )
 
-class Adaptor(object):
+class Adaptor(classes.Object):
     '''
     An adaptor for use dispatching requests to the InnerTube API
 
@@ -71,15 +72,11 @@ class Adaptor(object):
         Return a string representation of the adaptor
         '''
 
-        return utils.repr \
+        return super().__repr__ \
         (
-            class_name = self.__class__.__mro__[-2].__name__,
-            fields     = dict \
-            (
-                client = self.info.client.name,
-                host   = self.info.api.domain,
-                locale = self.context.hl,
-            ),
+            client = self.info.client.name,
+            host   = self.info.api.domain,
+            locale = self.context.hl,
         )
 
     @property
@@ -93,8 +90,9 @@ class Adaptor(object):
 
         self.__session.headers.update \
         (
-            utils.filter \
+            utils.filtered_dict \
             (
+                ** \
                 {
                     enums.Header.CLIENT_NAME.value:    str(self.info.service.id),
                     enums.Header.CLIENT_VERSION.value: self.info.client.version,
@@ -147,12 +145,10 @@ class Adaptor(object):
             gl            = self.locale.territory,
             hl            = '-'.join \
             (
-                utils.filter \
+                utils.filtered_list \
                 (
-                    (
-                        self.locale.language,
-                        self.locale.territory,
-                    ),
+                    self.locale.language,
+                    self.locale.territory,
                 ),
             ),
         )
@@ -173,7 +169,7 @@ class Adaptor(object):
             path   = \
             (
                 furl.Path()
-                / constants.API_MOUNT
+                / 'youtubei'
                 / f'v{self.info.api.version}'
                 / endpoint.lstrip(r'\/')
             ),
@@ -198,7 +194,7 @@ class Adaptor(object):
         (
             ** \
             (
-                utils.filter(params)
+                utils.filtered_dict(**params)
                 if params
                 else {}
             ),
@@ -207,7 +203,7 @@ class Adaptor(object):
 
         payload = addict.Dict \
         (
-            utils.filter(payload)
+            utils.filtered_dict(**payload)
             if payload
             else {}
         )
