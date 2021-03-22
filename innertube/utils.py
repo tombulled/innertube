@@ -7,16 +7,10 @@ Usage:
     >>> dir(utils)
     ...
     >>>
-    >>> utils.url
-    <function url at 0x7fd546a173a0>
-    >>>
 '''
-
-import urllib.parse
 
 from typing import \
 (
-    Optional,
     Callable,
     Iterable,
     Dict,
@@ -32,56 +26,6 @@ def repr(class_name: str, fields: Dict[str, Any] = None):
             f'{key}={value!r}'
             for key, value in (fields.items() if fields else ())
         )
-    )
-
-def url \
-        (
-            *,
-            domain:   str,
-            scheme:   str                      = 'https',
-            port:     Optional[int]            = None,
-            endpoint: Optional[str]            = None,
-            params:   Optional[Dict[str, Any]] = None,
-        ):
-    '''
-    Construct a URL
-
-    Args:
-        domain: Domain name
-            Example: 'google.com'
-        scheme:  Request scheme
-            Example: 'http'
-        port: Request port
-            Example: 8080
-        endpoint: URI endpoint
-            Example: 'api/v1/users'
-        params: Query string parameters
-            Example: {'username': 'admin', 'password': 'Password1'}
-
-    Returns:
-        A constructed URL
-
-    Example:
-        >>> url \
-        (
-            domain   = 'www.google.com',
-            scheme   = 'https',
-            endpoint = 'search',
-            params   = {'q': 'test'},
-        )
-        'https://www.google.com/search?q=test'
-        >>>
-    '''
-
-    return '{scheme}://{domain}{sep_port}{port}/{endpoint}{sep_params}{params}'.format \
-    (
-        scheme     = scheme,
-        domain     = domain,
-        sep_port   = ':' if port else '',
-        port       = port or '',
-        endpoint   = endpoint.lstrip(r'\/') if endpoint else '',
-        sep_params = '?' if params else '',
-        params     = urllib.parse.urlencode(params) if params else '',
     )
 
 def filter \

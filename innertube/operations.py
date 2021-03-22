@@ -16,10 +16,12 @@ Usage:
 
 import requests
 import addict
+import furl
 
 from . import utils
 from . import constants
 from . import apps
+from . import enums
 
 from typing import \
 (
@@ -62,10 +64,11 @@ def complete_search \
 
     response = requests.get \
     (
-        url = utils.url \
+        url = furl.furl \
         (
-            domain   = 'suggestqueries.google.com',
-            endpoint = 'complete/search',
+            scheme = enums.Scheme.HTTPS.value,
+            host   = 'suggestqueries.google.com',
+            path   = 'complete/search',
         ),
         params = utils.filter \
         (

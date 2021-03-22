@@ -16,6 +16,7 @@ requests = "^2.25.1"
 beautifulsoup4 = "^4.9.3"
 Babel = "^2.9.0"
 addict = "^2.4.0"
+furl = "^2.1.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

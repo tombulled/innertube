@@ -24,3 +24,7 @@ class Header(str, enum.Enum):
 class Mime(str, enum.Enum):
     JSON = 'application/json'
     HTML = 'text/html'
+
+class Scheme(str, enum.Enum):
+    HTTP  = 'http'
+    HTTPS = 'https'

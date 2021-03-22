@@ -11,6 +11,7 @@ Usage:
 
 import requests
 import addict
+import furl
 
 from . import utils
 from . import errors
@@ -153,19 +154,18 @@ class Adaptor(object):
     def visitor_data(self) -> Optional[str]:
         return self.__visitor_data
 
-    def url(self, endpoint: str) -> str:
+    def url(self, endpoint: str) -> furl.furl:
         '''
         Generate an API URL using the provided endpoint
         '''
 
-        return utils.url \
+        endpoint = endpoint.lstrip(r'\/')
+
+        return furl.furl \
         (
-            domain   = self.info.api.domain,
-            endpoint = 'youtubei/v{api_version}/{endpoint}'.format \
-            (
-                api_version = self.info.api.version,
-                endpoint    = endpoint.lstrip(r'\/'),
-            ),
+            scheme = enums.Scheme.HTTPS.value,
+            host   = self.info.api.domain,
+            path   = furl.Path() / 'youtubei' / f'v{self.info.api.version}' / endpoint,
         )
 
     def dispatch \
