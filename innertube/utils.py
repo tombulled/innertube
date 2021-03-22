@@ -23,6 +23,17 @@ from typing import \
     Any,
 )
 
+def repr(class_name: str, fields: Dict[str, Any] = None):
+    return '{class_name}({fields})'.format \
+    (
+        class_name = class_name,
+        fields     = ', '.join \
+        (
+            f'{key}={value!r}'
+            for key, value in (fields.items() if fields else ())
+        )
+    )
+
 def url \
         (
             *,

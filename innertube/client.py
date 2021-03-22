@@ -5,6 +5,8 @@ Library containing the base InnerTube `Client` class
 import babel
 import functools
 
+from . import utils
+
 from .decorators import \
 (
     method,
@@ -76,18 +78,15 @@ class Client(object):
         Return a string representation of the Client
         '''
 
-        return '<Client({params})>'.format \
+        return utils.repr \
         (
-            params = ', '.join \
+            class_name = 'Client',
+            fields     = dict \
             (
-                f'{key}={value!r}'
-                for key, value in dict \
-                (
-                    service = self.info.service.name,
-                    device  = self.info.device.name,
-                    locale  = self.adaptor.context.hl,
-                ).items()
-            )
+                service = self.info.service.name,
+                device  = self.info.device.name,
+                locale  = self.adaptor.context.hl,
+            ),
         )
 
     @functools.wraps(Adaptor.dispatch)

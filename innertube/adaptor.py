@@ -74,19 +74,30 @@ class Adaptor(object):
         Return a string representation of the adaptor
         '''
 
-        return '<Adaptor({params})>'.format \
+        return utils.repr \
         (
-            params = ', '.join \
+            class_name = 'Adaptor',
+            fields     = dict \
             (
-                f'{key}={value!r}'
-                for key, value in dict \
-                (
-                    client = self.info.client.name,
-                    host   = self.info.api.domain,
-                    locale = self.context.hl,
-                ).items()
-            )
+                client = self.info.client.name,
+                host   = self.info.api.domain,
+                locale = self.context.hl,
+            ),
         )
+
+        # return '<Adaptor({params})>'.format \
+        # (
+        #     params = ', '.join \
+        #     (
+        #         f'{key}={value!r}'
+        #         for key, value in dict \
+        #         (
+        #             client = self.info.client.name,
+        #             host   = self.info.api.domain,
+        #             locale = self.context.hl,
+        #         ).items()
+        #     )
+        # )
 
     @property
     def session(self) -> requests.Session:
