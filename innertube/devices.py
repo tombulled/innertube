@@ -40,7 +40,7 @@ Ios = models.DeviceInfo \
 
 Tv = models.DeviceInfo \
 (
-    type          = enums.DeviceType.IOS,
+    type          = enums.DeviceType.TV,
     name          = 'TV',
     product_token = '(PlayStation; PlayStation 4/8.03) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.0 Safari/605.1.15',
 )

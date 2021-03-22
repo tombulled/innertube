@@ -100,10 +100,13 @@ class Adaptor(object):
                     enums.Header.CLIENT_VERSION.value: self.info.client.version,
                     enums.Header.USER_AGENT.value:     self.info.user_agent,
                     enums.Header.VISITOR_ID.value:     self.visitor_data,
-                    enums.Header.REFERER.value:        furl.furl \
+                    enums.Header.REFERER.value:        str \
                     (
-                        scheme = enums.Scheme.HTTPS.value,
-                        host   = self.info.service.domain,
+                        furl.furl \
+                        (
+                            scheme = enums.Scheme.HTTPS.value,
+                            host   = self.info.service.domain,
+                        ),
                     ),
                 }
             )

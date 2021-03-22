@@ -33,7 +33,7 @@ from babel import \
     Locale,
 )
 
-from .infos.models import \
+from .models import \
 (
     AppInfo,
 )

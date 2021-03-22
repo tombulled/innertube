@@ -38,8 +38,8 @@ def client \
     if isinstance(service, ServiceInfo): service = service.type
     if isinstance(device, DeviceInfo):   device  = device.type
 
-    for app_name in dir(apps):
-        if isinstance(app_info := getattr(apps, app_name), AppInfo) \
+    for app_info in apps.__dict__.values():
+        if isinstance(app_info, AppInfo) \
                 and app_info.service.type == service \
                 and app_info.device.type  == device:
             return Client \
