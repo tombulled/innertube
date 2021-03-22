@@ -11,23 +11,24 @@ Usage:
 
 import requests
 import bs4
-import babel
 import addict
-import simplejson.errors
 import copy
+import simplejson.errors
 import http.client
 
 from . import utils
 from . import errors
+from . import enums
+from . import constants
 
 from typing import \
 (
-    Union,
+    Optional,
 )
 
-from .infos.models import \
+from .models import \
 (
-    ClientInfo,
+    AppInfo,
 )
 
 from babel import \
@@ -47,44 +48,43 @@ class Adaptor(object):
     worry about managing the requests themselves.
     '''
 
-    client_info: ClientInfo
-    locale:      Locale
+    info:   AppInfo
+    locale: Locale
 
     __session:      requests.Session
-    __visitor_data: Union[str, None] = None
+    __visitor_data: Optional[str] = None
 
     def __init__ \
             (
                 self,
-                client_info: ClientInfo,
+                info: AppInfo,
                 *,
                 locale: Locale = None,
             ):
         '''
-        Initialise the adaptor with the provided ClientInfo
+        Initialise the adaptor with the provided AppInfo
         '''
 
-        self.session     = requests.Session()
-        self.locale      = locale or babel.Locale('en', 'GB')
-        self.client_info = client_info
+        self.session = requests.Session()
+        self.locale  = locale or constants.DEFAULT_LOCALE
+        self.info    = info
 
     def __repr__(self) -> str:
         '''
         Return a string representation of the adaptor
         '''
 
-        return '<{class_name}({params})>'.format \
+        return '<Adaptor({params})>'.format \
         (
-            class_name  = self.__class__.__name__,
             params = ', '.join \
             (
                 f'{key}={value!r}'
-                for key, value in \
-                {
-                    'client': self.client_info.name,
-                    'host':   self.client_info.api.domain,
-                    'locale': self.client_context.hl,
-                }.items()
+                for key, value in dict \
+                (
+                    client = self.info.client.name,
+                    host   = self.info.api.domain,
+                    locale = self.context.hl,
+                ).items()
             )
         )
 
@@ -103,13 +103,13 @@ class Adaptor(object):
             (
                 {
                     # Native Headers
-                    'User-Agent': self.client_info.user_agent,
-                    'Referer':    utils.url(domain = self.client_info.service.domain),
+                    'User-Agent': self.info.user_agent,
+                    'Referer':    utils.url(domain = self.info.service.domain),
 
                     # Custom Headers
-                    'X-Goog-Visitor-Id':        self.__visitor_data,
-                    'X-YouTube-Client-Name':    str(self.client_info.service.id),
-                    'X-YouTube-Client-Version': self.client_info.version,
+                    'X-Goog-Visitor-Id':        self.visitor_data,
+                    'X-YouTube-Client-Name':    str(self.info.service.id),
+                    'X-YouTube-Client-Version': self.info.client.version,
                 }
             )
         )
@@ -132,12 +132,12 @@ class Adaptor(object):
 
         return addict.Dict \
         (
-            key = self.client_info.api.key,
-            alt = 'json',
+            key = self.info.api.key,
+            alt = enums.Alt.JSON.value,
         )
 
     @property
-    def client_context(self) -> addict.Dict:
+    def context(self) -> addict.Dict:
         '''
         Generate the client's context, which is used in the request payload
         '''
@@ -145,8 +145,8 @@ class Adaptor(object):
         return addict.Dict \
         (
             # Client
-            clientName    = self.client_info.name,
-            clientVersion = self.client_info.version,
+            clientName    = self.info.client.name,
+            clientVersion = self.info.client.version,
 
             # Localisation
             gl = self.locale.territory,
@@ -162,6 +162,10 @@ class Adaptor(object):
             ),
         )
 
+    @property
+    def visitor_data(self) -> Optional[str]:
+        return self.__visitor_data
+
     def url(self, endpoint: str) -> str:
         '''
         Generate an API URL using the provided endpoint
@@ -169,10 +173,10 @@ class Adaptor(object):
 
         return utils.url \
         (
-            domain   = self.client_info.api.domain,
+            domain   = self.info.api.domain,
             endpoint = 'youtubei/v{api_version}/{endpoint}'.format \
             (
-                api_version = self.client_info.api.version,
+                api_version = self.info.api.version,
                 endpoint    = endpoint.lstrip(r'\/'),
             ),
         )
@@ -186,18 +190,10 @@ class Adaptor(object):
             * If the response is not JSON, an InnerTubeException is raised
         '''
 
-        payload = copy.deepcopy(payload)
-        params  = copy.deepcopy(params)
+        params  = addict.Dict(**params, **self.params)
+        payload = addict.Dict(payload)
 
-        params.update(self.params)
-
-        payload.setdefault('context', {})
-
-        payload['context']['client'] = \
-        {
-            **self.client_context,
-            **payload.get('context').get('client', {}),
-        }
+        payload.context.client.update(self.context)
 
         response = self.session.post \
         (
@@ -207,6 +203,7 @@ class Adaptor(object):
             timeout = 5,
         )
 
+        # TODO: except: raise errors.InnerTubeException.from_response(...) ?
         try:
             data = response.json()
         except simplejson.errors.JSONDecodeError:
@@ -222,11 +219,12 @@ class Adaptor(object):
 
             raise errors.InnerTubeException \
             (
-                {
-                    'code':    response.status_code,
-                    'status':  response.reason,
-                    'message': message
-                }
+                dict \
+                (
+                    code    = response.status_code,
+                    status  = response.reason,
+                    message = message,
+                )
             ) from None
 
         if (error := data.get('error')):

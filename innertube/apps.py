@@ -1,144 +1,115 @@
-'''
-Library containing Info objects of type: ClientInfo
-
-Notes:
-    * Client information last updated: 27/02/2021
-
-Usage:
-    >>> from innertube.infos import clients
-    >>>
-    >>> dir(clients)
-    ...
-    >>>
-    >>> clients.Web
-    ClientInfo(...)
-    >>>
-'''
-
 from . import models
-from . import services
+from . import clients
 from . import devices
+from . import services
 
-Web = models.ClientInfo \
+YouTubeWeb = models.AppInfo \
 (
-    name    = 'WEB',
-    version = '2.20210223.09.00',
+    client  = clients.Web,
     device  = devices.Web,
     service = services.YouTube,
     api     = models.ApiInfo(key = 'AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8'),
 )
 
-WebMusic = models.ClientInfo \
+YouTubeMusicWeb = models.AppInfo \
 (
-    name    = 'WEB_REMIX',
-    version = '0.1',
+    client  = clients.WebMusic,
     device  = devices.Web,
     service = services.YouTubeMusic,
     api     = models.ApiInfo(key = 'AIzaSyC9XL3ZjWddXya6X74dJoCTL-WEYFDNX30'),
 )
 
-WebKids = models.ClientInfo \
+YouTubeKidsWeb = models.AppInfo \
 (
-    name    = 'WEB_KIDS',
-    version = '2.1.3',
+    client  = clients.WebKids,
     device  = devices.Web,
     service = services.YouTubeKids,
     api     = models.ApiInfo(key = 'AIzaSyBbZV_fZ3an51sF-mvs5w37OqqbsTOzwtU'),
 )
 
-WebStudio = models.ClientInfo \
+YouTubeStudioWeb = models.AppInfo \
 (
-    name    = 'WEB_CREATOR',
-    version = '1.20210223.01.00',
+    client  = clients.WebStudio,
     device  = devices.Web,
     service = services.YouTubeStudio,
     api     = models.ApiInfo(key = 'AIzaSyBUPetSUmoZL-OhlxA7wSac5XinrygCqMo'),
 )
 
-Android = models.ClientInfo \
+YouTubeAndroid = models.AppInfo \
 (
-    name    = 'ANDROID',
-    version = '16.07.34',
+    client  = clients.Android,
     device  = devices.Android,
     service = services.YouTube,
     api     = models.ApiInfo(key = 'AIzaSyA8eiZmM1FaDVjRy-df2KTyQ_vz_yYM39w'),
-    package = 'com.google.android.youtube',
+    project = 'youtube',
 )
 
-AndroidMusic = models.ClientInfo \
+YouTubeMusicAndroid = models.AppInfo \
 (
-    name    = 'ANDROID_MUSIC',
-    version = '4.16.51',
+    client  = clients.AndroidMusic,
     device  = devices.Android,
     service = services.YouTubeMusic,
     api     = models.ApiInfo(key = 'AIzaSyAOghZGza2MQSZkY_zfZ370N-PUdXEo8AI'),
-    package = 'com.google.android.apps.youtube.music',
+    project = 'apps.youtube.music',
 )
 
-AndroidKids = models.ClientInfo \
+YouTubeKidsAndroid = models.AppInfo \
 (
-    name    = 'ANDROID_KIDS',
-    version = '6.02.3',
+    client  = clients.AndroidKids,
     device  = devices.Android,
     service = services.YouTubeKids,
     api     = models.ApiInfo(key = 'AIzaSyAxxQKWYcEX8jHlflLt2Qcbb-rlolzBhhk'),
-    package = 'com.google.android.apps.youtube.kids',
+    project = 'apps.youtube.kids',
 )
 
-AndroidStudio = models.ClientInfo \
+YouTubeStudioAndroid = models.AppInfo \
 (
-    name    = 'ANDROID_CREATOR',
-    version = '21.06.103',
+    client  = clients.AndroidStudio,
     device  = devices.Android,
     service = services.YouTubeStudio,
     api     = models.ApiInfo(key = 'AIzaSyD_qjV8zaaUMehtLkrKFgVeSX_Iqbtyws8'),
-    package = 'com.google.android.apps.youtube.creator',
+    project = 'apps.youtube.creator',
 )
 
-Ios = models.ClientInfo \
+YouTubeIos = models.AppInfo \
 (
-    name    = 'IOS',
-    version = '16.05.7',
+    client  = clients.Ios,
     device  = devices.Ios,
     service = services.YouTube,
     api     = models.ApiInfo(key = 'AIzaSyB-63vPrdThhKuerbB2N_l7Kwwcxj6yUAc'),
-    package = 'com.google.ios.youtube',
+    project = 'youtube',
 )
 
-IosMusic = models.ClientInfo \
+YouTubeMusicIos = models.AppInfo \
 (
-    name    = 'IOS_MUSIC',
-    version = '4.16.1',
+    client  = clients.IosMusic,
     device  = devices.Ios,
     service = services.YouTubeMusic,
     api     = models.ApiInfo(key = 'AIzaSyBAETezhkwP0ZWA02RsqT1zu78Fpt0bC_s'),
-    package = 'com.google.ios.youtubemusic',
+    project = 'youtubemusic',
 )
 
-IosKids = models.ClientInfo \
+YouTubeKidsIos = models.AppInfo \
 (
-    name    = 'IOS_KIDS',
-    version = '5.42.2',
+    client  = clients.IosKids,
     device  = devices.Ios,
     service = services.YouTubeKids,
     api     = models.ApiInfo(key = 'AIzaSyA6_JWXwHaVBQnoutCv1-GvV97-rJ949Bc'),
-    package = 'com.google.ios.youtubekids',
+    project = 'youtubekids',
 )
 
-IosStudio = models.ClientInfo \
+YouTubeStudioIos = models.AppInfo \
 (
-    name    = 'IOS_CREATOR',
-    version = '20.47.100',
+    client  = clients.IosStudio,
     device  = devices.Ios,
     service = services.YouTubeStudio,
     api     = models.ApiInfo(key = 'AIzaSyAPyF5GfQI-kOa6nZwO8EsNrGdEx9bioNs'),
-    package = 'com.google.ios.ytcreator',
+    project = 'ytcreator',
 )
 
-Tv = models.ClientInfo \
+YouTubeTv = models.AppInfo \
 (
-    name    = 'TVHTML5',
-    version = '7.20210224.00.00',
+    client  = clients.Tv,
     device  = devices.Tv,
     service = services.YouTube,
     api     = models.ApiInfo(key = 'AIzaSyDCU8hByM-4DrUqRUYnGn-3llEO78bcxq8'),

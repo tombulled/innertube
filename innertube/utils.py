@@ -13,16 +13,24 @@ Usage:
 '''
 
 import urllib.parse
-from typing import Union, Callable, Iterable, Dict, Any
+
+from typing import \
+(
+    Optional,
+    Callable,
+    Iterable,
+    Dict,
+    Any,
+)
 
 def url \
         (
             *,
             domain:   str,
-            scheme:   str                         = 'https',
-            port:     Union[None, int]            = None,
-            endpoint: Union[None, str]            = None,
-            params:   Union[None, Dict[str, Any]] = None,
+            scheme:   str                      = 'https',
+            port:     Optional[int]            = None,
+            endpoint: Optional[str]            = None,
+            params:   Optional[Dict[str, Any]] = None,
         ):
     '''
     Construct a URL

@@ -15,32 +15,50 @@ Usage:
 '''
 
 import requests
-from typing import Union, List
+import addict
+
 from . import utils
-from .infos.types import ServiceType
-from .infos.models import ServiceInfo
+from . import constants
+from . import apps
+
+from typing import \
+(
+    List,
+)
+
+from babel import \
+(
+    Locale,
+)
+
+from .infos.models import \
+(
+    AppInfo,
+)
 
 def complete_search \
         (
             query: str,
             *,
-            service: Union[ServiceInfo, ServiceType] = ServiceType.YouTube,
+            app:     AppInfo = None,
+            locale:  Locale  = None,
         ) -> List[str]:
     '''
     Dispatch a 'complete/search' request to suggestqueries.google.com
+
+    Reccomended devices for services:
+        YouTube:      Tv
+        YouTubeMusic: Android
+        YouTubeKids:  Web
     '''
 
-    service_type = service if isinstance(service, ServiceType) else service.type
+    if not app:
+        app = apps.Tv
 
-    clients = \
-    {
-        ServiceType.YouTube:      'youtube-lr',               # Device: Tv
-        ServiceType.YouTubeMusic: 'youtube-music-android-v2', # Device: Android
-        ServiceType.YouTubeKids:  'youtube-pegasus-web',      # Device: Web
-    }
+    if not locale:
+        locale = constants.DEFAULT_LOCALE
 
-    if service_type not in clients:
-        service_type = ServiceType.YouTube
+    assert app.client.identifier, 'Client has no identifier'
 
     response = requests.get \
     (
@@ -49,16 +67,28 @@ def complete_search \
             domain   = 'suggestqueries.google.com',
             endpoint = 'complete/search',
         ),
-        params = \
+        params = utils.filter \
+        (
+            dict \
+            (
+                client = app.client.identifier,
+                q      = query,
+                hl     = locale.language,
+                gl     = locale.territory,
+                ds     = 'yt',
+                oe     = 'utf-8',
+                xhr    = 't',
+                hjson  = 't',
+            ),
+        ),
+        headers = \
         {
-            'client': clients.get(service_type),
-            'q':      query,
-            'hl':     'en',
-            'gl':     'gb',
-            'ds':     'yt',
-            'oe':     'utf-8',
-            'xhr':    't',
+            'User-Agent': app.user_agent,
         },
     )
 
-    return [suggestion for suggestion, _ in response.json()[1]]
+    return \
+    [
+        suggestion
+        for suggestion, _ in response.json()[1]
+    ]
