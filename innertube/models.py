@@ -15,9 +15,9 @@ Usage:
 import pydantic
 import humps
 import furl
-import benedict
 
 from . import enums
+from . import utils
 
 from typing import \
 (
@@ -45,14 +45,13 @@ class BaseModel(pydantic.BaseModel):
         allow_population_by_field_name = True
 
     def dump(self):
-        return benedict.benedict.filter \
+        return utils.filter \
         (
-            self.dict \
+            ** self.dict \
             (
                 by_alias = True,
                 # use_enum_values...
-            ),
-            lambda _, value: value is not None
+            )
         )
 
 class Params(BaseModel):

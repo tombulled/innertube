@@ -17,33 +17,23 @@ Usage:
 import requests
 import addict
 import furl
+import babel
 
 from . import utils
-from . import constants
-from . import apps
 from . import enums
+from . import infos
 
 from typing import \
 (
     List,
 )
 
-from babel import \
-(
-    Locale,
-)
-
-from .models import \
-(
-    AppInfo,
-)
-
 def complete_search \
         (
-            query: str,
             *,
-            app:     AppInfo = None,
-            locale:  Locale  = None,
+            query: str,
+            client: str, # This is a ClientInfo.identifier
+            locale: babel.Locale = None,
         ) -> List[str]:
     '''
     Dispatch a 'complete/search' request to suggestqueries.google.com
@@ -54,12 +44,6 @@ def complete_search \
         YouTubeKids:  Web
     '''
 
-    # Note: This needs updating!
-    if not app:
-        app = apps.YouTubeTv
-
-    assert app.client.identifier, 'Client has no identifier'
-
     response = requests.get \
     (
         url = furl.furl \
@@ -68,9 +52,9 @@ def complete_search \
             host   = 'suggestqueries.google.com',
             path   = 'complete/search',
         ),
-        params = utils.filtered_dict \
+        params = utils.filter \
         (
-            client = app.client.identifier,
+            client = client,
             q      = query,
             hl     = locale and locale.language,
             gl     = locale and locale.territory,
@@ -81,7 +65,7 @@ def complete_search \
         ),
         headers = \
         {
-            enums.Header.USER_AGENT.value: app.user_agent,
+            enums.Header.USER_AGENT.value: infos.Apps.YouTubeWeb.value.user_agent(),
         },
     )
 
