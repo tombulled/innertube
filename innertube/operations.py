@@ -54,11 +54,9 @@ def complete_search \
         YouTubeKids:  Web
     '''
 
+    # Note: This needs updating!
     if not app:
         app = apps.YouTubeTv
-
-    if not locale:
-        locale = constants.DEFAULT_LOCALE
 
     assert app.client.identifier, 'Client has no identifier'
 
@@ -74,8 +72,8 @@ def complete_search \
         (
             client = app.client.identifier,
             q      = query,
-            hl     = locale.language,
-            gl     = locale.territory,
+            hl     = locale and locale.language,
+            gl     = locale and locale.territory,
             ds     = 'yt',
             oe     = 'utf-8',
             xhr    = 't',

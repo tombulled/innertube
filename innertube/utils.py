@@ -1,26 +1,19 @@
-'''
-Library containing general utility functions
+import benedict
+import builtins
 
-Usage:
-    >>> from innertube import utils
-    >>>
-    >>> dir(utils)
-    ...
-    >>>
-'''
+def filter(*args, **kwargs):
+    if args:
+        return list \
+        (
+            builtins.filter \
+            (
+                lambda value: value is not None,
+                args,
+            )
+        )
 
-def filtered_dict(**dictionary) -> dict:
-    return \
-    {
-        key: val
-        for key, val in dictionary.items()
-        if val is not None
-    }
-
-def filtered_list(*items) -> list:
-    return \
-    [
-        item
-        for item in items
-        if item is not None
-    ]
+    return benedict.benedict.filter \
+    (
+        kwargs,
+        lambda key, value: value is not None,
+    )

@@ -2,22 +2,14 @@
 Package to facilitate low-level communication with Google's InnerTube API
 '''
 
-from . import \
+from .constructor import \
 (
-    apps,
-    clients,
-    devices,
-    services,
+    construct_client as client,
 )
 
-from .constructors import \
+from .session import \
 (
-    client,
-)
-
-from .adaptor import \
-(
-    Adaptor,
+    Session,
 )
 
 from .client import \

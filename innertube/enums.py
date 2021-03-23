@@ -30,7 +30,7 @@ class ClientType(str, enum.Enum):
 class Alt(str, enum.Enum):
     JSON = 'json'
 
-class ApiEndpoint(str, enum.Enum):
+class Endpoint(str, enum.Enum):
     CONFIG                       = 'config'
     GUIDE                        = 'guide'
     PLAYER                       = 'player'

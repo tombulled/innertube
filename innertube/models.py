@@ -13,8 +13,11 @@ Usage:
 '''
 
 import pydantic
+import humps
+import furl
+import benedict
 
-from . import constants
+from . import enums
 
 from typing import \
 (
@@ -22,15 +25,63 @@ from typing import \
     List,
 )
 
+from babel import \
+(
+    Locale,
+)
+
 from .enums import \
 (
-    ApiEndpoint,
+    Endpoint,
     DeviceType,
     ServiceType,
     ClientType,
+    Alt,
 )
 
-class BaseModel(pydantic.BaseModel): pass
+class BaseModel(pydantic.BaseModel):
+    class Config:
+        allow_mutation                 = False
+        allow_population_by_field_name = True
+
+    def dump(self):
+        return benedict.benedict.filter \
+        (
+            self.dict \
+            (
+                by_alias = True,
+                # use_enum_values...
+            ),
+            lambda _, value: value is not None
+        )
+
+class Params(BaseModel):
+    key: str
+    alt: str
+
+class Context(BaseModel):
+    client_name:    str
+    client_version: str
+    gl:             Optional[str]
+    hl:             Optional[str]
+
+    class Config:
+        alias_generator = humps.camelize
+
+class Headers(BaseModel):
+    client_name:    str = pydantic.Field(..., alias = enums.Header.CLIENT_NAME.value)
+    client_version: str = pydantic.Field(..., alias = enums.Header.CLIENT_VERSION.value)
+    user_agent:     str = pydantic.Field(..., alias = enums.Header.USER_AGENT.value)
+    referer:        str = pydantic.Field(..., alias = enums.Header.REFERER.value)
+
+    class Config:
+        alias_generator = lambda field: '-'.join(map(str.title, field.split('_')))
+
+class AdaptorInfo(BaseModel):
+    base_url: str
+    params:   Params
+    headers:  Headers
+    context:  Context
 
 class ProductInfo(BaseModel):
     name:    Optional[str]
@@ -56,7 +107,7 @@ class ServiceInfo(BaseModel):
     name:      str
     domain:    str
     id:        int
-    endpoints: List[ApiEndpoint]
+    endpoints: List[Endpoint]
 
 class ApiInfo(BaseModel):
     '''
@@ -65,6 +116,7 @@ class ApiInfo(BaseModel):
 
     key:     str
     domain:  str = 'youtubei.googleapis.com'
+    mount:   str = 'youtubei'
     version: int = 1
 
 class ClientInfo(BaseModel):
@@ -84,16 +136,76 @@ class AppInfo(BaseModel):
     api:     ApiInfo
     project: Optional[str]
 
-    @property
     def user_agent(self) -> str:
         return '{product_name}/{product_version} ({product_token})'.format \
         (
-            product_name    = self.device.product.name    or self.package,
+            product_name    = self.device.product.name    or self.package(),
             product_version = self.device.product.version or self.client.version,
             product_token   = self.device.product.token,
         )
 
-    @property
     def package(self) -> Optional[str]:
         if self.device.package and self.project:
             return f'{self.device.package}.{self.project}'
+
+    def base_url(self) -> str:
+        return str \
+        (
+            furl.furl \
+            (
+                scheme = enums.Scheme.HTTPS.value,
+                host   = self.api.domain,
+                path   = furl.Path() / self.api.mount / f'v{self.api.version}' / '/',
+            )
+        )
+
+    def params(self) -> Params:
+        return Params \
+        (
+            key = self.api.key,
+            alt = enums.Alt.JSON.value,
+        )
+
+    def context(self, locale: Locale = None) -> Context:
+        return Context \
+        (
+            client_name    = self.client.name,
+            client_version = self.client.version,
+            gl = locale and (locale.territory or locale.language),
+            hl = locale and '-'.join \
+            (
+                filter \
+                (
+                    lambda item: item is not None,
+                    (
+                        locale.language,
+                        locale.territory,
+                    ),
+                ),
+            ),
+        )
+
+    def headers(self) -> Headers:
+        return Headers \
+        (
+            client_name    = str(self.service.id),
+            client_version = self.client.version,
+            user_agent     = self.user_agent(),
+            referer        = str \
+            (
+                furl.furl \
+                (
+                    scheme = enums.Scheme.HTTPS.value,
+                    host   = self.service.domain,
+                ),
+            ),
+        )
+
+    def adaptor_info(self, locale: Locale = None) -> AdaptorInfo:
+        return AdaptorInfo \
+        (
+            base_url = self.base_url(),
+            params   = self.params(),
+            context  = self.context(locale = locale),
+            headers  = self.headers(),
+        )

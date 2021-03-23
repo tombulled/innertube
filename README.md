@@ -19,25 +19,18 @@ $ pip install git+https://github.com/tombulled/innertube
 ```python
 >>> import innertube
 >>>
->>> # Create a client
+>>> # Construct a client
 >>> client = innertube.client \
 (
-    service = innertube.services.YouTube, # Could also be YouTubeMusic etc.
-    device  = innertube.devices.Web,      # Could also be Android etc.
+    service = innertube.ServiceType.YOUTUBE, # Could also be YOUTUBE_MUSIC etc.
+    device  = innertube.DeviceType.WEB,      # Could also be ANDROID etc.
 )
->>>
->>> # Or... just import the specific one you want
->>> client = innertube.clients.Web()
->>>
->>> # View the client
->>> client
-Client(service='YouTube', device='Web', locale='en-GB')
 >>>
 >>> # Get some data!
 >>> data = client.search(query = 'foo fighters')
 >>>
 >>> # Power user? No problem, dispatch requests yourself
->>> data = client('browse', payload = {'browseId': 'FEwhat_to_watch'})
+>>> data = client('browse', json = {'browseId': 'FEwhat_to_watch'})
 >>>
 >>> # The core endpoints are implemented, so the above is equivalent to:
 >>> data = client.browse(browse_id = 'FEwhat_to_watch')

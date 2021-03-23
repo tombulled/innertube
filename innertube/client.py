@@ -1,32 +1,10 @@
-'''
-Library containing the base InnerTube `Client` class
-'''
-
-import babel
-import functools
+import attr
+import addict
+import requests
 
 from . import utils
-from . import classes
-
-from .decorators import \
-(
-    method,
-)
-
-from .enums import \
-(
-    ApiEndpoint,
-)
-
-from .adaptor import \
-(
-    Adaptor,
-)
-
-from .models import \
-(
-    AppInfo,
-)
+from . import decorators
+from . import enums
 
 from typing import \
 (
@@ -35,75 +13,16 @@ from typing import \
     List,
 )
 
-from babel import \
-(
-    Locale,
-)
+@attr.s(frozen = True)
+class SessionWrapper(object):
+    session: requests.Session = attr.ib()
 
-class Client(classes.Object):
-    '''
-    Base InnerTube Client
+class Client(SessionWrapper):
+    def __call__(self, *args, **kwargs):
+        return self.session.post(*args, **kwargs)
 
-    Attributes:
-        adaptor: Adaptor
-
-    Properties:
-        info: AppInfo
-    '''
-
-    adaptor: Adaptor
-
-    def __init__ \
-            (
-                self,
-                info: AppInfo,
-                *,
-                locale: Locale = None,
-            ):
-        '''
-        Initialise the Client
-
-        Creates and stores an `Adaptor` for dispatching requests
-        '''
-
-        super().__init__()
-
-        self.adaptor = Adaptor \
-        (
-            info   = info,
-            locale = locale,
-        )
-
-    def __repr__(self) -> str:
-        '''
-        Return a string representation of the Client
-        '''
-
-        return super().__repr__ \
-        (
-            service = self.info.service.name,
-            device  = self.info.device.name,
-            locale  = self.adaptor.context.hl,
-        )
-
-    @functools.wraps(Adaptor.dispatch)
-    def __call__(self, *args, **kwargs) -> dict:
-        '''
-        Short-hand for dispatching requests through the adaptor instance
-        '''
-
-        return self.adaptor.dispatch(*args, **kwargs)
-
-    @property
-    def info(self) -> AppInfo:
-        '''
-        Property to return the Adaptor's AppInfo
-        '''
-
-        return self.adaptor.info
-
-    @method(ApiEndpoint.CONFIG)
-    def config(dispatch: Callable) -> dict:
+    @decorators.method(enums.Endpoint.CONFIG)
+    def config(dispatch: Callable) -> addict.Dict:
         '''
         Dispatch the endpoint: config
 
@@ -112,8 +31,8 @@ class Client(classes.Object):
 
         return dispatch()
 
-    @method(ApiEndpoint.GUIDE)
-    def guide(dispatch: Callable) -> dict:
+    @decorators.method(enums.Endpoint.GUIDE)
+    def guide(dispatch: Callable) -> addict.Dict:
         '''
         Dispatch the endpoint: guide
 
@@ -122,8 +41,8 @@ class Client(classes.Object):
 
         return dispatch()
 
-    @method(ApiEndpoint.PLAYER)
-    def player(dispatch: Callable, *, video_id: str) -> dict:
+    @decorators.method(enums.Endpoint.PLAYER)
+    def player(dispatch: Callable, *, video_id: str) -> addict.Dict:
         '''
         Dispatch the endpoint: player
 
@@ -132,13 +51,13 @@ class Client(classes.Object):
 
         return dispatch \
         (
-            payload = dict \
+            json = dict \
             (
                 videoId = video_id,
             ),
         )
 
-    @method(ApiEndpoint.BROWSE)
+    @decorators.method(enums.Endpoint.BROWSE)
     def browse \
             (
                 dispatch: Callable,
@@ -146,7 +65,7 @@ class Client(classes.Object):
                 browse_id:    Optional[str] = None,
                 params:       Optional[str] = None,
                 continuation: Optional[str] = None,
-            ) -> dict:
+            ) -> addict.Dict:
         '''
         Dispatch the endpoint: browse
 
@@ -155,19 +74,19 @@ class Client(classes.Object):
 
         return dispatch \
         (
-            params = utils.filtered_dict \
+            params = utils.filter \
             (
                 continuation = continuation,
                 ctoken       = continuation,
             ),
-            payload = utils.filtered_dict \
+            json = utils.filter \
             (
                 browseId = browse_id,
                 params   = params,
             ),
         )
 
-    @method(ApiEndpoint.SEARCH)
+    @decorators.method(enums.Endpoint.SEARCH)
     def search \
             (
                 dispatch: Callable,
@@ -175,7 +94,7 @@ class Client(classes.Object):
                 query:        Optional[str] = None,
                 params:       Optional[str] = None,
                 continuation: Optional[str] = None,
-            ) -> dict:
+            ) -> addict.Dict:
         '''
         Dispatch the endpoint: search
 
@@ -184,19 +103,19 @@ class Client(classes.Object):
 
         return dispatch \
         (
-            params = utils.filtered_dict \
+            params = utils.filter \
             (
                 continuation = continuation,
                 ctoken       = continuation,
             ),
-            payload = utils.filtered_dict \
+            json = utils.filter \
             (
                 query  = query or '',
                 params = params,
             ),
         )
 
-    @method(ApiEndpoint.NEXT)
+    @decorators.method(enums.Endpoint.NEXT)
     def next \
             (
                 dispatch: Callable,
@@ -206,7 +125,7 @@ class Client(classes.Object):
                 params:       Optional[str] = None,
                 index:        Optional[int] = None,
                 continuation: Optional[str] = None,
-            ) -> dict:
+            ) -> addict.Dict:
         '''
         Dispatch the endpoint: next
 
@@ -215,7 +134,7 @@ class Client(classes.Object):
 
         return dispatch \
         (
-            payload = utils.filtered_dict \
+            json = utils.filter \
             (
                 params       = params,
                 playlistId   = playlist_id,
@@ -225,13 +144,13 @@ class Client(classes.Object):
             ),
         )
 
-    @method(ApiEndpoint.MUSIC_GET_SEARCH_SUGGESTIONS)
+    @decorators.method(enums.Endpoint.MUSIC_GET_SEARCH_SUGGESTIONS)
     def music_get_search_suggestions \
             (
                 dispatch: Callable,
                 *,
                 input: Optional[None] = None,
-            ) -> dict:
+            ) -> addict.Dict:
         '''
         Dispatch the endpoint: music/get_search_suggestions
 
@@ -240,20 +159,20 @@ class Client(classes.Object):
 
         return dispatch \
         (
-            payload = dict \
+            json = dict \
             (
                 input = input or '',
             ),
         )
 
-    @method(ApiEndpoint.MUSIC_GET_QUEUE)
+    @decorators.method(enums.Endpoint.MUSIC_GET_QUEUE)
     def music_get_queue \
             (
                 dispatch: Callable,
                 *,
                 video_ids:   Optional[List[str]] = None,
                 playlist_id: Optional[str]       = None,
-            ) -> dict:
+            ) -> addict.Dict:
         '''
         Dispatch the endpoint: music/get_queue
 
@@ -262,7 +181,7 @@ class Client(classes.Object):
 
         return dispatch \
         (
-            payload = utils.filtered_dict \
+            json = utils.filter \
             (
                 playlistId = playlist_id,
                 videoIds   = video_ids or (None,),
