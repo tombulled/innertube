@@ -1,10 +1,14 @@
 import attr
 import addict
 import requests
+import babel
+
+import functools
 
 from . import utils
-from . import decorators
 from . import enums
+from . import infos
+from . import session
 
 from typing import \
 (
@@ -12,6 +16,25 @@ from typing import \
     Optional,
     List,
 )
+
+def method(endpoint: enums.Endpoint):
+    def decorator(func):
+        @functools.wraps(func)
+        def wrapper(self, *args, **kwargs):
+            return func \
+            (
+                functools.partial \
+                (
+                    self.session.post,
+                    endpoint.value,
+                ),
+                *args,
+                **kwargs,
+            )
+
+        return wrapper
+
+    return decorator
 
 @attr.s(frozen = True)
 class SessionWrapper(object):
@@ -21,7 +44,33 @@ class Client(SessionWrapper):
     def __call__(self, *args, **kwargs):
         return self.session.post(*args, **kwargs)
 
-    @decorators.method(enums.Endpoint.CONFIG)
+    @classmethod
+    def construct \
+            (
+                cls,
+                service: enums.ServiceType,
+                device:  enums.DeviceType,
+                locale:  babel.Locale = None,
+            ):
+        app_info = infos.apps.get \
+        (
+            service = infos.services.get(type = service),
+            device  = infos.devices.get(type = device),
+        )
+
+        if app_info:
+            return cls \
+            (
+                session = session.Session \
+                (
+                    info = app_info.adaptor_info \
+                    (
+                        locale = locale,
+                    ),
+                )
+            )
+
+    @method(enums.Endpoint.CONFIG)
     def config(dispatch: Callable) -> addict.Dict:
         '''
         Dispatch the endpoint: config
@@ -31,7 +80,7 @@ class Client(SessionWrapper):
 
         return dispatch()
 
-    @decorators.method(enums.Endpoint.GUIDE)
+    @method(enums.Endpoint.GUIDE)
     def guide(dispatch: Callable) -> addict.Dict:
         '''
         Dispatch the endpoint: guide
@@ -41,7 +90,7 @@ class Client(SessionWrapper):
 
         return dispatch()
 
-    @decorators.method(enums.Endpoint.PLAYER)
+    @method(enums.Endpoint.PLAYER)
     def player(dispatch: Callable, *, video_id: str) -> addict.Dict:
         '''
         Dispatch the endpoint: player
@@ -57,7 +106,7 @@ class Client(SessionWrapper):
             ),
         )
 
-    @decorators.method(enums.Endpoint.BROWSE)
+    @method(enums.Endpoint.BROWSE)
     def browse \
             (
                 dispatch: Callable,
@@ -74,19 +123,19 @@ class Client(SessionWrapper):
 
         return dispatch \
         (
-            params = utils.filter \
+            params = utils.filter_kwargs \
             (
                 continuation = continuation,
                 ctoken       = continuation,
             ),
-            json = utils.filter \
+            json = utils.filter_kwargs \
             (
                 browseId = browse_id,
                 params   = params,
             ),
         )
 
-    @decorators.method(enums.Endpoint.SEARCH)
+    @method(enums.Endpoint.SEARCH)
     def search \
             (
                 dispatch: Callable,
@@ -103,19 +152,19 @@ class Client(SessionWrapper):
 
         return dispatch \
         (
-            params = utils.filter \
+            params = utils.filter_kwargs \
             (
                 continuation = continuation,
                 ctoken       = continuation,
             ),
-            json = utils.filter \
+            json = utils.filter_kwargs \
             (
                 query  = query or '',
                 params = params,
             ),
         )
 
-    @decorators.method(enums.Endpoint.NEXT)
+    @method(enums.Endpoint.NEXT)
     def next \
             (
                 dispatch: Callable,
@@ -134,7 +183,7 @@ class Client(SessionWrapper):
 
         return dispatch \
         (
-            json = utils.filter \
+            json = utils.filter_kwargs \
             (
                 params       = params,
                 playlistId   = playlist_id,
@@ -144,7 +193,7 @@ class Client(SessionWrapper):
             ),
         )
 
-    @decorators.method(enums.Endpoint.MUSIC_GET_SEARCH_SUGGESTIONS)
+    @method(enums.Endpoint.MUSIC_GET_SEARCH_SUGGESTIONS)
     def music_get_search_suggestions \
             (
                 dispatch: Callable,
@@ -165,7 +214,7 @@ class Client(SessionWrapper):
             ),
         )
 
-    @decorators.method(enums.Endpoint.MUSIC_GET_QUEUE)
+    @method(enums.Endpoint.MUSIC_GET_QUEUE)
     def music_get_queue \
             (
                 dispatch: Callable,
@@ -181,7 +230,7 @@ class Client(SessionWrapper):
 
         return dispatch \
         (
-            json = utils.filter \
+            json = utils.filter_kwargs \
             (
                 playlistId = playlist_id,
                 videoIds   = video_ids or (None,),

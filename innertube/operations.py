@@ -52,7 +52,7 @@ def complete_search \
             host   = 'suggestqueries.google.com',
             path   = 'complete/search',
         ),
-        params = utils.filter \
+        params = utils.filter_kwargs \
         (
             client = client,
             q      = query,

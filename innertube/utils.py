@@ -1,19 +1,15 @@
-import benedict
-import builtins
+def filter_kwargs(**kwargs) -> dict:
+    return \
+    {
+        key: value
+        for key, value in kwargs.items()
+        if value is not None
+    }
 
-def filter(*args, **kwargs):
-    if args:
-        return list \
-        (
-            builtins.filter \
-            (
-                lambda value: value is not None,
-                args,
-            )
-        )
-
-    return benedict.benedict.filter \
-    (
-        kwargs,
-        lambda key, value: value is not None,
-    )
+def filter_args(*args) -> list:
+    return \
+    [
+        arg
+        for arg in args
+        if arg is not None
+    ]

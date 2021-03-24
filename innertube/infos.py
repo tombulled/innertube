@@ -1,5 +1,7 @@
-import enum
 import pydantic
+
+import enum
+import collections
 
 from . import models
 from . import enums
@@ -10,121 +12,116 @@ from typing import \
     Optional
 )
 
-class ModelContainer(enum.Enum):
-    @classmethod
-    def search(cls, **kwargs) -> List[pydantic.BaseModel]:
+class Container(collections.UserList):
+    def __init__(self, *args):
+        super().__init__(args)
+
+    def search(self, **kwargs):
         return \
         [
-            member.value
-            for member in cls.__members__.values()
-            for field_name, field_value in kwargs.items()
-            if (value := getattr(member.value, field_name, None)) and value == field_value
+            item
+            for item in self
+            if all \
+            (
+                getattr(item, key, None) == value
+                for key, value in kwargs.items()
+            )
         ]
 
-    @classmethod
-    def get(cls, **kwargs) -> Optional[pydantic.BaseModel]:
-        if (results := cls.search(**kwargs)):
+    def get(self, **kwargs):
+        if (results := self.search(**kwargs)):
             return results[0]
 
-class Clients(ModelContainer):
-    Web = models.ClientInfo \
+clients = Container \
+(
+    models.ClientInfo \
     (
         type       = enums.ClientType.WEB,
         name       = 'WEB',
         version    = '2.20210223.09.00',
         identifier = 'youtube',
-    )
-
-    WebMusic = models.ClientInfo \
+    ),
+    models.ClientInfo \
     (
         type    = enums.ClientType.WEB_MUSIC,
         name    = 'WEB_REMIX',
         version = '0.1',
-    )
-
-    WebKids = models.ClientInfo \
+    ),
+    models.ClientInfo \
     (
         type       = enums.ClientType.WEB_KIDS,
         name       = 'WEB_KIDS',
         version    = '2.1.3',
         identifier = 'youtube-pegasus-web',
-    )
-
-    WebStudio = models.ClientInfo \
+    ),
+    models.ClientInfo \
     (
         type    = enums.ClientType.WEB_STUDIO,
         name    = 'WEB_CREATOR',
         version = '1.20210223.01.00',
-    )
-
-    Android = models.ClientInfo \
+    ),
+    models.ClientInfo \
     (
         type    = enums.ClientType.ANDROID,
         name    = 'ANDROID',
         version = '16.07.34',
-    )
-
-    AndroidMusic = models.ClientInfo \
+    ),
+    models.ClientInfo \
     (
         type       = enums.ClientType.ANDROID_MUSIC,
         name       = 'ANDROID_MUSIC',
         version    = '4.16.51',
         identifier = 'youtube-music-android',
-    )
-
-    AndroidKids = models.ClientInfo \
+    ),
+    models.ClientInfo \
     (
         type    = enums.ClientType.ANDROID_KIDS,
         name    = 'ANDROID_KIDS',
         version = '6.02.3',
-    )
-
-    AndroidStudio = models.ClientInfo \
+    ),
+    models.ClientInfo \
     (
         type    = enums.ClientType.ANDROID_STUDIO,
         name    = 'ANDROID_CREATOR',
         version = '21.06.103',
-    )
-
-    Ios = models.ClientInfo \
+    ),
+    models.ClientInfo \
     (
         type    = enums.ClientType.IOS,
         name    = 'IOS',
         version = '16.05.7',
-    )
-
-    IosMusic = models.ClientInfo \
+    ),
+    models.ClientInfo \
     (
         type       = enums.ClientType.IOS_MUSIC,
         name       = 'IOS_MUSIC',
         version    = '4.16.1',
         identifier = 'youtube-music-ios',
-    )
-
-    IosKids = models.ClientInfo \
+    ),
+    models.ClientInfo \
     (
         type    = enums.ClientType.IOS_KIDS,
         name    = 'IOS_KIDS',
         version = '5.42.2',
-    )
-
-    IosStudio = models.ClientInfo \
+    ),
+    models.ClientInfo \
     (
         type    = enums.ClientType.IOS_STUDIO,
         name    = 'IOS_CREATOR',
         version = '20.47.100',
-    )
-
-    Tv = models.ClientInfo \
+    ),
+    models.ClientInfo \
     (
         type       = enums.ClientType.TV,
         name       = 'TVHTML5',
         version    = '7.20210224.00.00',
         identifier = 'youtube-lr',
-    )
+    ),
+)
 
-class Devices(ModelContainer):
-    Web = models.DeviceInfo \
+devices = Container \
+(
+    models.DeviceInfo \
     (
         type    = enums.DeviceType.WEB,
         name    = 'Web',
@@ -134,9 +131,8 @@ class Devices(ModelContainer):
             version = '5.0',
             token   = 'Windows NT 10.0; Win64; x64; rv:77.0',
         ),
-    )
-
-    Android = models.DeviceInfo \
+    ),
+    models.DeviceInfo \
     (
         type    = enums.DeviceType.ANDROID,
         name    = 'Android',
@@ -145,9 +141,8 @@ class Devices(ModelContainer):
         (
             token = 'Linux; U; Android 9; en_GB; VirtualBox Build/PI',
         ),
-    )
-
-    Ios = models.DeviceInfo \
+    ),
+    models.DeviceInfo \
     (
         type    = enums.DeviceType.IOS,
         name    = 'IOS',
@@ -156,9 +151,8 @@ class Devices(ModelContainer):
         (
             token = 'iPhone10,5; U; CPU iOS 14_4 like Mac OS X; en_GB',
         ),
-    )
-
-    Tv = models.DeviceInfo \
+    ),
+    models.DeviceInfo \
     (
         type    = enums.DeviceType.TV,
         name    = 'TV',
@@ -168,10 +162,12 @@ class Devices(ModelContainer):
             version = '5.0',
             token   = 'PlayStation; PlayStation 4/8.03',
         ),
-    )
+    ),
+)
 
-class Services(ModelContainer):
-    YouTube = models.ServiceInfo \
+services = Container \
+(
+    models.ServiceInfo \
     (
         type      = enums.ServiceType.YOUTUBE,
         name      = 'YouTube',
@@ -186,9 +182,8 @@ class Services(ModelContainer):
             enums.Endpoint.SEARCH,
             enums.Endpoint.NEXT,
         ],
-    )
-
-    YOUTUBE_MUSIC = models.ServiceInfo \
+    ),
+    models.ServiceInfo \
     (
         type      = enums.ServiceType.YOUTUBE_MUSIC,
         name      = 'YouTube Music',
@@ -205,9 +200,8 @@ class Services(ModelContainer):
             enums.Endpoint.MUSIC_GET_SEARCH_SUGGESTIONS,
             enums.Endpoint.MUSIC_GET_QUEUE,
         ],
-    )
-
-    YouTubeKids = models.ServiceInfo \
+    ),
+    models.ServiceInfo \
     (
         type      = enums.ServiceType.YOUTUBE_KIDS,
         name      = 'YouTube Kids',
@@ -221,9 +215,8 @@ class Services(ModelContainer):
             enums.Endpoint.SEARCH,
             enums.Endpoint.NEXT,
         ],
-    )
-
-    YouTubeStudio = models.ServiceInfo \
+    ),
+    models.ServiceInfo \
     (
         type      = enums.ServiceType.YOUTUBE_STUDIO,
         name      = 'YouTube Studio',
@@ -235,117 +228,121 @@ class Services(ModelContainer):
             enums.Endpoint.BROWSE,
             enums.Endpoint.PLAYER,
         ],
-    )
+    ),
+)
 
-class Apps(ModelContainer):
-    YouTubeWeb = models.AppInfo \
+apps = Container \
+(
+    models.AppInfo \
     (
-        client  = Clients.get(type = enums.ClientType.WEB),
-        device  = Devices.get(type = enums.DeviceType.WEB),
-        service = Services.get(type = enums.ServiceType.YOUTUBE),
+        type    = enums.AppType.YOUTUBE_WEB,
+        client  = clients.get(type = enums.ClientType.WEB),
+        device  = devices.get(type = enums.DeviceType.WEB),
+        service = services.get(type = enums.ServiceType.YOUTUBE),
         api     = models.ApiInfo(key = 'AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8'),
-    )
-
-    YouTubeMusicWeb = models.AppInfo \
+    ),
+    models.AppInfo \
     (
-        client  = Clients.get(type = enums.ClientType.WEB_MUSIC),
-        device  = Devices.get(type = enums.DeviceType.WEB),
-        service = Services.get(type = enums.ServiceType.YOUTUBE_MUSIC),
+        type    = enums.AppType.YOUTUBE_MUSIC_WEB,
+        client  = clients.get(type = enums.ClientType.WEB_MUSIC),
+        device  = devices.get(type = enums.DeviceType.WEB),
+        service = services.get(type = enums.ServiceType.YOUTUBE_MUSIC),
         api     = models.ApiInfo(key = 'AIzaSyC9XL3ZjWddXya6X74dJoCTL-WEYFDNX30'),
-    )
-
-    YouTubeKidsWeb = models.AppInfo \
+    ),
+    models.AppInfo \
     (
-        client  = Clients.get(type = enums.ClientType.WEB_KIDS),
-        device  = Devices.get(type = enums.DeviceType.WEB),
-        service = Services.get(type = enums.ServiceType.YOUTUBE_KIDS),
+        type    = enums.AppType.YOUTUBE_KIDS_WEB,
+        client  = clients.get(type = enums.ClientType.WEB_KIDS),
+        device  = devices.get(type = enums.DeviceType.WEB),
+        service = services.get(type = enums.ServiceType.YOUTUBE_KIDS),
         api     = models.ApiInfo(key = 'AIzaSyBbZV_fZ3an51sF-mvs5w37OqqbsTOzwtU'),
-    )
-
-    YouTubeStudioWeb = models.AppInfo \
+    ),
+    models.AppInfo \
     (
-        client  = Clients.get(type = enums.ClientType.WEB_STUDIO),
-        device  = Devices.get(type = enums.DeviceType.WEB),
-        service = Services.get(type = enums.ServiceType.YOUTUBE_STUDIO),
+        type    = enums.AppType.YOUTUBE_STUDIO_WEB,
+        client  = clients.get(type = enums.ClientType.WEB_STUDIO),
+        device  = devices.get(type = enums.DeviceType.WEB),
+        service = services.get(type = enums.ServiceType.YOUTUBE_STUDIO),
         api     = models.ApiInfo(key = 'AIzaSyBUPetSUmoZL-OhlxA7wSac5XinrygCqMo'),
-    )
-
-    YouTubeAndroid = models.AppInfo \
+    ),
+    models.AppInfo \
     (
-        client  = Clients.get(type = enums.ClientType.ANDROID),
-        device  = Devices.get(type = enums.DeviceType.ANDROID),
-        service = Services.get(type = enums.ServiceType.YOUTUBE),
+        type    = enums.AppType.YOUTUBE_ANDROID,
+        client  = clients.get(type = enums.ClientType.ANDROID),
+        device  = devices.get(type = enums.DeviceType.ANDROID),
+        service = services.get(type = enums.ServiceType.YOUTUBE),
         api     = models.ApiInfo(key = 'AIzaSyA8eiZmM1FaDVjRy-df2KTyQ_vz_yYM39w'),
         project = 'youtube',
-    )
-
-    YouTubeMusicAndroid = models.AppInfo \
+    ),
+    models.AppInfo \
     (
-        client  = Clients.get(type = enums.ClientType.ANDROID_MUSIC),
-        device  = Devices.get(type = enums.DeviceType.ANDROID),
-        service = Services.get(type = enums.ServiceType.YOUTUBE_MUSIC),
+        type    = enums.AppType.YOUTUBE_MUSIC_ANDROID,
+        client  = clients.get(type = enums.ClientType.ANDROID_MUSIC),
+        device  = devices.get(type = enums.DeviceType.ANDROID),
+        service = services.get(type = enums.ServiceType.YOUTUBE_MUSIC),
         api     = models.ApiInfo(key = 'AIzaSyAOghZGza2MQSZkY_zfZ370N-PUdXEo8AI'),
         project = 'apps.youtube.music',
-    )
-
-    YouTubeKidsAndroid = models.AppInfo \
+    ),
+    models.AppInfo \
     (
-        client  = Clients.get(type = enums.ClientType.ANDROID_KIDS),
-        device  = Devices.get(type = enums.DeviceType.ANDROID),
-        service = Services.get(type = enums.ServiceType.YOUTUBE_KIDS),
+        type    = enums.AppType.YOUTUBE_KIDS_ANDROID,
+        client  = clients.get(type = enums.ClientType.ANDROID_KIDS),
+        device  = devices.get(type = enums.DeviceType.ANDROID),
+        service = services.get(type = enums.ServiceType.YOUTUBE_KIDS),
         api     = models.ApiInfo(key = 'AIzaSyAxxQKWYcEX8jHlflLt2Qcbb-rlolzBhhk'),
         project = 'apps.youtube.kids',
-    )
-
-    YouTubeStudioAndroid = models.AppInfo \
+    ),
+    models.AppInfo \
     (
-        client  = Clients.get(type = enums.ClientType.ANDROID_STUDIO),
-        device  = Devices.get(type = enums.DeviceType.ANDROID),
-        service = Services.get(type = enums.ServiceType.YOUTUBE_STUDIO),
+        type    = enums.AppType.YOUTUBE_STUDIO_ANDROID,
+        client  = clients.get(type = enums.ClientType.ANDROID_STUDIO),
+        device  = devices.get(type = enums.DeviceType.ANDROID),
+        service = services.get(type = enums.ServiceType.YOUTUBE_STUDIO),
         api     = models.ApiInfo(key = 'AIzaSyD_qjV8zaaUMehtLkrKFgVeSX_Iqbtyws8'),
         project = 'apps.youtube.creator',
-    )
-
-    YouTubeIos = models.AppInfo \
+    ),
+    models.AppInfo \
     (
-        client  = Clients.get(type = enums.ClientType.IOS),
-        device  = Devices.get(type = enums.DeviceType.IOS),
-        service = Services.get(type = enums.ServiceType.YOUTUBE),
+        type    = enums.AppType.YOUTUBE_IOS,
+        client  = clients.get(type = enums.ClientType.IOS),
+        device  = devices.get(type = enums.DeviceType.IOS),
+        service = services.get(type = enums.ServiceType.YOUTUBE),
         api     = models.ApiInfo(key = 'AIzaSyB-63vPrdThhKuerbB2N_l7Kwwcxj6yUAc'),
         project = 'youtube',
-    )
-
-    YouTubeMusicIos = models.AppInfo \
+    ),
+    models.AppInfo \
     (
-        client  = Clients.get(type = enums.ClientType.IOS_MUSIC),
-        device  = Devices.get(type = enums.DeviceType.IOS),
-        service = Services.get(type = enums.ServiceType.YOUTUBE_MUSIC),
+        type    = enums.AppType.YOUTUBE_MUSIC_IOS,
+        client  = clients.get(type = enums.ClientType.IOS_MUSIC),
+        device  = devices.get(type = enums.DeviceType.IOS),
+        service = services.get(type = enums.ServiceType.YOUTUBE_MUSIC),
         api     = models.ApiInfo(key = 'AIzaSyBAETezhkwP0ZWA02RsqT1zu78Fpt0bC_s'),
         project = 'youtubemusic',
-    )
-
-    YouTubeKidsIos = models.AppInfo \
+    ),
+    models.AppInfo \
     (
-        client  = Clients.get(type = enums.ClientType.IOS_KIDS),
-        device  = Devices.get(type = enums.DeviceType.IOS),
-        service = Services.get(type = enums.ServiceType.YOUTUBE_KIDS),
+        type    = enums.AppType.YOUTUBE_KIDS_IOS,
+        client  = clients.get(type = enums.ClientType.IOS_KIDS),
+        device  = devices.get(type = enums.DeviceType.IOS),
+        service = services.get(type = enums.ServiceType.YOUTUBE_KIDS),
         api     = models.ApiInfo(key = 'AIzaSyA6_JWXwHaVBQnoutCv1-GvV97-rJ949Bc'),
         project = 'youtubekids',
-    )
-
-    YouTubeStudioIos = models.AppInfo \
+    ),
+    models.AppInfo \
     (
-        client  = Clients.get(type = enums.ClientType.IOS_STUDIO),
-        device  = Devices.get(type = enums.DeviceType.IOS),
-        service = Services.get(type = enums.ServiceType.YOUTUBE_STUDIO),
+        type    = enums.AppType.YOUTUBE_STUDIO_IOS,
+        client  = clients.get(type = enums.ClientType.IOS_STUDIO),
+        device  = devices.get(type = enums.DeviceType.IOS),
+        service = services.get(type = enums.ServiceType.YOUTUBE_STUDIO),
         api     = models.ApiInfo(key = 'AIzaSyAPyF5GfQI-kOa6nZwO8EsNrGdEx9bioNs'),
         project = 'ytcreator',
-    )
-
-    YouTubeTv = models.AppInfo \
+    ),
+    models.AppInfo \
     (
-        client  = Clients.get(type = enums.ClientType.TV),
-        device  = Devices.get(type = enums.DeviceType.TV),
-        service = Services.get(type = enums.ServiceType.YOUTUBE),
+        type    = enums.AppType.YOUTUBE_TV,
+        client  = clients.get(type = enums.ClientType.TV),
+        device  = devices.get(type = enums.DeviceType.TV),
+        service = services.get(type = enums.ServiceType.YOUTUBE),
         api     = models.ApiInfo(key = 'AIzaSyDCU8hByM-4DrUqRUYnGn-3llEO78bcxq8'),
-    )
+    ),
+)

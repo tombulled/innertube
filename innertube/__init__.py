@@ -4,11 +4,6 @@ Package to facilitate low-level communication with Google's InnerTube API
 
 from . import infos
 
-from .constructor import \
-(
-    construct_client as client,
-)
-
 from .session import \
 (
     Session,

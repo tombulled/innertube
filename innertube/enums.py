@@ -1,36 +1,65 @@
 import enum
 
-class DeviceType(str, enum.Enum):
-    WEB     = 'WEB'
-    ANDROID = 'ANDROID'
-    IOS     = 'IOS'
-    TV      = 'TV'
+class StrEnum(str, enum.Enum): pass
 
-class ServiceType(str, enum.Enum):
-    YOUTUBE        = 'YOUTUBE'
-    YOUTUBE_MUSIC  = 'YOUTUBE_MUSIC'
-    YOUTUBE_KIDS   = 'YOUTUBE_KIDS'
-    YOUTUBE_STUDIO = 'YOUTUBE_STUDIO'
+class AutoName(StrEnum):
+    def _generate_next_value_(name: str, *_) -> str:
+        return name
 
-class ClientType(str, enum.Enum):
-    WEB            = 'WEB'
-    WEB_MUSIC      = 'WEB_REMIX'
-    WEB_KIDS       = 'WEB_KIDS'
-    WEB_STUDIO     = 'WEB_CREATOR'
-    ANDROID        = 'ANDROID'
-    ANDROID_MUSIC  = 'ANDROID_MUSIC'
-    ANDROID_KIDS   = 'ANDROID_KIDS'
-    ANDROID_STUDIO = 'ANDROID_CREATOR'
-    IOS            = 'IOS'
-    IOS_MUSIC      = 'IOS_MUSIC'
-    IOS_KIDS       = 'IOS_KIDS'
-    IOS_STUDIO     = 'IOS_CREATOR'
-    TV             = 'TV'
+class AutoNameLower(StrEnum):
+    def _generate_next_value_(name: str, *_) -> str:
+        return name.lower()
 
-class Alt(str, enum.Enum):
-    JSON = 'json'
+class DeviceType(AutoName):
+    WEB     = enum.auto()
+    ANDROID = enum.auto()
+    IOS     = enum.auto()
+    TV      = enum.auto()
 
-class Endpoint(str, enum.Enum):
+class ServiceType(AutoName):
+    YOUTUBE        = enum.auto()
+    YOUTUBE_MUSIC  = enum.auto()
+    YOUTUBE_KIDS   = enum.auto()
+    YOUTUBE_STUDIO = enum.auto()
+
+class ClientType(AutoName):
+    WEB            = enum.auto()
+    WEB_MUSIC      = enum.auto()
+    WEB_KIDS       = enum.auto()
+    WEB_STUDIO     = enum.auto()
+    ANDROID        = enum.auto()
+    ANDROID_MUSIC  = enum.auto()
+    ANDROID_KIDS   = enum.auto()
+    ANDROID_STUDIO = enum.auto()
+    IOS            = enum.auto()
+    IOS_MUSIC      = enum.auto()
+    IOS_KIDS       = enum.auto()
+    IOS_STUDIO     = enum.auto()
+    TV             = enum.auto()
+
+class AppType(AutoName):
+    YOUTUBE_WEB            = enum.auto()
+    YOUTUBE_MUSIC_WEB      = enum.auto()
+    YOUTUBE_KIDS_WEB       = enum.auto()
+    YOUTUBE_STUDIO_WEB     = enum.auto()
+    YOUTUBE_ANDROID        = enum.auto()
+    YOUTUBE_MUSIC_ANDROID  = enum.auto()
+    YOUTUBE_KIDS_ANDROID   = enum.auto()
+    YOUTUBE_STUDIO_ANDROID = enum.auto()
+    YOUTUBE_IOS            = enum.auto()
+    YOUTUBE_MUSIC_IOS      = enum.auto()
+    YOUTUBE_KIDS_IOS       = enum.auto()
+    YOUTUBE_STUDIO_IOS     = enum.auto()
+    YOUTUBE_TV             = enum.auto()
+
+class Alt(AutoNameLower):
+    JSON = enum.auto()
+
+class Scheme(AutoNameLower):
+    HTTP  = enum.auto()
+    HTTPS = enum.auto()
+
+class Endpoint(StrEnum):
     CONFIG                       = 'config'
     GUIDE                        = 'guide'
     PLAYER                       = 'player'
@@ -40,7 +69,7 @@ class Endpoint(str, enum.Enum):
     MUSIC_GET_SEARCH_SUGGESTIONS = 'music/get_search_suggestions'
     MUSIC_GET_QUEUE              = 'music/get_queue'
 
-class Header(str, enum.Enum):
+class Header(StrEnum):
     USER_AGENT     = 'User-Agent'
     REFERER        = 'Referer'
     CONTENT_TYPE   = 'Content-Type'
@@ -48,10 +77,6 @@ class Header(str, enum.Enum):
     CLIENT_NAME    = 'X-YouTube-Client-Name'
     CLIENT_VERSION = 'X-YouTube-Client-Version'
 
-class Mime(str, enum.Enum):
+class Mime(StrEnum):
     JSON = 'application/json'
     HTML = 'text/html'
-
-class Scheme(str, enum.Enum):
-    HTTP  = 'http'
-    HTTPS = 'https'

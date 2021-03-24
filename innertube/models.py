@@ -36,6 +36,7 @@ from .enums import \
     DeviceType,
     ServiceType,
     ClientType,
+    AppType,
     Alt,
 )
 
@@ -45,7 +46,7 @@ class BaseModel(pydantic.BaseModel):
         allow_population_by_field_name = True
 
     def dump(self):
-        return utils.filter \
+        return utils.filter_kwargs \
         (
             ** self.dict \
             (
@@ -75,6 +76,17 @@ class Headers(BaseModel):
 
     class Config:
         alias_generator = lambda field: '-'.join(map(str.title, field.split('_')))
+
+class Error(BaseModel):
+    class Error(BaseModel):
+        reason: str
+        domain: str
+        message: str
+
+    code: int
+    status: str
+    message: str
+    errors: Optional[List[Error]]
 
 class AdaptorInfo(BaseModel):
     base_url: str
@@ -129,6 +141,7 @@ class ClientInfo(BaseModel):
     identifier: Optional[str]
 
 class AppInfo(BaseModel):
+    type:    AppType
     client:  ClientInfo
     device:  DeviceInfo
     service: ServiceInfo
@@ -173,13 +186,10 @@ class AppInfo(BaseModel):
             gl = locale and (locale.territory or locale.language),
             hl = locale and '-'.join \
             (
-                filter \
+                utils.filter_args \
                 (
-                    lambda item: item is not None,
-                    (
-                        locale.language,
-                        locale.territory,
-                    ),
+                    locale.language,
+                    locale.territory,
                 ),
             ),
         )

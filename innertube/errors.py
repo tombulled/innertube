@@ -21,16 +21,20 @@ innertube.errors.InnerTubeException: [501] UNIMPLEMENTED: Operation is not imple
 '''
 
 import addict
+import attr
 import bs4
+
 import http.client
 
 from . import enums
+from . import models
 
 from requests import \
 (
     Response,
 )
 
+@attr.s
 class InnerTubeException(Exception):
     '''
     Generic InnerTubeException
@@ -40,39 +44,44 @@ class InnerTubeException(Exception):
             (e.g. operations.video_info)
     '''
 
-    def __init__(self, error: dict):
-        '''
-        Initialise the Exception
+    error: models.Error = attr.ib()
 
-        Generates a string representation of the error for use raising the Exception
-        '''
-
-        self.error = error
-
-        message = '[{code}] {status}: {message}'.format(**error)
-
-        for sub_error in error.get('errors', ()):
-            message += '\n\t{reason}@{domain}: {message}'.format(**sub_error)
-
-        super().__init__(message)
+    def __str__(self) -> str:
+        return '\n\t'.join \
+        (
+            (
+                f'[{self.error.code}] {self.error.status}: {self.error.message}',
+                * \
+                (
+                    f'{error.reason}@{error.domain}: {error.message}'
+                    for error in self.error.errors or ()
+                ),
+            ),
+        )
 
     @classmethod
     def from_response(cls, response: Response):
         content_type = response.headers.get(enums.Header.CONTENT_TYPE.value).lower()
 
-        error = addict.Dict \
-        (
-            code    = response.status_code,
-            status  = response.reason,
-            message = http.client.responses[response.status_code],
-        )
+        error_message = http.client.responses[response.status_code]
 
         if content_type.startswith(enums.Mime.JSON.value):
-            error = addict.Dict(response.json()).error or error
+            data = addict.Dict(response.json())
+
+            if (error := data.error):
+                return cls(models.Error(**error))
         elif content_type.startswith(enums.Mime.HTML.value):
             soup = bs4.BeautifulSoup(response.text, 'html.parser')
 
             if (title := soup.find('title')):
-                error.message = title.text
+                error_message = title.text
 
-        return cls(error)
+        return cls \
+        (
+            models.Error \
+            (
+                code    = response.status_code,
+                status  = response.reason,
+                message = error_message,
+            )
+        )
