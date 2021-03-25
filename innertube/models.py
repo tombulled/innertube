@@ -100,9 +100,12 @@ class AdaptorInfo(BaseModel):
     context:  Context
 
 class ProductInfo(BaseModel):
-    name:    Optional[str]
-    version: Optional[str]
+    name:    str = 'Mozilla'
+    version: str = '5.0'
     token:   str
+
+    def user_agent(self) -> str:
+        return f'{self.name}/{self.version} ({self.token})'
 
 class DeviceInfo(BaseModel):
     '''
@@ -111,7 +114,8 @@ class DeviceInfo(BaseModel):
 
     type:    DeviceType
     name:    str
-    product: ProductInfo
+    # product: ProductInfo
+    token:   str
     package: Optional[str]
 
 class ServiceInfo(BaseModel):
@@ -152,12 +156,15 @@ class AppInfo(BaseModel):
     api:     ApiInfo
     project: Optional[str]
 
-    def user_agent(self) -> str:
-        return '{product_name}/{product_version} ({product_token})'.format \
+    def product(self) -> ProductInfo:
+        return ProductInfo \
         (
-            product_name    = self.device.product.name    or self.package(),
-            product_version = self.device.product.version or self.client.version,
-            product_token   = self.device.product.token,
+            ** utils.filter_kwargs \
+            (
+                name    = self.package(),
+                version = self.project and self.client.version,
+                token   = self.device.token,
+            ),
         )
 
     def package(self) -> Optional[str]:
@@ -203,7 +210,7 @@ class AppInfo(BaseModel):
         (
             client_name    = str(self.service.id),
             client_version = self.client.version,
-            user_agent     = self.user_agent(),
+            user_agent     = self.product().user_agent(),
             referer        = str \
             (
                 furl.furl \

@@ -123,45 +123,29 @@ devices = Container \
 (
     models.DeviceInfo \
     (
-        type    = enums.DeviceType.WEB,
-        name    = 'Web',
-        product = models.ProductInfo \
-        (
-            name    = 'Mozilla',
-            version = '5.0',
-            token   = 'Windows NT 10.0; Win64; x64; rv:77.0',
-        ),
+        type  = enums.DeviceType.WEB,
+        name  = 'Web',
+        token = 'Windows NT 10.0; Win64; x64; rv:77.0',
     ),
     models.DeviceInfo \
     (
         type    = enums.DeviceType.ANDROID,
         name    = 'Android',
+        token   = 'Linux; U; Android 9; en_GB; VirtualBox Build/PI',
         package = 'com.google.android',
-        product = models.ProductInfo \
-        (
-            token = 'Linux; U; Android 9; en_GB; VirtualBox Build/PI',
-        ),
     ),
     models.DeviceInfo \
     (
         type    = enums.DeviceType.IOS,
         name    = 'IOS',
+        token   = 'iPhone10,5; U; CPU iOS 14_4 like Mac OS X; en_GB',
         package = 'com.google.ios',
-        product = models.ProductInfo \
-        (
-            token = 'iPhone10,5; U; CPU iOS 14_4 like Mac OS X; en_GB',
-        ),
     ),
     models.DeviceInfo \
     (
-        type    = enums.DeviceType.TV,
-        name    = 'TV',
-        product = models.ProductInfo \
-        (
-            name    = 'Mozilla',
-            version = '5.0',
-            token   = 'PlayStation; PlayStation 4/8.03',
-        ),
+        type  = enums.DeviceType.TV,
+        name  = 'TV',
+        token = 'PlayStation; PlayStation 4/8.03',
     ),
 )
 
