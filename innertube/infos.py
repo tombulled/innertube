@@ -169,65 +169,31 @@ services = Container \
 (
     models.ServiceInfo \
     (
-        type      = enums.ServiceType.YOUTUBE,
-        name      = 'YouTube',
-        domain    = 'www.youtube.com',
-        id        = 1,
-        endpoints = \
-        [
-            enums.Endpoint.CONFIG,
-            enums.Endpoint.BROWSE,
-            enums.Endpoint.PLAYER,
-            enums.Endpoint.GUIDE,
-            enums.Endpoint.SEARCH,
-            enums.Endpoint.NEXT,
-        ],
+        type   = enums.ServiceType.YOUTUBE,
+        name   = 'YouTube',
+        domain = 'www.youtube.com',
+        id     = 1,
     ),
     models.ServiceInfo \
     (
-        type      = enums.ServiceType.YOUTUBE_MUSIC,
-        name      = 'YouTube Music',
-        domain    = 'music.youtube.com',
-        id        = 67,
-        endpoints = \
-        [
-            enums.Endpoint.CONFIG,
-            enums.Endpoint.BROWSE,
-            enums.Endpoint.PLAYER,
-            enums.Endpoint.GUIDE,
-            enums.Endpoint.SEARCH,
-            enums.Endpoint.NEXT,
-            enums.Endpoint.MUSIC_GET_SEARCH_SUGGESTIONS,
-            enums.Endpoint.MUSIC_GET_QUEUE,
-        ],
+        type   = enums.ServiceType.YOUTUBE_MUSIC,
+        name   = 'YouTube Music',
+        domain = 'music.youtube.com',
+        id     = 67,
     ),
     models.ServiceInfo \
     (
-        type      = enums.ServiceType.YOUTUBE_KIDS,
-        name      = 'YouTube Kids',
-        domain    = 'www.youtubekids.com',
-        id        = 76,
-        endpoints = \
-        [
-            enums.Endpoint.CONFIG,
-            enums.Endpoint.BROWSE,
-            enums.Endpoint.PLAYER,
-            enums.Endpoint.SEARCH,
-            enums.Endpoint.NEXT,
-        ],
+        type   = enums.ServiceType.YOUTUBE_KIDS,
+        name   = 'YouTube Kids',
+        domain = 'www.youtubekids.com',
+        id     = 76,
     ),
     models.ServiceInfo \
     (
-        type      = enums.ServiceType.YOUTUBE_STUDIO,
-        name      = 'YouTube Studio',
-        domain    = 'studio.youtube.com',
-        id        = 62,
-        endpoints = \
-        [
-            enums.Endpoint.CONFIG,
-            enums.Endpoint.BROWSE,
-            enums.Endpoint.PLAYER,
-        ],
+        type   = enums.ServiceType.YOUTUBE_STUDIO,
+        name   = 'YouTube Studio',
+        domain = 'studio.youtube.com',
+        id     = 62,
     ),
 )
 

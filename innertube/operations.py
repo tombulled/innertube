@@ -31,7 +31,7 @@ from typing import \
 def complete_search \
         (
             *,
-            query: str,
+            query:  str,
             client: str, # This is a ClientInfo.identifier
             locale: babel.Locale = None,
         ) -> List[str]:
@@ -58,19 +58,22 @@ def complete_search \
             q      = query,
             hl     = locale and locale.language,
             gl     = locale and locale.territory,
-            ds     = 'yt',
-            oe     = 'utf-8',
-            xhr    = 't',
-            hjson  = 't',
+            ds     = enums.DataSource.YOUTUBE,
+            oe     = enums.Encoding.UTF_8,
+            xhr    = enums.CharBool.TRUE,
+            hjson  = enums.CharBool.TRUE,
         ),
         headers = \
         {
-            enums.Header.USER_AGENT.value: infos.Apps.YouTubeWeb.value.user_agent(),
+            enums.Header.USER_AGENT.value: infos.apps.get \
+            (
+                type = enums.AppType.YOUTUBE_WEB,
+            ).user_agent(),
         },
     )
 
     return \
     [
         suggestion
-        for suggestion, _ in response.json()[1]
+        for suggestion, *_ in response.json()[1]
     ]

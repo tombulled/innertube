@@ -32,7 +32,6 @@ from babel import \
 
 from .enums import \
 (
-    Endpoint,
     DeviceType,
     ServiceType,
     ClientType,
@@ -45,14 +44,20 @@ class BaseModel(pydantic.BaseModel):
         allow_mutation                 = False
         allow_population_by_field_name = True
 
-    def dump(self):
+    def dict(self, **kwargs):
         return utils.filter_kwargs \
         (
-            ** self.dict \
+            ** super().dict \
             (
-                by_alias = True,
-                # use_enum_values...
-            )
+                ** \
+                {
+                    ** dict \
+                    (
+                        by_alias = True,
+                    ),
+                    ** kwargs,
+                },
+            ),
         )
 
 class Params(BaseModel):
@@ -118,7 +123,6 @@ class ServiceInfo(BaseModel):
     name:      str
     domain:    str
     id:        int
-    endpoints: List[Endpoint]
 
 class ApiInfo(BaseModel):
     '''

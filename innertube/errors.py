@@ -22,7 +22,7 @@ innertube.errors.InnerTubeException: [501] UNIMPLEMENTED: Operation is not imple
 
 import addict
 import attr
-import bs4
+import requests_html
 
 import http.client
 
@@ -63,7 +63,12 @@ class InnerTubeException(Exception):
     def from_response(cls, response: Response):
         content_type = response.headers.get(enums.Header.CONTENT_TYPE.value).lower()
 
-        error_message = http.client.responses[response.status_code]
+        error = addict.Dict \
+        (
+            code    = response.status_code,
+            status  = response.reason,
+            message = http.client.responses[response.status_code],
+        )
 
         if content_type.startswith(enums.Mime.JSON.value):
             data = addict.Dict(response.json())
@@ -71,17 +76,9 @@ class InnerTubeException(Exception):
             if (error := data.error):
                 return cls(models.Error(**error))
         elif content_type.startswith(enums.Mime.HTML.value):
-            soup = bs4.BeautifulSoup(response.text, 'html.parser')
+            html = requests_html.HTML(html = response.text)
 
-            if (title := soup.find('title')):
-                error_message = title.text
+            if (titles := html.find('title')):
+                error.message = titles[0].text
 
-        return cls \
-        (
-            models.Error \
-            (
-                code    = response.status_code,
-                status  = response.reason,
-                message = error_message,
-            )
-        )
+        return cls(models.Error(**error))

@@ -59,16 +59,6 @@ class Scheme(AutoNameLower):
     HTTP  = enum.auto()
     HTTPS = enum.auto()
 
-class Endpoint(StrEnum):
-    CONFIG                       = 'config'
-    GUIDE                        = 'guide'
-    PLAYER                       = 'player'
-    BROWSE                       = 'browse'
-    SEARCH                       = 'search'
-    NEXT                         = 'next'
-    MUSIC_GET_SEARCH_SUGGESTIONS = 'music/get_search_suggestions'
-    MUSIC_GET_QUEUE              = 'music/get_queue'
-
 class Header(StrEnum):
     USER_AGENT     = 'User-Agent'
     REFERER        = 'Referer'
@@ -80,3 +70,13 @@ class Header(StrEnum):
 class Mime(StrEnum):
     JSON = 'application/json'
     HTML = 'text/html'
+
+class CharBool(StrEnum):
+    TRUE  = 't'
+    FALSE = 'f'
+
+class Encoding(StrEnum):
+    UTF_8 = 'utf-8'
+
+class DataSource(StrEnum):
+    YOUTUBE = 'yt'

@@ -8,29 +8,42 @@ from . import errors
 from . import enums
 from . import models
 
+from typing import \
+(
+    Optional,
+)
 
 @attr.s(init = False)
 class Session(requests_toolbelt.sessions.BaseUrlSession):
     base_url: str = attr.ib()
-    
-    __info: models.AdaptorInfo
 
-    def __init__(self, info: models.AdaptorInfo):
-        super().__init__(base_url = info.base_url)
+    __context: Optional[dict]
 
-        self.headers.update(info.headers.dump())
-        self.params.update(info.params.dump())
+    def __init__ \
+            (
+                self,
+                *,
+                base_url: Optional[str]  = None,
+                context:  Optional[dict] = None,
+                headers:  Optional[dict] = None,
+                params:   Optional[dict] = None,
+            ):
+        super().__init__(base_url = base_url)
 
-        self.__info = info
+        self.headers.update(headers or {})
+        self.params.update(params or {})
+
+        self.__context = context
 
     @functools.wraps(requests_toolbelt.sessions.BaseUrlSession.request)
     def request(self, *args, **kwargs) -> addict.Dict:
-        kwargs = addict.Dict(kwargs)
+        if (context := self.__context):
+            kwargs = addict.Dict(kwargs)
 
-        if not kwargs.json:
-            kwargs.json = addict.Dict()
+            if not kwargs.json:
+                kwargs.json = addict.Dict()
 
-        kwargs.json.context.client.update(self.__info.context.dump())
+            kwargs.json.context.client.update(context)
 
         response = super().request(*args, **kwargs)
 
