@@ -38,7 +38,6 @@ from .errors import \
 
 def client \
         (
-            cls,
             service: ServiceType,
             device:  DeviceType,
             locale:  Locale = None,
@@ -50,7 +49,7 @@ def client \
     )
 
     if app:
-        return cls \
+        return Client \
         (
             session = Session \
             (
