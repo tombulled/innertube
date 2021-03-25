@@ -17,7 +17,7 @@ from typing import \
     List,
 )
 
-def method(endpoint: enums.Endpoint):
+def method(endpoint: str):
     def decorator(func):
         @functools.wraps(func)
         def wrapper(self, *args, **kwargs):
@@ -26,7 +26,7 @@ def method(endpoint: enums.Endpoint):
                 functools.partial \
                 (
                     self.session.post,
-                    endpoint.value,
+                    endpoint,
                 ),
                 *args,
                 **kwargs,
@@ -55,7 +55,7 @@ class Client(SessionWrapper):
         app_info = infos.apps.get \
         (
             service = infos.services.get(type = service),
-            device  = infos.devices.get(type = device),
+            device  = infos.devices.get(type  = device),
         )
 
         if app_info:
@@ -63,14 +63,14 @@ class Client(SessionWrapper):
             (
                 session = session.Session \
                 (
-                    info = app_info.adaptor_info \
+                    ** app_info.adaptor_info \
                     (
                         locale = locale,
-                    ),
+                    ).dict(),
                 )
             )
 
-    @method(enums.Endpoint.CONFIG)
+    @method('config')
     def config(dispatch: Callable) -> addict.Dict:
         '''
         Dispatch the endpoint: config
@@ -80,7 +80,7 @@ class Client(SessionWrapper):
 
         return dispatch()
 
-    @method(enums.Endpoint.GUIDE)
+    @method('guide')
     def guide(dispatch: Callable) -> addict.Dict:
         '''
         Dispatch the endpoint: guide
@@ -90,7 +90,7 @@ class Client(SessionWrapper):
 
         return dispatch()
 
-    @method(enums.Endpoint.PLAYER)
+    @method('player')
     def player(dispatch: Callable, *, video_id: str) -> addict.Dict:
         '''
         Dispatch the endpoint: player
@@ -106,7 +106,7 @@ class Client(SessionWrapper):
             ),
         )
 
-    @method(enums.Endpoint.BROWSE)
+    @method('browse')
     def browse \
             (
                 dispatch: Callable,
@@ -135,7 +135,7 @@ class Client(SessionWrapper):
             ),
         )
 
-    @method(enums.Endpoint.SEARCH)
+    @method('search')
     def search \
             (
                 dispatch: Callable,
@@ -164,7 +164,7 @@ class Client(SessionWrapper):
             ),
         )
 
-    @method(enums.Endpoint.NEXT)
+    @method('next')
     def next \
             (
                 dispatch: Callable,
@@ -193,7 +193,7 @@ class Client(SessionWrapper):
             ),
         )
 
-    @method(enums.Endpoint.MUSIC_GET_SEARCH_SUGGESTIONS)
+    @method('music/get_search_suggestions')
     def music_get_search_suggestions \
             (
                 dispatch: Callable,
@@ -214,7 +214,7 @@ class Client(SessionWrapper):
             ),
         )
 
-    @method(enums.Endpoint.MUSIC_GET_QUEUE)
+    @method('music/get_queue')
     def music_get_queue \
             (
                 dispatch: Callable,
