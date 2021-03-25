@@ -7,17 +7,14 @@ from babel import \
     Locale,
 )
 
-from .infos import \
-(
-    services,
-    devices,
-    clients,
-    apps,
-)
-
 from .sessions import \
 (
     Session,
+)
+
+from .groups import \
+(
+    ClientGroup,
 )
 
 from .clients import \
@@ -36,18 +33,4 @@ from .errors import \
     InnerTubeException,
 )
 
-def client \
-        (
-            service: ServiceType,
-            device:  DeviceType,
-            locale:  Locale = None,
-        ) -> Client:
-    return Client \
-    (
-        info = apps.get \
-        (
-            service = services.get(type = service),
-            device  = devices.get(type  = device),
-        ),
-        locale = locale,
-    )
+client = Client.construct
