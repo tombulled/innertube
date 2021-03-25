@@ -46,9 +46,9 @@ class ClientGroup(BaseClientGroup):
     def __init__ \
             (
                 self,
-                service:  enums.ServiceType,
-                *devices: enums.DeviceType,
-                locale:   babel.Locale = None,
+                service: enums.ServiceType,
+                devices: typing.List[enums.DeviceType],
+                locale:  babel.Locale = None,
             ):
         super().__init__ \
         (
