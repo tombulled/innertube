@@ -114,7 +114,6 @@ class DeviceInfo(BaseModel):
 
     type:    DeviceType
     name:    str
-    # product: ProductInfo
     token:   str
     package: Optional[str]
 

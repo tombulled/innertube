@@ -41,21 +41,13 @@ def client \
             service: ServiceType,
             device:  DeviceType,
             locale:  Locale = None,
-        ):
-    app = apps.get \
+        ) -> Client:
+    return Client \
     (
-        service = services.get(type = service),
-        device  = devices.get(type  = device),
-    )
-
-    if app:
-        return Client \
+        info = apps.get \
         (
-            session = Session \
-            (
-                ** app.adaptor_info \
-                (
-                    locale = locale,
-                ).dict(),
-            )
-        )
+            service = services.get(type = service),
+            device  = devices.get(type  = device),
+        ),
+        locale = locale,
+    )

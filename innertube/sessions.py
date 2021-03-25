@@ -33,7 +33,11 @@ class Session(requests_toolbelt.sessions.BaseUrlSession):
         self.headers.update(headers or {})
         self.params.update(params or {})
 
-        self.__context = context
+        self.__context = addict.Dict(context)
+
+    @property
+    def context(self):
+        return self.__context
 
     @functools.wraps(requests_toolbelt.sessions.BaseUrlSession.request)
     def request(self, *args, **kwargs) -> addict.Dict:

@@ -32,11 +32,14 @@ def complete_search \
         (
             *,
             query:  str,
-            client: str, # This is a ClientInfo.identifier
+            client: str,
             locale: babel.Locale = None,
         ) -> List[str]:
     '''
     Dispatch a 'complete/search' request to suggestqueries.google.com
+
+    Notes:
+        * `client` refers to a ClientInfo.identifier string
 
     Reccomended devices for services:
         YouTube:      Tv
@@ -68,7 +71,7 @@ def complete_search \
             enums.Header.USER_AGENT.value: infos.apps.get \
             (
                 type = enums.AppType.YOUTUBE_WEB,
-            ).user_agent(),
+            ).product().user_agent(),
         },
     )
 
