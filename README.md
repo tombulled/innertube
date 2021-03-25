@@ -75,3 +75,17 @@ Only the core, unauthenticated endpoints are currently implemented. However, bet
 ## What about Authentication?
 The InnerTube API uses OAuth2, however I have been unable to successfully implement authentication.
 Therefore, this library currently only provides unauthenticated access to the API.
+
+## Credits
+Here's a list of the awesome libraries used by `innertube`
+| PyPi | Source |
+| ---- | ------ |
+| [requests](https://pypi.org/project/requests/) | https://github.com/psf/requests |
+| [pydantic](https://pypi.org/project/pydantic/) | https://github.com/samuelcolvin/pydantic |
+| [addict](https://pypi.org/project/addict/) | https://github.com/mewwts/addict |
+| [attrs](https://pypi.org/project/attrs/) | https://github.com/python-attrs/attrs |
+| [furl](https://pypi.org/project/furl/) | https://github.com/gruns/furl |
+| [babel](https://pypi.org/project/Babel/) | https://github.com/python-babel/babel |
+| [humps](https://pypi.org/project/pyhumps/) | https://github.com/nficano/humps |
+| [requests-html](https://pypi.org/project/requests-html/) | https://github.com/psf/requests-html |
+| [requests-toolbelt](https://pypi.org/project/requests-toolbelt/) | https://github.com/requests/toolbelt |
