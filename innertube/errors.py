@@ -1,49 +1,18 @@
-'''
-Library containing custom Exceptions
-
->>> from innertube import errors
->>>
->>> dir(errors)
-...
->>>
->>> raise errors.InnerTubeException \
-(
-    {
-        'code':    501,
-        'status':  'UNIMPLEMENTED',
-        'message': 'Operation is not implemented, or supported, or enabled.'
-    }
-)
-Traceback (most recent call last):
-  File "<stdin>", line 1, in <module>
-innertube.errors.InnerTubeException: [501] UNIMPLEMENTED: Operation is not implemented, or supported, or enabled.
->>>
-'''
-
 import addict
 import attr
-import requests_html
+import bs4
+import requests
+
+import mime
 
 import http.client
+import html.parser
 
 from . import enums
 from . import models
 
-from requests import \
-(
-    Response,
-)
-
 @attr.s
 class InnerTubeException(Exception):
-    '''
-    Generic InnerTubeException
-
-    Notes:
-        * This exception may also be raised by non-innertube interactions
-            (e.g. operations.video_info)
-    '''
-
     error: models.Error = attr.ib()
 
     def __str__(self) -> str:
@@ -60,8 +29,10 @@ class InnerTubeException(Exception):
         )
 
     @classmethod
-    def from_response(cls, response: Response):
+    def from_response(cls, response: requests.Response):
         content_type = response.headers.get(enums.Header.CONTENT_TYPE.value).lower()
+
+        mime_type = mime.parse(content_type.lower())
 
         error = addict.Dict \
         (
@@ -70,15 +41,14 @@ class InnerTubeException(Exception):
             message = http.client.responses[response.status_code],
         )
 
-        if content_type.startswith(enums.Mime.JSON.value):
+        if mime_type.subtype == enums.MediaSubtype.JSON:
             data = addict.Dict(response.json())
 
             if (error := data.error):
                 return cls(models.Error(**error))
-        elif content_type.startswith(enums.Mime.HTML.value):
-            html = requests_html.HTML(html = response.text)
+        elif mime_type.subtype == enums.MediaSubtype.HTML:
+            soup = bs4.BeautifulSoup(response.text, html.parser.__name__)
 
-            if (titles := html.find('title')):
-                error.message = titles[0].text
+            error.message = soup.p.p.text
 
-        return cls(models.Error(**error))
+        return cls(models.Error.parse_obj(error))

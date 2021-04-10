@@ -3,74 +3,42 @@ import babel
 
 import typing
 
-from . import clients
 from . import enums
-
-from .clients import \
-(
-    Client,
-)
+from . import clients
+from . import constructors
 
 @attr.s
 class BaseClientGroup(object):
-    clients: typing.Dict[enums.DeviceType, Client] = attr.ib \
-    (
-        repr = lambda clients: tuple \
-        (
-            client.info.name
-            for client in clients.values()
-        ).__str__()
-    )
+    clients = attr.ib()
 
-    def __call__(self, device: enums.DeviceType) -> Client:
+    def __call__(self, device: enums.Device):
         return self.clients.get(device)
 
-    def __repr__(self) -> str:
-        return repr \
-        (
-            pydantic.create_model \
-            (
-                self.__class__.__name__,
-                clients = \
-                [
-                    client.info.name
-                    for client in self.clients.values()
-                ],
-            )()
-        )
-
+@attr.s(init = False)
 class ClientGroup(BaseClientGroup):
-    __service: enums.ServiceType
-    __locale:  typing.Optional[babel.Locale]
+    service: enums.Service                  = attr.ib()
+    locale:  typing.Optional[babel.Locale]  = attr.ib()
 
     def __init__ \
             (
                 self,
-                service: enums.ServiceType,
-                devices: typing.List[enums.DeviceType],
-                locale:  babel.Locale = None,
+                service: enums.Service,
+                devices: enums.Device,
+                locale:  typing.Optional[babel.Locale] = None,
             ):
         super().__init__ \
         (
             clients = \
-            {
-                device: clients.Client.construct \
+            [
+                constructors.client \
                 (
                     service = service,
                     device  = device,
                     locale  = locale,
                 )
                 for device in devices
-            }
+            ]
         )
 
-        self.__service = service
-        self.__locale  = locale
-
-    @property
-    def service(self) -> enums.ServiceType:
-        return self.__service
-
-    @property
-    def locale(self) -> typing.Optional[babel.Locale]:
-        return self.__locale
+        self.service = service
+        self.locale  = locale

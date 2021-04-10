@@ -1,194 +1,247 @@
-'''
-Library containing info models
-
-Usage:
-    >>> from innertube import models
-    >>>
-    >>> dir(models)
-    ...
-    >>>
-    >>> models.DeviceInfo
-    <class 'innertube.models.DeviceInfo'>
-    >>>
-'''
-
 import pydantic
 import humps
+import babel
 import furl
 
+import functools
+import enum
+import operator
+import typing
+
 from . import enums
-from . import utils
-
-from typing import \
-(
-    Optional,
-    List,
-)
-
-from babel import \
-(
-    Locale,
-)
-
-from .enums import \
-(
-    DeviceType,
-    ServiceType,
-    ClientType,
-    AppType,
-    Alt,
-)
 
 class BaseModel(pydantic.BaseModel):
     class Config:
-        allow_mutation                 = False
         allow_population_by_field_name = True
-
-    def dict(self, **kwargs):
-        return utils.filter_kwargs \
-        (
-            ** super().dict \
-            (
-                ** \
-                {
-                    ** dict \
-                    (
-                        by_alias = True,
-                    ),
-                    ** kwargs,
-                },
-            ),
-        )
 
 class Params(BaseModel):
     key: str
-    alt: str
+    alt: enums.Alt
 
 class Context(BaseModel):
-    client_name:    str
-    client_version: str
-    gl:             Optional[str]
-    hl:             Optional[str]
+    client_name:    typing.Optional[str]
+    client_version: typing.Optional[str]
+    gl:             typing.Optional[str]
+    hl:             typing.Optional[str]
 
     class Config:
         alias_generator = humps.camelize
 
 class Headers(BaseModel):
-    client_name:    str = pydantic.Field(..., alias = enums.Header.CLIENT_NAME.value)
-    client_version: str = pydantic.Field(..., alias = enums.Header.CLIENT_VERSION.value)
-    user_agent:     str = pydantic.Field(..., alias = enums.Header.USER_AGENT.value)
-    referer:        str = pydantic.Field(..., alias = enums.Header.REFERER.value)
+    client_name:    typing.Optional[str] = pydantic.Field(..., alias = enums.Header.CLIENT_NAME.value)
+    client_version: typing.Optional[str] = pydantic.Field(..., alias = enums.Header.CLIENT_VERSION.value)
+    user_agent:     typing.Optional[str] = pydantic.Field(..., alias = enums.Header.USER_AGENT.value)
+    referer:        typing.Optional[str] = pydantic.Field(..., alias = enums.Header.REFERER.value)
 
     class Config:
         alias_generator = lambda field: '-'.join(map(str.title, field.split('_')))
 
-class Error(BaseModel):
-    class Error(BaseModel):
-        reason: str
-        domain: str
-        message: str
-
-    code: int
-    status: str
+class SubError(BaseModel):
+    reason:  str
+    domain:  str
     message: str
-    errors: Optional[List[Error]]
 
-class AdaptorInfo(BaseModel):
+class Error(BaseModel):
+    code:    int
+    status:  str
+    message: str
+    errors:  typing.Optional[typing.List[SubError]]
+
+class Adaptor(BaseModel):
     base_url: str
     params:   Params
     headers:  Headers
     context:  Context
 
-class ProductInfo(BaseModel):
-    name:    str = 'Mozilla'
-    version: str = '5.0'
-    token:   str
+class ProductIdentifier(BaseModel):
+    name:     str
+    version:  typing.Optional[str]
 
-    def user_agent(self) -> str:
-        return f'{self.name}/{self.version} ({self.token})'
-
-class DeviceInfo(BaseModel):
-    '''
-    Info Model for storing information about a Device
-    '''
-
-    type:    DeviceType
-    name:    str
-    token:   str
-    package: Optional[str]
-
-class ServiceInfo(BaseModel):
-    '''
-    Info Model for storing information about a Service
-    '''
-
-    type:      ServiceType
-    name:      str
-    domain:    str
-    id:        int
-
-class ApiInfo(BaseModel):
-    '''
-    Info Model for storing information about an Api
-    '''
-
-    key:     str
-    domain:  str = 'youtubei.googleapis.com'
-    mount:   str = 'youtubei'
-    version: int = 1
-
-class ClientInfo(BaseModel):
-    '''
-    Info Model for storing information about a Client
-    '''
-
-    type:       ClientType
-    name:       str
-    version:    str
-    identifier: Optional[str]
-
-class AppInfo(BaseModel):
-    type:    AppType
-    client:  ClientInfo
-    device:  DeviceInfo
-    service: ServiceInfo
-    api:     ApiInfo
-    project: Optional[str]
-
-    def product(self) -> ProductInfo:
-        return ProductInfo \
+    def __str__(self):
+        return '/'.join \
         (
-            ** utils.filter_kwargs \
+            filter \
             (
-                name    = self.package(),
-                version = self.project and self.client.version,
-                token   = self.device.token,
+                lambda item: item is not None,
+                (
+                    self.name,
+                    self.version,
+                ),
             ),
         )
 
-    def package(self) -> Optional[str]:
-        if self.device.package and self.project:
-            return f'{self.device.package}.{self.project}'
+class ProductComment(BaseModel):
+    comments: typing.List[str]
 
-    def base_url(self) -> str:
+    def __str__(self):
+        return '({comments})'.format \
+        (
+            comments = '; '.join \
+            (
+                self.comments,
+            ),
+        )
+
+class Product(BaseModel):
+    identifier: ProductIdentifier
+    comment:    typing.Optional[ProductComment]
+
+    def __str__(self):
+        return ' '.join \
+        (
+            map \
+            (
+                str,
+                filter \
+                (
+                    lambda item: item is not None,
+                    (
+                        self.identifier,
+                        self.comment,
+                    ),
+                ),
+            ),
+        )
+
+class UserAgent(BaseModel):
+    products: typing.List[Product]
+
+    def __str__(self):
+        return ' '.join(map(str, self.products))
+
+class Company(BaseModel):
+    name:   str
+    domain: str
+
+    def package(self):
+        return '.'.join(self.domain.split('.')[::-1])
+
+class Device(BaseModel):
+    class Product(BaseModel):
+        identifier: typing.Optional[ProductIdentifier]
+        comment:    typing.Optional[ProductComment]
+
+        def product(self):
+            return self.identifier and Product \
+            (
+                identifier = self.identifier,
+                comment    = self.comment,
+            )
+
+    name:    str
+    product: Product
+    project: typing.Optional[str]
+
+class Service(BaseModel):
+    name:   str
+    domain: str
+    id:     typing.Optional[int]
+
+class Host(BaseModel):
+    scheme:  enums.Scheme = enums.Scheme.HTTPS
+    domain:  str
+    port:    typing.Optional[int]
+
+    def __str__(self):
         return str \
         (
             furl.furl \
             (
-                scheme = enums.Scheme.HTTPS.value,
-                host   = self.api.domain,
-                path   = furl.Path() / self.api.mount / f'v{self.api.version}' / '/',
+                scheme = self.scheme.value,
+                host   = self.domain,
+                port   = self.port,
             )
         )
 
-    def params(self) -> Params:
-        return Params \
+class Api(BaseModel):
+    host:    Host
+    mount:   typing.Optional[str]
+    version: typing.Optional[str]
+
+    def __str__(self):
+        return str \
         (
-            key = self.api.key,
-            alt = enums.Alt.JSON.value,
+            functools.reduce \
+            (
+                operator.truediv,
+                (
+                    map \
+                    (
+                        lambda item: item or '',
+                        (
+                            furl.furl(str(self.host)),
+                            self.mount,
+                            self.version,
+                        )
+                    )
+                )
+            )
         )
 
-    def context(self, locale: Locale = None) -> Context:
+class Authentication(BaseModel):
+    api_key: str
+
+class Client(BaseModel):
+    name:       str
+    version:    str
+    auth:       Authentication
+    module:     typing.Optional[str]
+    identifier: typing.Optional[str]
+
+    def product(self):
+        return ProductIdentifier \
+        (
+            name    = self.name,
+            version = self.version,
+        )
+
+class AppSchema(BaseModel):
+    client:  enums.Client
+    device:  enums.Device
+    service: enums.Service
+
+class App(BaseModel):
+    company: Company
+    client:  Client
+    device:  Device
+    service: Service
+    api:     Api
+
+    def product(self):
+        return self.device.product.product() or Product \
+        (
+            identifier = self.client.product(),
+            comment    = self.device.product.comment,
+        )
+
+    def user_agent(self):
+        return UserAgent \
+        (
+            products = [self.product()],
+        )
+
+    def base_url(self):
+        return str(self.api)
+
+    def package(self):
+        segments = \
+        (
+            self.company.package(),
+            self.device.project,
+            self.module,
+        )
+
+        if all(segments):
+            return '.'.join(segments)
+
+    def params(self):
+        return Params \
+        (
+            key = self.client.auth.api_key,
+            alt = enums.Alt.JSON,
+        )
+
+    def context(self, locale: babel.Locale = None):
         return Context \
         (
             client_name    = self.client.name,
@@ -196,10 +249,13 @@ class AppInfo(BaseModel):
             gl = locale and (locale.territory or locale.language),
             hl = locale and '-'.join \
             (
-                utils.filter_args \
+                filter \
                 (
-                    locale.language,
-                    locale.territory,
+                    lambda item: item is not None,
+                    (
+                        locale.language,
+                        locale.territory,
+                    ),
                 ),
             ),
         )
@@ -207,9 +263,9 @@ class AppInfo(BaseModel):
     def headers(self) -> Headers:
         return Headers \
         (
-            client_name    = str(self.service.id),
+            client_name    = self.service.id,
             client_version = self.client.version,
-            user_agent     = self.product().user_agent(),
+            user_agent     = str(self.user_agent()),
             referer        = str \
             (
                 furl.furl \
@@ -220,8 +276,8 @@ class AppInfo(BaseModel):
             ),
         )
 
-    def adaptor_info(self, locale: Locale = None) -> AdaptorInfo:
-        return AdaptorInfo \
+    def adaptor(self, locale: babel.Locale = None) -> Adaptor:
+        return Adaptor \
         (
             base_url = self.base_url(),
             params   = self.params(),

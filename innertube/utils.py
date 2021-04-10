@@ -1,15 +1,12 @@
-def filter_kwargs(**kwargs) -> dict:
+def filter(function = None, **kwargs) -> dict:
     return \
     {
         key: value
         for key, value in kwargs.items()
-        if value is not None
+        if \
+        (
+            function(value)
+            if function
+            else value is not None
+        )
     }
-
-def filter_args(*args) -> list:
-    return \
-    [
-        arg
-        for arg in args
-        if arg is not None
-    ]

@@ -1,62 +1,66 @@
+import requests
+import typing
+import urllib.parse
 import attr
 import addict
-import requests_toolbelt.sessions
 
-import functools
+import mime
 
-from . import errors
 from . import enums
-from . import models
-
-from typing import \
-(
-    Optional,
-)
+from . import errors
 
 @attr.s(init = False)
-class Session(requests_toolbelt.sessions.BaseUrlSession):
-    base_url: str = attr.ib()
+class BaseUrlSession(requests.Session):
+    base_url: typing.Optional[str] = attr.ib(default = None)
 
-    __context: Optional[dict]
+    def __init__(self, base_url: typing.Optional[str] = None):
+        super().__init__()
 
-    def __init__ \
-            (
-                self,
-                *,
-                base_url: Optional[str]  = None,
-                context:  Optional[dict] = None,
-                headers:  Optional[dict] = None,
-                params:   Optional[dict] = None,
-            ):
-        super().__init__(base_url = base_url)
+        self.base_url = base_url
 
-        self.headers.update(headers or {})
-        self.params.update(params or {})
+    def prepare_request(self, request: requests.Request) -> requests.PreparedRequest:
+        request.url = urllib.parse.urljoin(self.base_url, request.url)
 
-        self.__context = addict.Dict(context)
+        return super().prepare_request(request)
 
-    @property
-    def context(self):
-        return self.__context
+@attr.s(init = False)
+class BaseSession(requests.Session):
+    context: typing.Optional[dict] = attr.ib(default = None)
 
-    @functools.wraps(requests_toolbelt.sessions.BaseUrlSession.request)
-    def request(self, *args, **kwargs) -> addict.Dict:
-        if (context := self.__context):
-            kwargs = addict.Dict(kwargs)
+    def __init__(self, context: typing.Optional[dict] = None):
+        super().__init__()
 
-            if not kwargs.json:
-                kwargs.json = addict.Dict()
+        self.context = context
 
-            kwargs.json.context.client.update(context)
+    def prepare_request(self, request: requests.Request):
+        if self.context and request.method == enums.Method.POST:
+            request.json = addict.Dict(request.json or {})
+            
+            request.json.context.client.update(self.context)
 
-        response = super().request(*args, **kwargs)
+        return super().prepare_request(request)
+
+    def send(self, request: requests.PreparedRequest, **kwargs) -> requests.Response:
+        response = super().send(request, **kwargs)
 
         if not response.ok:
             raise errors.InnerTubeException.from_response(response) from None
 
-        data = addict.Dict(response.json())
+        if (content_type := response.headers.get(enums.Header.CONTENT_TYPE.value)):
+            mime_type = mime.parse(content_type.lower())
 
-        if (visitor_data := data.responseContext.visitorData):
-            self.headers[enums.Header.VISITOR_ID.value] = visitor_data
+            if mime_type.subtype == enums.MediaSubtype.JSON:
+                data = addict.Dict(response.json())
 
-        return data
+                if (visitor_data := data.responseContext.visitorData):
+                    self.headers[enums.Header.VISITOR_ID.value] = visitor_data
+
+        return response
+
+@attr.s(init = False)
+class Session(BaseUrlSession, BaseSession):
+    def __init__(self, base_url: typing.Optional[str] = None, context: typing.Optional[dict] = None):
+        super().__init__()
+
+        BaseUrlSession.__init__(self, base_url)
+        BaseSession.__init__(self, context)

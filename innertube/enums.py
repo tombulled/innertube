@@ -3,26 +3,38 @@ import enum
 class StrEnum(str, enum.Enum): pass
 
 class AutoName(StrEnum):
-    def _generate_next_value_(name: str, *_) -> str:
-        return name
+    _generate_next_value_ = lambda name, *_: name
 
 class AutoNameLower(StrEnum):
-    def _generate_next_value_(name: str, *_) -> str:
-        return name.lower()
+    _generate_next_value_ = lambda name, *_: name.lower()
 
-class DeviceType(AutoName):
+class Company(AutoName):
+    GOOGLE = enum.auto()
+
+class Product(AutoName):
+    MOZILLA = enum.auto()
+
+class Host(AutoName):
+    YOUTUBEI        = enum.auto()
+    SUGGEST_QUERIES = enum.auto()
+
+class Api(AutoName):
+    YOUTUBEI_V1     = enum.auto()
+    SUGGEST_QUERIES = enum.auto()
+
+class Device(AutoName):
     WEB     = enum.auto()
     ANDROID = enum.auto()
     IOS     = enum.auto()
     TV      = enum.auto()
 
-class ServiceType(AutoName):
+class Service(AutoName):
     YOUTUBE        = enum.auto()
     YOUTUBE_MUSIC  = enum.auto()
     YOUTUBE_KIDS   = enum.auto()
     YOUTUBE_STUDIO = enum.auto()
 
-class ClientType(AutoName):
+class Client(AutoName):
     WEB            = enum.auto()
     WEB_MUSIC      = enum.auto()
     WEB_KIDS       = enum.auto()
@@ -37,7 +49,7 @@ class ClientType(AutoName):
     IOS_STUDIO     = enum.auto()
     TV             = enum.auto()
 
-class AppType(AutoName):
+class App(AutoName):
     YOUTUBE_WEB            = enum.auto()
     YOUTUBE_MUSIC_WEB      = enum.auto()
     YOUTUBE_KIDS_WEB       = enum.auto()
@@ -59,24 +71,35 @@ class Scheme(AutoNameLower):
     HTTP  = enum.auto()
     HTTPS = enum.auto()
 
+class Method(AutoName):
+    GET  = enum.auto()
+    POST = enum.auto()
+    # ...
+
 class Header(StrEnum):
-    USER_AGENT     = 'User-Agent'
-    REFERER        = 'Referer'
-    CONTENT_TYPE   = 'Content-Type'
+    _generate_next_value_ = lambda name, *_: name.replace('_', '-').title()
+
+    USER_AGENT     = enum.auto()
+    REFERER        = enum.auto()
+    CONTENT_TYPE   = enum.auto()
     VISITOR_ID     = 'X-Goog-Visitor-Id'
     CLIENT_NAME    = 'X-YouTube-Client-Name'
     CLIENT_VERSION = 'X-YouTube-Client-Version'
 
-class Mime(StrEnum):
-    JSON = 'application/json'
-    HTML = 'text/html'
+class MediaSubtype(AutoNameLower):
+    JSON = enum.auto()
+    HTML = enum.auto()
 
 class CharBool(StrEnum):
-    TRUE  = 't'
-    FALSE = 'f'
+    _generate_next_value_ = lambda name, *_: name[0]
+
+    TRUE  = enum.auto()
+    FALSE = enum.auto()
 
 class Encoding(StrEnum):
-    UTF_8 = 'utf-8'
+    _generate_next_value_ = lambda name, *_: name.replace('_', '-').lower()
+
+    UTF_8 = enum.auto()
 
 class DataSource(StrEnum):
     YOUTUBE = 'yt'

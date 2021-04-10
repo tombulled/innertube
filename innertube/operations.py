@@ -1,45 +1,27 @@
-'''
-Library containing non-innertube related operations that are used by the various services
-
-These operations do not go through the InnerTube API and are included for convenience
-
-Usage:
-    >>> from innertube import operations
-    >>>
-    >>> dir(operations)
-    ...
-    >>>
-    >>> operations.complete_search
-    <function complete_search at 0x7fd5476ec670>
-    >>>
-'''
-
 import requests
 import addict
 import furl
 import babel
 
-from . import utils
-from . import enums
-from . import infos
+import typing
 
-from typing import \
-(
-    List,
-)
+from . import enums
+from . import utils
+from . import infos
+from . import sessions
 
 def complete_search \
         (
             *,
             query:  str,
-            client: str,
-            locale: babel.Locale = None,
-        ) -> List[str]:
+            client: typing.Optional[str]          = None,
+            locale: typing.Optional[babel.Locale] = None,
+        ) -> typing.List[str]:
     '''
     Dispatch a 'complete/search' request to suggestqueries.google.com
 
     Notes:
-        * `client` refers to a ClientInfo.identifier string
+        * `client` refers to a Client.identifier string
 
     Reccomended devices for services:
         YouTube:      Tv
@@ -47,17 +29,20 @@ def complete_search \
         YouTubeKids:  Web
     '''
 
-    response = requests.get \
+    app = infos.apps[enums.App.YOUTUBE_TV]
+    api = infos.apis[enums.Api.SUGGEST_QUERIES]
+
+    session = sessions.BaseUrlSession \
     (
-        url = furl.furl \
+        base_url = str(api),
+    )
+
+    response = session.get \
+    (
+        'complete/search',
+        params = utils.filter \
         (
-            scheme = enums.Scheme.HTTPS.value,
-            host   = 'suggestqueries.google.com',
-            path   = 'complete/search',
-        ),
-        params = utils.filter_kwargs \
-        (
-            client = client,
+            client = client or app.client.identifier,
             q      = query,
             hl     = locale and locale.language,
             gl     = locale and locale.territory,
@@ -68,10 +53,7 @@ def complete_search \
         ),
         headers = \
         {
-            enums.Header.USER_AGENT.value: infos.apps.get \
-            (
-                type = enums.AppType.YOUTUBE_WEB,
-            ).product().user_agent(),
+            enums.Header.USER_AGENT.value: str(app.user_agent()),
         },
     )
 
