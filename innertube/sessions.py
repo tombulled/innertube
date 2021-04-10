@@ -1,8 +1,9 @@
 import requests
-import typing
-import urllib.parse
 import attr
 import addict
+
+import typing
+import urllib.parse
 
 import mime
 
@@ -35,7 +36,7 @@ class BaseSession(requests.Session):
     def prepare_request(self, request: requests.Request):
         if self.context and request.method == enums.Method.POST:
             request.json = addict.Dict(request.json or {})
-            
+
             request.json.context.client.update(self.context)
 
         return super().prepare_request(request)
