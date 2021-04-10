@@ -91,7 +91,7 @@ class MediaSubtype(AutoNameLower):
     HTML = enum.auto()
 
 class CharBool(StrEnum):
-    _generate_next_value_ = lambda name, *_: name[0]
+    _generate_next_value_ = lambda name, *_: name[0].lower()
 
     TRUE  = enum.auto()
     FALSE = enum.auto()

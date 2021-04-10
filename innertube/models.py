@@ -207,23 +207,23 @@ class App(BaseModel):
     service: Service
     api:     Api
 
-    def product(self):
+    def product(self) -> Product:
         return self.device.product.product() or Product \
         (
             identifier = self.client.product(),
             comment    = self.device.product.comment,
         )
 
-    def user_agent(self):
+    def user_agent(self) -> UserAgent:
         return UserAgent \
         (
             products = [self.product()],
         )
 
-    def base_url(self):
+    def base_url(self) -> str:
         return str(self.api)
 
-    def package(self):
+    def package(self) -> str:
         segments = \
         (
             self.company.package(),
@@ -234,14 +234,14 @@ class App(BaseModel):
         if all(segments):
             return '.'.join(segments)
 
-    def params(self):
+    def params(self) -> Params:
         return Params \
         (
             key = self.client.auth.api_key,
             alt = enums.Alt.JSON,
         )
 
-    def context(self, locale: babel.Locale = None):
+    def context(self, locale: babel.Locale = None) -> Context:
         return Context \
         (
             client_name    = self.client.name,

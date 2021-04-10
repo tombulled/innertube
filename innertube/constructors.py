@@ -74,8 +74,8 @@ def session \
 def client \
         (
             service: enums.Service,
-            device: enums.Service,
-            locale: typing.Optional[babel.Locale] = None,
+            device:  enums.Service,
+            locale:  typing.Optional[babel.Locale] = None,
         ) -> typing.Optional[clients.Client]:
     session_obj = session \
     (

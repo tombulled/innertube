@@ -70,7 +70,7 @@ devices: typing.Dict[enums.Device, models.Device] = \
     enums.Device.ANDROID: models.Device \
     (
         name    = 'Android',
-        module = 'com.google.android',
+        module  = 'com.google.android',
         product = models.Device.Product \
         (
             comment = models.ProductComment \
@@ -89,7 +89,7 @@ devices: typing.Dict[enums.Device, models.Device] = \
     enums.Device.IOS: models.Device \
     (
         name    = 'IOS',
-        module = 'com.google.ios',
+        module  = 'com.google.ios',
         product = models.Device.Product \
         (
             comment = models.ProductComment \
@@ -106,7 +106,7 @@ devices: typing.Dict[enums.Device, models.Device] = \
     ),
     enums.Device.TV: models.Device \
     (
-        name  = 'TV',
+        name    = 'TV',
         product = models.Device.Product \
         (
             identifier = products[enums.Product.MOZILLA],
@@ -288,120 +288,81 @@ schemas: typing.Dict[enums.App, models.AppSchema] = \
 {
     enums.App.YOUTUBE_WEB: models.AppSchema \
     (
-        # name    = 'YouTube Web',
-        # company = enums.Company.GOOGLE,
         client  = enums.Client.WEB,
         device  = enums.Device.WEB,
         service = enums.Service.YOUTUBE,
-        # api     = enums.Api.YOUTUBEI_V1,
     ),
     enums.App.YOUTUBE_MUSIC_WEB: models.AppSchema \
     (
-        # name    = 'YouTubeMusic Web',
-        # company = enums.Company.GOOGLE,
         client  = enums.Client.WEB_MUSIC,
         device  = enums.Device.WEB,
         service = enums.Service.YOUTUBE_MUSIC,
-        # api     = enums.Api.YOUTUBEI_V1,
     ),
     enums.App.YOUTUBE_KIDS_WEB: models.AppSchema \
     (
-        # name    = 'YouTubeKids Web',
-        # company = enums.Company.GOOGLE,
         client  = enums.Client.WEB_KIDS,
         device  = enums.Device.WEB,
         service = enums.Service.YOUTUBE_KIDS,
-        # api     = enums.Api.YOUTUBEI_V1,
     ),
     enums.App.YOUTUBE_STUDIO_WEB: models.AppSchema \
     (
-        # name    = 'YouTubeStudio Web',
-        # company = enums.Company.GOOGLE,
         client  = enums.Client.WEB_STUDIO,
         device  = enums.Device.WEB,
         service = enums.Service.YOUTUBE_STUDIO,
-        # api     = enums.Api.YOUTUBEI_V1,
     ),
     enums.App.YOUTUBE_ANDROID: models.AppSchema \
     (
-        # name    = 'YouTubeAndroid',
-        # company = enums.Company.GOOGLE,
         client  = enums.Client.ANDROID,
         device  = enums.Device.ANDROID,
         service = enums.Service.YOUTUBE,
-        # api     = enums.Api.YOUTUBEI_V1,
     ),
     enums.App.YOUTUBE_MUSIC_ANDROID: models.AppSchema \
     (
-        # name    = 'YouTubeMusic Android',
-        # company = enums.Company.GOOGLE,
         client  = enums.Client.ANDROID_MUSIC,
         device  = enums.Device.ANDROID,
         service = enums.Service.YOUTUBE_MUSIC,
-        # api     = enums.Api.YOUTUBEI_V1,
     ),
     enums.App.YOUTUBE_KIDS_ANDROID: models.AppSchema \
     (
-        # name    = 'YouTubeKids Android',
-        # company = enums.Company.GOOGLE,
         client  = enums.Client.ANDROID_KIDS,
         device  = enums.Device.ANDROID,
         service = enums.Service.YOUTUBE_KIDS,
-        # api     = enums.Api.YOUTUBEI_V1,
     ),
     enums.App.YOUTUBE_STUDIO_ANDROID: models.AppSchema \
     (
-        # name    = 'YouTubeStudio Android',
-        # company = enums.Company.GOOGLE,
         client  = enums.Client.ANDROID_STUDIO,
         device  = enums.Device.ANDROID,
         service = enums.Service.YOUTUBE_STUDIO,
-        # api     = enums.Api.YOUTUBEI_V1,
     ),
     enums.App.YOUTUBE_IOS: models.AppSchema \
     (
-        # name    = 'YouTube IOS',
-        # company = enums.Company.GOOGLE,
         client  = enums.Client.IOS,
         device  = enums.Device.IOS,
         service = enums.Service.YOUTUBE,
-        # api     = enums.Api.YOUTUBEI_V1,
     ),
     enums.App.YOUTUBE_MUSIC_IOS: models.AppSchema \
     (
-        # name    = 'YouTubeMusic IOS',
-        # company = enums.Company.GOOGLE,
         client  = enums.Client.IOS_MUSIC,
         device  = enums.Device.IOS,
         service = enums.Service.YOUTUBE_MUSIC,
-        # api     = enums.Api.YOUTUBEI_V1,
     ),
     enums.App.YOUTUBE_KIDS_IOS: models.AppSchema \
     (
-        # name    = 'YouTubeKids IOS',
-        # company = enums.Company.GOOGLE,
         client  = enums.Client.IOS_KIDS,
         device  = enums.Device.IOS,
         service = enums.Service.YOUTUBE_KIDS,
-        # api     = enums.Api.YOUTUBEI_V1,
     ),
     enums.App.YOUTUBE_STUDIO_IOS: models.AppSchema \
     (
-        # name    = 'YouTubeStudio IOS',
-        # company = enums.Company.GOOGLE,
         client  = enums.Client.IOS_STUDIO,
         device  = enums.Device.IOS,
         service = enums.Service.YOUTUBE_STUDIO,
-        # api     = enums.Api.YOUTUBEI_V1,
     ),
     enums.App.YOUTUBE_TV: models.AppSchema \
     (
-        # name    = 'YouTube TV',
-        # company = enums.Company.GOOGLE,
         client  = enums.Client.TV,
         device  = enums.Device.TV,
         service = enums.Service.YOUTUBE,
-        # api     = enums.Api.YOUTUBEI_V1,
     ),
 }
 
