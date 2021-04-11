@@ -1,87 +1,75 @@
-import addict
-import babel
-
 import typing
 
-from . import infos
 from . import enums
 from . import models
-from . import clients
+from . import infos
 from . import sessions
+from . import clients
 
-def app \
+def suggest_queries \
         (
-            service: enums.Service,
-            device:  enums.Service,
-        ) -> typing.Optional[models.App]:
-    app_type:   enums.App
-    app_schema: models.AppSchema
+            device: enums.Device  = enums.Device.WEB,
+            locale: models.Locale = None,
+        ):
+    api    = infos.apis[enums.Api.SUGGEST_QUERIES]
+    device = infos.devices[device]
 
-    for app_type, app_schema in infos.schemas.items():
-        if app_schema.service == service and app_schema.device == device:
-            return infos.apps[app_type]
-
-def adaptor \
-        (
-            service: enums.Service,
-            device:  enums.Service,
-            locale:  typing.Optional[babel.Locale] = None,
-        ) -> typing.Optional[models.Adaptor]:
-    app_obj = app \
+    consumer = models.Consumer \
     (
-        service = service,
-        device  = device,
+        api    = infos.apis[enums.Api.SUGGEST_QUERIES],
+        device = infos.devices[enums.Device.WEB],
     )
 
-    return app_obj and app_obj.adaptor \
+    session = sessions.BaseUrlSession \
+    (
+        base_url = str(api),
+    )
+
+    session.headers.update(consumer.headers(locale = locale))
+
+    return clients.SuggestQueries \
+    (
+        session = session,
+    )
+
+def innertube \
+        (
+            service: enums.Service,
+            device:  enums.Device                   = enums.Device.WEB,
+            locale:  typing.Optional[models.Locale] = None,
+        ) -> typing.Optional[clients.InnerTube]:
+    for client, schema in infos.schemas.items():
+        if schema.service == service and schema.device == device:
+            break
+    else:
+        return
+
+    app = models.Application \
+    (
+        client   = infos.clients[client],
+        service  = infos.services[service],
+        consumer = models.Consumer \
+        (
+            api    = infos.apis[enums.Api.YOUTUBEI_V1],
+            device = infos.devices[device],
+        ),
+    )
+
+    adaptor = app.adaptor \
     (
         locale = locale,
     )
 
-def session \
-        (
-            service: enums.Service,
-            device:  enums.Service,
-            locale:  typing.Optional[babel.Locale] = None,
-        ) -> typing.Optional[sessions.Session]:
-    adaptor_obj = adaptor \
-    (
-        service = service,
-        device  = device,
-        locale  = locale,
-    )
-
-    data: addict.Dict = addict.Dict \
-    (
-        adaptor_obj.dict \
-        (
-            by_alias     = True,
-            exclude_none = True,
-        ),
-    )
-
     session: sessions.Session = sessions.Session \
     (
-        base_url = data.base_url,
-        context  = data.context,
+        base_url = adaptor.base_url,
+        context  = adaptor.context,
     )
 
-    session.headers.update(data.headers)
-    session.params.update(data.params)
+    session.headers.update(adaptor.headers)
+    session.params.update(adaptor.params)
 
-    return session
-
-def client \
-        (
-            service: enums.Service,
-            device:  enums.Service,
-            locale:  typing.Optional[babel.Locale] = None,
-        ) -> typing.Optional[clients.Client]:
-    session_obj = session \
+    return clients.InnerTube \
     (
-        service = service,
-        device  = device,
-        locale  = locale,
+        session = session,
     )
-
-    return session_obj and clients.Client(session_obj)

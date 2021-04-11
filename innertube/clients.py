@@ -4,15 +4,19 @@ import requests
 
 import typing
 
+from . import utils
+from . import enums
+
 @attr.s
 class SessionWrapper(object):
     session: requests.Session = attr.ib()
 
-class BaseClient(SessionWrapper):
+class BaseClient(SessionWrapper): pass
+
+class InnerTube(BaseClient):
     def __call__(self, *args, **kwargs) -> addict.Dict:
         return addict.Dict(self.session.post(*args, **kwargs).json())
 
-class Client(BaseClient):
     def config(self) -> addict.Dict:
         return self('config')
 
@@ -118,7 +122,7 @@ class Client(BaseClient):
                 self,
                 *,
                 video_ids:   typing.Optional[typing.List[str]] = None,
-                playlist_id: typing.Optional[str]       = None,
+                playlist_id: typing.Optional[str]              = None,
             ) -> addict.Dict:
         return self \
         (
@@ -127,5 +131,32 @@ class Client(BaseClient):
             (
                 playlistId = playlist_id,
                 videoIds   = video_ids or (None,),
+            ),
+        )
+
+class SuggestQueries(BaseClient):
+    def __call__(self, *args, **kwargs) -> addict.Dict:
+        return self.session.get(*args, **kwargs).json()
+
+    def complete_search \
+            (
+                self,
+                *,
+                query:       str,
+                client:      str,
+                data_source: typing.Optional[str] = None,
+                **kwargs,
+            ) -> typing.List[str]:
+        return self \
+        (
+            'complete/search',
+            params = utils.filter \
+            (
+                **kwargs,
+                client = client,
+                q      = query,
+                ds     = data_source,
+                xhr    = enums.CharBool.TRUE.value,
+                hjson  = enums.CharBool.TRUE.value,
             ),
         )

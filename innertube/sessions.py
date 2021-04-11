@@ -54,7 +54,7 @@ class BaseSession(requests.Session):
                 data = addict.Dict(response.json())
 
                 if (visitor_data := data.responseContext.visitorData):
-                    self.headers[enums.Header.VISITOR_ID.value] = visitor_data
+                    self.headers[enums.GoogleHeader.VISITOR_ID.value] = visitor_data
 
         return response
 

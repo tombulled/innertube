@@ -13,10 +13,8 @@ keywords = ["youtube", "innertube"]
 python = "^3.8"
 pydantic = "^1.7.3"
 requests = "^2.25.1"
-Babel = "^2.9.0"
 addict = "^2.4.0"
 furl = "^2.1.0"
-pyhumps = "^1.6.1"
 attrs = "^20.3.0"
 mime = {git = "https://github.com/tombulled/mime.git", rev = "main"}
 beautifulsoup4 = "^4.9.3"

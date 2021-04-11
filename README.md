@@ -85,6 +85,4 @@ Here's a list of the awesome libraries that helped make `innertube`
 | [addict](https://pypi.org/project/addict/) | https://github.com/mewwts/addict |
 | [attrs](https://pypi.org/project/attrs/) | https://github.com/python-attrs/attrs |
 | [furl](https://pypi.org/project/furl/) | https://github.com/gruns/furl |
-| [babel](https://pypi.org/project/Babel/) | https://github.com/python-babel/babel |
-| [humps](https://pypi.org/project/pyhumps/) | https://github.com/nficano/humps |
 | [beautifulsoup4](https://pypi.org/project/beautifulsoup4/) | https://www.crummy.com/software/BeautifulSoup/ |

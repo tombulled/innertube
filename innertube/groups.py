@@ -1,11 +1,11 @@
 import attr
-import babel
 
 import typing
 
 from . import enums
 from . import clients
 from . import constructors
+from . import models
 
 @attr.s
 class BaseClientGroup(object):
@@ -23,21 +23,21 @@ class ClientGroup(BaseClientGroup):
             (
                 self,
                 service: enums.Service,
-                devices: enums.Device,
-                locale:  typing.Optional[babel.Locale] = None,
+                devices: typing.List[enums.Device],
+                locale:  typing.Optional[models.Locale] = None,
             ):
         super().__init__ \
         (
             clients = \
-            [
-                constructors.client \
+            {
+                device: constructors.client \
                 (
                     service = service,
                     device  = device,
                     locale  = locale,
                 )
                 for device in devices
-            ]
+            }
         )
 
         self.service = service

@@ -129,5 +129,6 @@ dmypy.json
 .pyre/
 
 # Custom
+app.py
 app.*.py
 _bin/
