@@ -299,7 +299,7 @@ schemas: typing.Dict[enums.Client, models.ClientSchema] = \
         device  = enums.Device.WEB,
         service = enums.Service.YOUTUBE,
     ),
-    enums.Client.WEB_MUSIC: models.ClientSchema \
+    enums.Client.WEB_REMIX: models.ClientSchema \
     (
         device  = enums.Device.WEB,
         service = enums.Service.YOUTUBE_MUSIC,
@@ -309,7 +309,7 @@ schemas: typing.Dict[enums.Client, models.ClientSchema] = \
         device  = enums.Device.WEB,
         service = enums.Service.YOUTUBE_KIDS,
     ),
-    enums.Client.WEB_STUDIO: models.ClientSchema \
+    enums.Client.WEB_CREATOR: models.ClientSchema \
     (
         device  = enums.Device.WEB,
         service = enums.Service.YOUTUBE_STUDIO,
@@ -329,7 +329,7 @@ schemas: typing.Dict[enums.Client, models.ClientSchema] = \
         device  = enums.Device.ANDROID,
         service = enums.Service.YOUTUBE_KIDS,
     ),
-    enums.Client.ANDROID_STUDIO: models.ClientSchema \
+    enums.Client.ANDROID_CREATOR: models.ClientSchema \
     (
         device  = enums.Device.ANDROID,
         service = enums.Service.YOUTUBE_STUDIO,
@@ -349,7 +349,7 @@ schemas: typing.Dict[enums.Client, models.ClientSchema] = \
         device  = enums.Device.IOS,
         service = enums.Service.YOUTUBE_KIDS,
     ),
-    enums.Client.IOS_STUDIO: models.ClientSchema \
+    enums.Client.IOS_CREATOR: models.ClientSchema \
     (
         device  = enums.Device.IOS,
         service = enums.Service.YOUTUBE_STUDIO,
