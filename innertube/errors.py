@@ -16,17 +16,7 @@ class RequestError(Exception):
     error: models.Error = attr.ib()
 
     def __str__(self) -> str:
-        return '\n\t'.join \
-        (
-            (
-                f'[{self.error.code}] {self.error.status}: {self.error.message}',
-                * \
-                (
-                    f'{error.reason}@{error.domain}: {error.message}'
-                    for error in self.error.errors or ()
-                ),
-            ),
-        )
+        return str(self.error)
 
     @classmethod
     def from_response(cls, response: requests.Response):

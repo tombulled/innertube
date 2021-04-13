@@ -28,9 +28,9 @@ class ResponseContext(BaseModel):
     browse_id:    typing.Optional[str]
     context:      typing.Optional[str]
     visitor_data: typing.Optional[str]
-    client:       Client
-    request:      Request
-    flags:        Flags
+    client:       typing.Optional[Client]
+    request:      typing.Optional[Request]
+    flags:        typing.Optional[Flags]
 
 class Parser(BaseModel):
     request:   typing.Optional[typing.List[str]]
@@ -56,16 +56,32 @@ class Locale(BaseModel):
             )
         )
 
-class SubError(BaseModel):
-    reason:  str
-    domain:  str
-    message: str
-
 class Error(BaseModel):
+    class Error(BaseModel):
+        reason:  str
+        domain:  str
+        message: str
+
+        def __str__(self) -> str:
+            return f'{self.reason}@{self.domain}: {self.message}'
+
     code:    int
     status:  str
     message: str
-    errors:  typing.Optional[typing.List[SubError]]
+    errors:  typing.Optional[typing.List[Error]]
+
+    def __str__(self) -> str:
+        return '\n\t'.join \
+        (
+            (
+                f'[{self.code}] {self.status}: {self.message}',
+                * \
+                (
+                    str(error)
+                    for error in self.errors or ()
+                )
+            )
+        )
 
 class Adaptor(BaseModel):
     base_url: str
