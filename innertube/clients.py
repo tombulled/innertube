@@ -1,10 +1,12 @@
 import attr
 import requests
 
-import typing
 import re
-import functools
+import typing
 import operator
+import functools
+
+import register
 
 from . import enums
 from . import models
@@ -12,8 +14,6 @@ from . import types
 from . import parsers
 from . import infos
 from . import sessions
-
-import register
 
 attrs = attr.s \
 (
@@ -69,6 +69,7 @@ class BaseInnerTube(BaseClient):
             if parser_match:
                 return parser(response)
 
+        # TODO: Raise appropriate exception
         raise Exception(f'No parser found for context: {response_context!s}')
 
     def config(self) -> types.Dict:
