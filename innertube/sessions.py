@@ -1,37 +1,47 @@
-import requests
 import attr
+import requests
 import addict
+
+import mime
 
 import typing
 import urllib.parse
 
-import mime
-
 from . import enums
 from . import errors
 
-@attr.s(init = False)
-class BaseUrlSession(requests.Session):
-    base_url: typing.Optional[str] = attr.ib(default = None)
+attrs = attr.s \
+(
+    auto_detect  = True,
+    auto_attribs = True,
+)
 
-    def __init__(self, base_url: typing.Optional[str] = None):
+@attrs
+class BaseSession(requests.Session):
+    def __attrs_pre_init__(self):
         super().__init__()
 
-        self.base_url = base_url
+@attrs
+class BaseUrlSession(BaseSession):
+    base_url: typing.Optional[str] = attr.ib \
+    (
+        default = None,
+        init    = False,
+    )
 
     def prepare_request(self, request: requests.Request) -> requests.PreparedRequest:
-        request.url = urllib.parse.urljoin(self.base_url, request.url)
+        if self.base_url is not None:
+            request.url = urllib.parse.urljoin(self.base_url, request.url)
 
         return super().prepare_request(request)
 
-@attr.s(init = False)
-class BaseSession(requests.Session):
-    context: typing.Optional[dict] = attr.ib(default = None)
-
-    def __init__(self, context: typing.Optional[dict] = None):
-        super().__init__()
-
-        self.context = context
+@attrs
+class Session(BaseUrlSession):
+    context: dict = attr.ib \
+    (
+        default = attr.Factory(dict),
+        init    = False,
+    )
 
     def prepare_request(self, request: requests.Request):
         if self.context and request.method == enums.Method.POST:
@@ -45,7 +55,7 @@ class BaseSession(requests.Session):
         response = super().send(request, **kwargs)
 
         if not response.ok:
-            raise errors.InnerTubeException.from_response(response) from None
+            raise errors.RequestError.from_response(response) from None
 
         if (content_type := response.headers.get(enums.Header.CONTENT_TYPE.value)):
             mime_type = mime.parse(content_type.lower())
@@ -57,11 +67,3 @@ class BaseSession(requests.Session):
                     self.headers[enums.GoogleHeader.VISITOR_ID.value] = visitor_data
 
         return response
-
-@attr.s(init = False)
-class Session(BaseUrlSession, BaseSession):
-    def __init__(self, base_url: typing.Optional[str] = None, context: typing.Optional[dict] = None):
-        super().__init__()
-
-        BaseUrlSession.__init__(self, base_url)
-        BaseSession.__init__(self, context)

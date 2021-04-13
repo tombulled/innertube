@@ -12,7 +12,7 @@ from . import enums
 from . import models
 
 @attr.s
-class InnerTubeException(Exception):
+class RequestError(Exception):
     error: models.Error = attr.ib()
 
     def __str__(self) -> str:
@@ -49,6 +49,7 @@ class InnerTubeException(Exception):
         elif mime_type.subtype == enums.MediaSubtype.HTML:
             soup = bs4.BeautifulSoup(response.text, html.parser.__name__)
 
-            error.message = soup.p.p.text
+            if (tag := soup.p.p):
+                error.message = tag.text
 
         return cls(models.Error.parse_obj(error))

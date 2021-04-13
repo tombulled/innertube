@@ -14,7 +14,11 @@ class NoValue(AutoName):
     def __repr__(self) -> str:
         return f'<{self.__class__.__name__}.{self.name}>'
 
-class RequestId(AutoName):
+# class Host(StrEnum):
+#     YOUTUBEI:        str = 'youtubei.googleapis.com'
+#     SUGGEST_QUERIES: str = 'suggestqueries.google.com'
+
+class Request(AutoName):
     _generate_next_value_ = lambda name, *_: humps.pascalize(name.lower())
 
     CONFIG:                                str = enum.auto()

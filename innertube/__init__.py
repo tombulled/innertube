@@ -1,3 +1,3 @@
-from .constructors import innertube, suggest_queries
 from .models       import Locale
-from .enums        import Device, Service
+from .enums        import Client
+from .clients      import InnerTube, SuggestQueries

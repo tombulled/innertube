@@ -8,9 +8,36 @@ import operator
 import typing
 
 from . import enums
-from . import utils
+from . import types
 
 class BaseModel(pydantic.BaseModel): pass
+
+class ResponseContext(BaseModel):
+    class Request(BaseModel):
+        type: typing.Optional[str]
+        id:   typing.Optional[str]
+
+    class Client(BaseModel):
+        name:    typing.Optional[str]
+        version: typing.Optional[str]
+
+    class Flags(BaseModel):
+        logged_in: typing.Optional[bool]
+
+    function:     typing.Optional[str]
+    browse_id:    typing.Optional[str]
+    context:      typing.Optional[str]
+    visitor_data: typing.Optional[str]
+    client:       Client
+    request:      Request
+    flags:        Flags
+
+class Parser(BaseModel):
+    request:   typing.Optional[typing.List[str]]
+    function:  typing.Optional[typing.List[str]]
+    browse_id: typing.Optional[typing.List[str]]
+    context:   typing.Optional[typing.List[str]]
+    client:    typing.Optional[typing.List[str]]
 
 class Locale(BaseModel):
     hl: str
@@ -209,15 +236,14 @@ class Consumer(BaseModel):
     api:     Api
 
     def headers(self, locale: Locale = None) -> dict:
-        return utils.filter \
+        return types.Dict \
         (
-            ** \
             {
                 enums.Header.USER_AGENT.value:      str(self.device.user_agent()),
                 enums.Header.REFERER.value:         str(self.api),
                 enums.Header.ACCEPT_LANGUAGE.value: locale and locale.accept(),
             }
-        )
+        ).filter()
 
 class Application(BaseModel):
     client:   Client
@@ -263,9 +289,8 @@ class Application(BaseModel):
         )
 
     def headers(self, locale: Locale = None) -> dict:
-        return utils.filter \
+        return types.Dict \
         (
-            ** \
             {
                 enums.YouTubeHeader.CLIENT_NAME.value:    str(self.service.id),
                 enums.YouTubeHeader.CLIENT_VERSION.value: self.client.version,
@@ -273,7 +298,7 @@ class Application(BaseModel):
                 enums.Header.REFERER.value:               str(self.service.host()),
                 enums.Header.ACCEPT_LANGUAGE.value:       locale and locale.accept(),
             }
-        )
+        ).filter()
 
     def adaptor(self, locale: babel.Locale = None) -> Adaptor:
         return Adaptor \

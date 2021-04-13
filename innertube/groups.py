@@ -16,15 +16,13 @@ class BaseClientGroup(object):
 
 @attr.s(init = False)
 class ClientGroup(BaseClientGroup):
-    service: enums.Service                  = attr.ib()
-    locale:  typing.Optional[babel.Locale]  = attr.ib()
+    service: enums.Service = attr.ib()
 
     def __init__ \
             (
                 self,
                 service: enums.Service,
                 devices: typing.List[enums.Device],
-                locale:  typing.Optional[models.Locale] = None,
             ):
         super().__init__ \
         (
@@ -34,11 +32,9 @@ class ClientGroup(BaseClientGroup):
                 (
                     service = service,
                     device  = device,
-                    locale  = locale,
                 )
                 for device in devices
             }
         )
 
         self.service = service
-        self.locale  = locale

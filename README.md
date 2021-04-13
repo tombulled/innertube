@@ -20,7 +20,7 @@ $ pip install git+https://github.com/tombulled/innertube
 >>> import innertube
 >>>
 >>> # Construct a client
->>> client = innertube.client \
+>>> client = innertube.innertube \
 (
     service = innertube.Service.YOUTUBE, # Could be YOUTUBE_MUSIC, etc.
     device  = innertube.Device.WEB,      # Could be ANDROID, etc.
