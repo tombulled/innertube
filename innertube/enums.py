@@ -14,10 +14,6 @@ class NoValue(AutoName):
     def __repr__(self) -> str:
         return f'<{self.__class__.__name__}.{self.name}>'
 
-# class Host(StrEnum):
-#     YOUTUBEI:        str = 'youtubei.googleapis.com'
-#     SUGGEST_QUERIES: str = 'suggestqueries.google.com'
-
 class Request(AutoName):
     _generate_next_value_ = lambda name, *_: humps.pascalize(name.lower())
 
@@ -63,13 +59,9 @@ class Company(NoValue):
 class Product(NoValue):
     MOZILLA: str = enum.auto()
 
-class Host(NoValue):
+class Api(NoValue):
     YOUTUBEI:        str = enum.auto()
     SUGGEST_QUERIES: str = enum.auto()
-
-class Api(NoValue):
-    YOUTUBEI_V1:     str = enum.auto()
-    SUGGEST_QUERIES: str= enum.auto()
 
 class Device(NoValue):
     WEB:     str = enum.auto()

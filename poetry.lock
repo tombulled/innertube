@@ -204,10 +204,30 @@ secure = ["pyOpenSSL (>=0.14)", "cryptography (>=1.3.4)", "idna (>=2.0.0)", "cer
 socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 brotli = ["brotlipy (>=0.6.0)"]
 
+[[package]]
+name = "useragent"
+version = "0.1.0"
+description = ""
+category = "main"
+optional = false
+python-versions = "^3.8"
+develop = false
+
+[package.dependencies]
+addict = "^2.4.0"
+pydantic = "^1.8.1"
+pyhumps = "^1.6.1"
+
+[package.source]
+type = "git"
+url = "https://github.com/tombulled/useragent.git"
+reference = "main"
+resolved_reference = "c0868e9ea249a8d5411d057188cdb07b39acf11d"
+
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "bfcd9c2e3252f6affa1de93df1be47fb7a212ac9d2bbb88f208f02a29533d615"
+content-hash = "551297879183252b2bfc87e584e6c50afc35c89f77d7295aa7826819d13f5a3d"
 
 [metadata.files]
 addict = [
@@ -297,3 +317,4 @@ urllib3 = [
     {file = "urllib3-1.26.4-py2.py3-none-any.whl", hash = "sha256:2f4da4594db7e1e110a944bb1b551fdf4e6c136ad42e4234131391e21eb5b0df"},
     {file = "urllib3-1.26.4.tar.gz", hash = "sha256:e7b021f7241115872f92f43c6508082facffbd1c048e3c6e2bb9c2a157e28937"},
 ]
+useragent = []

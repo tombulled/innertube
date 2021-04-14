@@ -16,11 +16,12 @@ requests = "^2.25.1"
 addict = "^2.4.0"
 furl = "^2.1.0"
 attrs = "^20.3.0"
-mime = {git = "https://github.com/tombulled/mime.git", rev = "main"}
 beautifulsoup4 = "^4.9.3"
 pyhumps = "^1.6.1"
 parse = "^1.19.0"
+mime = {git = "https://github.com/tombulled/mime.git", rev = "main"}
 register = {git = "https://github.com/tombulled/register.git", rev = "main"}
+useragent = {git = "https://github.com/tombulled/useragent.git", rev = "main"}
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
