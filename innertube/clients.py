@@ -54,14 +54,6 @@ class BaseInnerTube(BaseClient):
             values: typing.Optional[typing.List[str]]
 
         for parser, schema in reversed(self.parsers.items()):
-            # value_map = \
-            # {
-            #     response_context.client.name:  schema.client,
-            #     response_context.request.type: schema.request,
-            #     response_context.browse_id:    schema.browse_id,
-            #     response_context.function:     schema.function,
-            #     response_context.context:      schema.context,
-            # }
             mappings = \
             (
                 Mapping \
@@ -224,23 +216,6 @@ class BaseInnerTube(BaseClient):
 
 class InnerTube(BaseInnerTube):
     def __init__(self, client: enums.Client, locale: typing.Optional[models.Locale] = None):
-    # def __init__ \
-    #         (
-    #             self,
-    #             client: enums.Client,
-    #             service: enums.Service,
-    #             device:  enums.Device,
-    #             locale:  typing.Optional[models.Locale] = None,
-    #         ):
-        # for client, schema in infos.schemas.items():
-        #     if schema.service == service and schema.device == device:
-        #         break
-        # else:
-        #     # TODO: Raise a better exception
-        #     raise Exception('No client for service + device')
-
-        # cli
-
         schema = infos.schemas[client]
 
         app = models.Application \

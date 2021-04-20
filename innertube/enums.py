@@ -10,13 +10,17 @@ class AutoName(StrEnum):
 class AutoNameLower(StrEnum):
     _generate_next_value_ = lambda name, *_: name.lower()
 
+class AutoNamePascal(StrEnum):
+    _generate_next_value_ = lambda name, *_: humps.pascalize(name.lower())
+
+class AutoNameHeader(StrEnum):
+    _generate_next_value_ = lambda name, *_: name.replace('_', '-').title()
+
 class NoValue(AutoName):
     def __repr__(self) -> str:
         return f'<{self.__class__.__name__}.{self.name}>'
 
-class Request(AutoName):
-    _generate_next_value_ = lambda name, *_: humps.pascalize(name.lower())
-
+class Request(AutoNamePascal):
     CONFIG:                                str = enum.auto()
     SEARCH:                                str = enum.auto()
     PLAYER:                                str = enum.auto()
@@ -106,21 +110,19 @@ class Method(AutoName):
     PATCH:   str = enum.auto()
     PUT:     str = enum.auto()
 
-class Header(StrEnum):
-    _generate_next_value_ = lambda name, *_: name.replace('_', '-').title()
-
+class Header(AutoNameHeader):
     USER_AGENT:      str = enum.auto()
     REFERER:         str = enum.auto()
     CONTENT_TYPE:    str = enum.auto()
     ACCEPT_LANGUAGE: str = enum.auto()
 
-class GoogleHeader(StrEnum):
-    _generate_next_value_ = lambda name, *_: 'X-Goog-' + name.replace('_', '-').title()
+class GoogleHeader(AutoNameHeader):
+    _generate_next_value_ = lambda name, *_: 'X-Goog-' + AutoNameHeader._generate_next_value_(name)
 
     VISITOR_ID: str = enum.auto()
 
-class YouTubeHeader(StrEnum):
-    _generate_next_value_ = lambda name, *_: 'X-YouTube-' + name.replace('_', '-').title()
+class YouTubeHeader(AutoNameHeader):
+    _generate_next_value_ = lambda name, *_: 'X-YouTube-' + AutoNameHeader._generate_next_value_(name)
 
     CLIENT_NAME:    str = enum.auto()
     CLIENT_VERSION: str = enum.auto()
