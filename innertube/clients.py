@@ -1,5 +1,6 @@
 import attr
 import requests
+import addict
 
 import re
 import typing
@@ -10,10 +11,10 @@ import register
 
 from . import enums
 from . import models
-from . import types
 from . import parsers
 from . import infos
 from . import sessions
+from . import utils
 
 attrs = attr.s \
 (
@@ -43,27 +44,59 @@ class BaseInnerTube(BaseClient):
     def __attrs_post_init__(self):
         self.parsers()(lambda data: data)
 
-    def __call__(self, *args, **kwargs) -> types.Dict:
-        response = types.Dict(self.session.post(*args, **kwargs).json())
+    def __call__(self, *args, **kwargs) -> addict.Dict:
+        response = addict.Dict(self.session.post(*args, **kwargs).json())
 
         response_context: models.ResponseContext = parsers.response_context(response.responseContext)
 
+        class Mapping(typing.NamedTuple):
+            field:  typing.Optional[str]
+            values: typing.Optional[typing.List[str]]
+
         for parser, schema in reversed(self.parsers.items()):
-            value_map = \
-            {
-                response_context.client.name:  schema.client,
-                response_context.request.type: schema.request,
-                response_context.browse_id:    schema.browse_id,
-                response_context.function:     schema.function,
-                response_context.context:      schema.context,
-            }
+            # value_map = \
+            # {
+            #     response_context.client.name:  schema.client,
+            #     response_context.request.type: schema.request,
+            #     response_context.browse_id:    schema.browse_id,
+            #     response_context.function:     schema.function,
+            #     response_context.context:      schema.context,
+            # }
+            mappings = \
+            (
+                Mapping \
+                (
+                    field  = response_context.client.name,
+                    values = schema.client,
+                ),
+                Mapping \
+                (
+                    field  = response_context.request.type,
+                    values = schema.request,
+                ),
+                Mapping \
+                (
+                    field  = response_context.browse_id,
+                    values = schema.browse_id,
+                ),
+                Mapping \
+                (
+                    field  = response_context.function,
+                    values = schema.function,
+                ),
+                Mapping \
+                (
+                    field  = response_context.context,
+                    values = schema.context,
+                ),
+            )
 
             parser_match = all \
             (
-                value is None \
-                    or values is None
-                    or value  in values
-                for value, values in value_map.items()
+                mapping.field is None \
+                    or not mapping.values \
+                    or mapping.field in mapping.values
+                for mapping in mappings
             )
 
             if parser_match:
@@ -72,13 +105,13 @@ class BaseInnerTube(BaseClient):
         # TODO: Raise appropriate exception
         raise Exception(f'No parser found for context: {response_context!s}')
 
-    def config(self) -> types.Dict:
+    def config(self) -> addict.Dict:
         return self('config')
 
-    def guide(self) -> types.Dict:
+    def guide(self) -> addict.Dict:
         return self('guide')
 
-    def player(self, *, video_id: str) -> types.Dict:
+    def player(self, *, video_id: str) -> addict.Dict:
         return self \
         (
             'player',
@@ -91,24 +124,24 @@ class BaseInnerTube(BaseClient):
     def browse \
             (
                 self,
-                *,
                 browse_id:    typing.Optional[str] = None,
+                *,
                 params:       typing.Optional[str] = None,
                 continuation: typing.Optional[str] = None,
-            ) -> types.Dict:
+            ) -> addict.Dict:
         return self \
         (
             'browse',
-            params = types.Dict \
+            params = utils.filter \
             (
                 continuation = continuation,
                 ctoken       = continuation,
-            ).filter(),
-            json = types.Dict \
+            ),
+            json = utils.filter \
             (
                 browseId = browse_id,
                 params   = params,
-            ).filter(),
+            ),
         )
 
     def search \
@@ -118,16 +151,16 @@ class BaseInnerTube(BaseClient):
                 query:        typing.Optional[str] = None,
                 params:       typing.Optional[str] = None,
                 continuation: typing.Optional[str] = None,
-            ) -> types.Dict:
+            ) -> addict.Dict:
         return self \
         (
             'search',
-            params = types.Dict \
+            params = addict.Dict \
             (
                 continuation = continuation,
                 ctoken       = continuation,
             ).filter(),
-            json = types.Dict \
+            json = addict.Dict \
             (
                 query  = query or '',
                 params = params,
@@ -143,11 +176,11 @@ class BaseInnerTube(BaseClient):
                 params:       typing.Optional[str] = None,
                 index:        typing.Optional[int] = None,
                 continuation: typing.Optional[str] = None,
-            ) -> types.Dict:
+            ) -> addict.Dict:
         return self \
         (
             'next',
-            json = types.Dict \
+            json = addict.Dict \
             (
                 params       = params,
                 playlistId   = playlist_id,
@@ -162,7 +195,7 @@ class BaseInnerTube(BaseClient):
                 self,
                 *,
                 input: typing.Optional[None] = None,
-            ) -> types.Dict:
+            ) -> addict.Dict:
         return self \
         (
             'music/get_search_suggestions',
@@ -178,11 +211,11 @@ class BaseInnerTube(BaseClient):
                 *,
                 video_ids:   typing.Optional[typing.List[str]] = None,
                 playlist_id: typing.Optional[str]              = None,
-            ) -> types.Dict:
+            ) -> addict.Dict:
         return self \
         (
             'music/get_queue',
-            json = types.Dict \
+            json = addict.Dict \
             (
                 playlistId = playlist_id,
                 videoIds   = video_ids or (None,),
@@ -191,17 +224,32 @@ class BaseInnerTube(BaseClient):
 
 class InnerTube(BaseInnerTube):
     def __init__(self, client: enums.Client, locale: typing.Optional[models.Locale] = None):
+    # def __init__ \
+    #         (
+    #             self,
+    #             client: enums.Client,
+    #             service: enums.Service,
+    #             device:  enums.Device,
+    #             locale:  typing.Optional[models.Locale] = None,
+    #         ):
+        # for client, schema in infos.schemas.items():
+        #     if schema.service == service and schema.device == device:
+        #         break
+        # else:
+        #     # TODO: Raise a better exception
+        #     raise Exception('No client for service + device')
+
+        # cli
+
         schema = infos.schemas[client]
 
         app = models.Application \
         (
-            client   = infos.clients[client],
-            service  = infos.services[schema.service],
-            consumer = models.Consumer \
-            (
-                api    = infos.apis[enums.Api.YOUTUBEI_V1],
-                device = infos.devices[schema.device],
-            ),
+            client  = infos.clients[client],
+            service = infos.services[schema.service],
+            device  = infos.devices[schema.device],
+            api     = infos.apis[enums.Api.YOUTUBEI],
+            company = infos.companies[enums.Company.GOOGLE],
         )
 
         adaptor = app.adaptor \
@@ -223,7 +271,7 @@ class InnerTube(BaseInnerTube):
         )
 
 class BaseSuggestQueries(BaseClient):
-    def __call__(self, *args, **kwargs) -> types.Dict:
+    def __call__(self, *args, **kwargs) -> addict.Dict:
         return self.session.get(*args, **kwargs).json()
 
     def complete_search \
@@ -238,7 +286,7 @@ class BaseSuggestQueries(BaseClient):
         return self \
         (
             'complete/search',
-            params = types.Dict \
+            params = addict.Dict \
             (
                 **kwargs,
                 client = client,

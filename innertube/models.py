@@ -10,7 +10,7 @@ import operator
 import typing
 
 from . import enums
-from . import types
+from . import utils
 
 class BaseModel(pydantic.BaseModel): pass
 
@@ -30,16 +30,16 @@ class ResponseContext(BaseModel):
     browse_id:    typing.Optional[str]
     context:      typing.Optional[str]
     visitor_data: typing.Optional[str]
-    client:       typing.Optional[Client]
-    request:      typing.Optional[Request]
-    flags:        typing.Optional[Flags]
+    client:       typing.Optional[Client]  = pydantic.Field(default_factory = Client)
+    request:      typing.Optional[Request] = pydantic.Field(default_factory = Request)
+    flags:        typing.Optional[Flags]   = pydantic.Field(default_factory = Flags)
 
 class Parser(BaseModel):
-    request:   typing.Optional[typing.List[str]]
-    function:  typing.Optional[typing.List[str]]
-    browse_id: typing.Optional[typing.List[str]]
-    context:   typing.Optional[typing.List[str]]
-    client:    typing.Optional[typing.List[str]]
+    request:   typing.Optional[typing.Set[str]] = pydantic.Field(default_factory = set)
+    function:  typing.Optional[typing.Set[str]] = pydantic.Field(default_factory = set)
+    browse_id: typing.Optional[typing.Set[str]] = pydantic.Field(default_factory = set)
+    context:   typing.Optional[typing.Set[str]] = pydantic.Field(default_factory = set)
+    client:    typing.Optional[typing.Set[str]] = pydantic.Field(default_factory = set)
 
 class Locale(BaseModel):
     hl: str
@@ -237,7 +237,7 @@ class Application(BaseModel):
         )
 
     def headers(self, locale: Locale = None) -> dict:
-        return types.Dict \
+        return utils.filter \
         (
             {
                 enums.YouTubeHeader.CLIENT_NAME.value:    str(self.service.id),
@@ -246,7 +246,7 @@ class Application(BaseModel):
                 enums.Header.REFERER.value:               str(self.service.host()),
                 enums.Header.ACCEPT_LANGUAGE.value:       locale and locale.accept(),
             }
-        ).filter()
+        )
 
     def adaptor(self, locale: babel.Locale = None) -> Adaptor:
         return Adaptor \
