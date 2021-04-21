@@ -1,26 +1,8 @@
+import enumb
+
 import enum
 
-import humps
-
-class StrEnum(str, enum.Enum): pass
-
-class AutoName(StrEnum):
-    _generate_next_value_ = lambda name, *_: name
-
-class AutoNameLower(StrEnum):
-    _generate_next_value_ = lambda name, *_: name.lower()
-
-class AutoNamePascal(StrEnum):
-    _generate_next_value_ = lambda name, *_: humps.pascalize(name.lower())
-
-class AutoNameHeader(StrEnum):
-    _generate_next_value_ = lambda name, *_: name.replace('_', '-').title()
-
-class NoValue(AutoName):
-    def __repr__(self) -> str:
-        return f'<{self.__class__.__name__}.{self.name}>'
-
-class Request(AutoNamePascal):
+class Request(enumb.AutoNamePascal):
     CONFIG:                                str = enum.auto()
     SEARCH:                                str = enum.auto()
     PLAYER:                                str = enum.auto()
@@ -44,10 +26,10 @@ class Request(AutoNamePascal):
     MOBILE_MAIN_APP_GUIDE:                 str = enum.auto()
     WEB_MAIN_APP_GUIDE:                    str = enum.auto()
 
-class RequestContext(AutoNameLower):
+class RequestContext(enumb.AutoNameLower):
     CHANNEL_CREATOR: str = enum.auto()
 
-class BrowseId(StrEnum):
+class BrowseId(enumb.StrEnum):
     _generate_next_value_ = lambda name, *_: f'FE{name.lower()}'
 
     MUSIC_EXPLORE                   = enum.auto()
@@ -57,29 +39,29 @@ class BrowseId(StrEnum):
     MUSIC_MOODS_AND_GENRES          = enum.auto()
     MUSIC_MOODS_AND_GENRES_CATEGORY = enum.auto()
 
-class Company(NoValue):
+class Company(enumb.NoValue):
     GOOGLE: str = enum.auto()
 
-class Product(NoValue):
+class Product(enumb.NoValue):
     MOZILLA: str = enum.auto()
 
-class Api(NoValue):
+class Api(enumb.NoValue):
     YOUTUBEI:        str = enum.auto()
     SUGGEST_QUERIES: str = enum.auto()
 
-class Device(NoValue):
+class Device(enumb.NoValue):
     WEB:     str = enum.auto()
     ANDROID: str = enum.auto()
     IOS:     str = enum.auto()
     TV:      str = enum.auto()
 
-class Service(NoValue):
+class Service(enumb.NoValue):
     YOUTUBE:        str = enum.auto()
     YOUTUBE_MUSIC:  str = enum.auto()
     YOUTUBE_KIDS:   str = enum.auto()
     YOUTUBE_STUDIO: str = enum.auto()
 
-class Client(NoValue):
+class Client(enumb.NoValue):
     WEB:             str = enum.auto()
     WEB_REMIX:       str = enum.auto()
     WEB_KIDS:        str = enum.auto()
@@ -94,14 +76,14 @@ class Client(NoValue):
     IOS_CREATOR:     str = enum.auto()
     TVHTML5:         str = enum.auto()
 
-class Alt(AutoNameLower):
+class Alt(enumb.AutoNameLower):
     JSON: str = enum.auto()
 
-class Scheme(AutoNameLower):
+class Scheme(enumb.AutoNameLower):
     HTTP:  str = enum.auto()
     HTTPS: str = enum.auto()
 
-class Method(AutoName):
+class Method(enumb.AutoName):
     GET:     str = enum.auto()
     POST:    str = enum.auto()
     DELETE:  str = enum.auto()
@@ -110,32 +92,32 @@ class Method(AutoName):
     PATCH:   str = enum.auto()
     PUT:     str = enum.auto()
 
-class Header(AutoNameHeader):
+class Header(enumb.AutoNameSlugTitle):
     USER_AGENT:      str = enum.auto()
     REFERER:         str = enum.auto()
     CONTENT_TYPE:    str = enum.auto()
     ACCEPT_LANGUAGE: str = enum.auto()
 
-class GoogleHeader(AutoNameHeader):
-    _generate_next_value_ = lambda name, *_: 'X-Goog-' + AutoNameHeader._generate_next_value_(name)
+class GoogleHeader(enumb.AutoNameSlugTitle):
+    _generate_next_value_ = lambda name, *_: 'X-Goog-' + enumb.AutoNameSlugTitle._generate_next_value_(name)
 
     VISITOR_ID: str = enum.auto()
 
-class YouTubeHeader(AutoNameHeader):
-    _generate_next_value_ = lambda name, *_: 'X-YouTube-' + AutoNameHeader._generate_next_value_(name)
+class YouTubeHeader(enumb.AutoNameSlugTitle):
+    _generate_next_value_ = lambda name, *_: 'X-YouTube-' + enumb.AutoNameSlugTitle._generate_next_value_(name)
 
     CLIENT_NAME:    str = enum.auto()
     CLIENT_VERSION: str = enum.auto()
 
-class MediaSubtype(AutoNameLower):
+class MediaSubtype(enumb.AutoNameLower):
     JSON: str = enum.auto()
     HTML: str = enum.auto()
 
-class CharBool(StrEnum):
+class CharBool(enumb.StrEnum):
     _generate_next_value_ = lambda name, *_: name[0].lower()
 
     TRUE:  str = enum.auto()
     FALSE: str = enum.auto()
 
-class DataSource(StrEnum):
+class DataSource(enumb.StrEnum):
     YOUTUBE: str = 'yt'
