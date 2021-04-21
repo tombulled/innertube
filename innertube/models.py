@@ -3,6 +3,7 @@ import babel
 import furl
 
 import useragent
+import sets
 
 import functools
 import enum
@@ -34,12 +35,22 @@ class ResponseContext(BaseModel):
     request:      typing.Optional[Request] = pydantic.Field(default_factory = Request)
     flags:        typing.Optional[Flags]   = pydantic.Field(default_factory = Flags)
 
-class Parser(BaseModel):
-    request:   typing.Optional[typing.Set[str]] = pydantic.Field(default_factory = set)
-    function:  typing.Optional[typing.Set[str]] = pydantic.Field(default_factory = set)
-    browse_id: typing.Optional[typing.Set[str]] = pydantic.Field(default_factory = set)
-    context:   typing.Optional[typing.Set[str]] = pydantic.Field(default_factory = set)
-    client:    typing.Optional[typing.Set[str]] = pydantic.Field(default_factory = set)
+class ResponseFingerprint(BaseModel):
+    endpoint:  typing.Optional[str]
+    request:   typing.Optional[str]
+    function:  typing.Optional[str]
+    browse_id: typing.Optional[str]
+    context:   typing.Optional[str]
+    client:    typing.Optional[str]
+
+class Parser(sets.Sets[ResponseFingerprint]): pass
+
+# class Parser(BaseModel):
+#     request:   typing.Optional[typing.Set[str]] = pydantic.Field(default_factory = set)
+#     function:  typing.Optional[typing.Set[str]] = pydantic.Field(default_factory = set)
+#     browse_id: typing.Optional[typing.Set[str]] = pydantic.Field(default_factory = set)
+#     context:   typing.Optional[typing.Set[str]] = pydantic.Field(default_factory = set)
+#     client:    typing.Optional[typing.Set[str]] = pydantic.Field(default_factory = set)
 
 class Locale(BaseModel):
     hl: str

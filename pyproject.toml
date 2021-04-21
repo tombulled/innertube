@@ -22,6 +22,7 @@ parse = "^1.19.0"
 mime = {git = "https://github.com/tombulled/mime.git", rev = "main"}
 register = {git = "https://github.com/tombulled/register.git", rev = "main"}
 useragent = {git = "https://github.com/tombulled/useragent.git", rev = "main"}
+sets = {git = "https://github.com/tombulled/sets.git", rev = "main"}
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

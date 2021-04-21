@@ -53,7 +53,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
 [[package]]
 name = "furl"
-version = "2.1.0"
+version = "2.1.2"
 description = "URL manipulation made simple."
 category = "main"
 optional = false
@@ -87,7 +87,7 @@ pydantic = "^1.8.1"
 type = "git"
 url = "https://github.com/tombulled/mime.git"
 reference = "main"
-resolved_reference = "415b924669c05d1f34863519b54ac8a489a94027"
+resolved_reference = "d3bc04028702b120dadf1504b7e61e30823a2bd0"
 
 [[package]]
 name = "orderedmultidict"
@@ -147,7 +147,7 @@ attrs = "^20.3.0"
 type = "git"
 url = "https://github.com/tombulled/register.git"
 reference = "main"
-resolved_reference = "a7d9508c32dbbb2e73f5aaafe9a51f854bb1d2c3"
+resolved_reference = "9584074c0076857f2d08eb93e1511ecb246fcafb"
 
 [[package]]
 name = "requests"
@@ -166,6 +166,24 @@ urllib3 = ">=1.21.1,<1.27"
 [package.extras]
 security = ["pyOpenSSL (>=0.14)", "cryptography (>=1.3.4)"]
 socks = ["PySocks (>=1.5.6,!=1.5.7)", "win-inet-pton"]
+
+[[package]]
+name = "sets"
+version = "0.1.0"
+description = "Python library to store and manage a collection of sets"
+category = "main"
+optional = false
+python-versions = "^3.8"
+develop = false
+
+[package.dependencies]
+pydantic = "^1.8.1"
+
+[package.source]
+type = "git"
+url = "https://github.com/tombulled/sets.git"
+reference = "main"
+resolved_reference = "5279de937c6adbf8aebf2d5b1e2dce940f347057"
 
 [[package]]
 name = "six"
@@ -227,7 +245,7 @@ resolved_reference = "c0868e9ea249a8d5411d057188cdb07b39acf11d"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "551297879183252b2bfc87e584e6c50afc35c89f77d7295aa7826819d13f5a3d"
+content-hash = "8ffb3c3ef29cb284b3236627ae835a5126faf8a885de287cbab5a6cb5aaa4f16"
 
 [metadata.files]
 addict = [
@@ -252,8 +270,8 @@ chardet = [
     {file = "chardet-4.0.0.tar.gz", hash = "sha256:0d6f53a15db4120f2b08c94f11e7d93d2c911ee118b6b30a04ec3ee8310179fa"},
 ]
 furl = [
-    {file = "furl-2.1.0-py2.py3-none-any.whl", hash = "sha256:f4d6f1e5479c376a5b7bdc62795d736d8c1b2a754f366a2ad2816e46e946e22e"},
-    {file = "furl-2.1.0.tar.gz", hash = "sha256:c0e0231a1feee2acd256574b7033df3144775451c610cb587060d6a0d7e0b621"},
+    {file = "furl-2.1.2-py2.py3-none-any.whl", hash = "sha256:a2c6adb472fc5faba2e18b6c28b83464b80201f168fd10b81997895a7cb5d5a6"},
+    {file = "furl-2.1.2.tar.gz", hash = "sha256:f7dba33eafbee7dbc83963534b25e72f816cced48ac53191ee60bfcc62933918"},
 ]
 idna = [
     {file = "idna-2.10-py2.py3-none-any.whl", hash = "sha256:b97d804b1e9b523befed77c48dacec60e6dcb0b5391d57af6a65a312a90648c0"},
@@ -300,6 +318,7 @@ requests = [
     {file = "requests-2.25.1-py2.py3-none-any.whl", hash = "sha256:c210084e36a42ae6b9219e00e48287def368a26d03a048ddad7bfee44f75871e"},
     {file = "requests-2.25.1.tar.gz", hash = "sha256:27973dd4a904a4f13b263a19c866c13b92a39ed1c964655f025f3f8d3d75b804"},
 ]
+sets = []
 six = [
     {file = "six-1.15.0-py2.py3-none-any.whl", hash = "sha256:8b74bedcbbbaca38ff6d7491d76f2b06b3592611af620f8426e82dddb04a5ced"},
     {file = "six-1.15.0.tar.gz", hash = "sha256:30639c035cdb23534cd4aa2dd52c3bf48f06e5f4a941509c8bafd8ce11080259"},

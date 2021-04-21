@@ -1,6 +1,7 @@
 import attr
-import requests
 import addict
+import furl
+import requests
 
 import re
 import typing
@@ -45,54 +46,27 @@ class BaseInnerTube(BaseClient):
         self.parsers()(lambda data: data)
 
     def __call__(self, *args, **kwargs) -> addict.Dict:
-        response = addict.Dict(self.session.post(*args, **kwargs).json())
+        response = self.session.post(*args, **kwargs)
 
-        response_context: models.ResponseContext = parsers.response_context(response.responseContext)
+        response_data = addict.Dict(response.json())
 
-        class Mapping(typing.NamedTuple):
-            field:  typing.Optional[str]
-            values: typing.Optional[typing.List[str]]
+        response_context: models.ResponseContext = parsers.response_context(response_data.responseContext)
+
+        response_context_fingerprint = models.ResponseFingerprint \
+        (
+            request   = response_context.request.type,
+            function  = response_context.function,
+            browse_id = response_context.browse_id,
+            context   = response_context.context,
+            client    = response_context.client.name,
+            endpoint  = '/'.join(furl.furl(response.url).path.segments[2:]),
+        )
+
+        response_schema = models.Parser.from_model(response_context_fingerprint)
 
         for parser, schema in reversed(self.parsers.items()):
-            mappings = \
-            (
-                Mapping \
-                (
-                    field  = response_context.client.name,
-                    values = schema.client,
-                ),
-                Mapping \
-                (
-                    field  = response_context.request.type,
-                    values = schema.request,
-                ),
-                Mapping \
-                (
-                    field  = response_context.browse_id,
-                    values = schema.browse_id,
-                ),
-                Mapping \
-                (
-                    field  = response_context.function,
-                    values = schema.function,
-                ),
-                Mapping \
-                (
-                    field  = response_context.context,
-                    values = schema.context,
-                ),
-            )
-
-            parser_match = all \
-            (
-                mapping.field is None \
-                    or not mapping.values \
-                    or mapping.field in mapping.values
-                for mapping in mappings
-            )
-
-            if parser_match:
-                return parser(response)
+            if (schema & response_schema).any():
+                return parser(response_data)
 
         # TODO: Raise appropriate exception
         raise Exception(f'No parser found for context: {response_context!s}')
