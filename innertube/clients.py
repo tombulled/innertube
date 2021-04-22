@@ -52,7 +52,7 @@ class BaseInnerTube(BaseClient):
 
         response_context: models.ResponseContext = parsers.response_context(response_data.responseContext)
 
-        response_context_fingerprint = models.ResponseFingerprint \
+        response_fingerprint = models.ResponseFingerprint \
         (
             request   = response_context.request.type,
             function  = response_context.function,
@@ -62,7 +62,7 @@ class BaseInnerTube(BaseClient):
             endpoint  = '/'.join(furl.furl(response.url).path.segments[2:]),
         )
 
-        response_schema = models.Parser.from_model(response_context_fingerprint)
+        response_schema = models.Parser.from_model(response_fingerprint)
 
         for parser, schema in reversed(self.parsers.items()):
             if (schema & response_schema).any():

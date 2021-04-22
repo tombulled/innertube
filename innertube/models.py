@@ -45,13 +45,6 @@ class ResponseFingerprint(BaseModel):
 
 class Parser(sets.Sets[ResponseFingerprint]): pass
 
-# class Parser(BaseModel):
-#     request:   typing.Optional[typing.Set[str]] = pydantic.Field(default_factory = set)
-#     function:  typing.Optional[typing.Set[str]] = pydantic.Field(default_factory = set)
-#     browse_id: typing.Optional[typing.Set[str]] = pydantic.Field(default_factory = set)
-#     context:   typing.Optional[typing.Set[str]] = pydantic.Field(default_factory = set)
-#     client:    typing.Optional[typing.Set[str]] = pydantic.Field(default_factory = set)
-
 class Locale(BaseModel):
     hl: str
     gl: typing.Optional[str]
@@ -103,7 +96,7 @@ class Adaptor(BaseModel):
     context:  dict
 
 class Host(BaseModel):
-    scheme:  str = enums.Scheme.HTTPS.value
+    scheme:  str = enums.Scheme.HTTPS
     domain:  str
     port:    typing.Optional[int]
     path:    str = '/'

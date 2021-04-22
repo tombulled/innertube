@@ -55,7 +55,7 @@ class Session(BaseUrlSession):
         response = super().send(request, **kwargs)
 
         if not response.ok:
-            raise errors.RequestError.from_response(response) from None
+            raise errors.RequestError.from_response(response)
 
         if (content_type := response.headers.get(enums.Header.CONTENT_TYPE.value)):
             mime_type = mime.parse(content_type.lower())
