@@ -71,7 +71,7 @@ devices: typing.Dict[enums.Device, models.Device] = \
     ),
     enums.Device.IOS: models.Device \
     (
-        name       = 'IOS',
+        name       = 'iOS',
         identifier = 'ios',
         comments   = \
         (
@@ -81,9 +81,9 @@ devices: typing.Dict[enums.Device, models.Device] = \
             'en_GB',
         ),
     ),
-    enums.Device.TV: models.Device \
+    enums.Device.LR: models.Device \
     (
-        name       = 'TV',
+        name       = 'LR',
         identifier = 'lr',
         comments   = \
         (
@@ -113,7 +113,7 @@ services: typing.Dict[enums.Service, models.Service] = \
     enums.Service.YOUTUBE_KIDS: models.Service \
     (
         name       = 'YouTube Kids',
-        identifier = 'youtube-pegasus',
+        identifier = 'youtube-kids',
         domain     = 'www.youtubekids.com',
         id         = 76,
     ),
@@ -285,7 +285,7 @@ schemas: typing.Dict[enums.Client, models.ClientSchema] = \
     ),
     enums.Client.TVHTML5: models.ClientSchema \
     (
-        device  = enums.Device.TV,
+        device  = enums.Device.LR,
         service = enums.Service.YOUTUBE,
     ),
 }

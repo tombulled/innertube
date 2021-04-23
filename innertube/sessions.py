@@ -23,12 +23,7 @@ class Session(requests.Session):
         super().__init__()
 
     def __attrs_post_init__(self):
-        self.headers.update \
-        (
-            {
-                str(enums.Header.USER_AGENT): str(infos.devices[enums.Device.WEB].user_agent()),
-            }
-        )
+        self.headers[str(enums.Header.USER_AGENT)] = str(infos.devices[enums.Device.WEB].user_agent())
 
 @attrs
 class BaseUrlSession(Session):
@@ -39,12 +34,7 @@ class BaseUrlSession(Session):
     )
 
     def __attrs_post_init__(self):
-        self.headers.update \
-        (
-            {
-                str(enums.Header.REFERER): self.base_url,
-            }
-        )
+        self.headers[str(enums.Header.REFERER)] = self.base_url
 
     def prepare_request(self, request: requests.Request) -> requests.PreparedRequest:
         if self.base_url is not None:

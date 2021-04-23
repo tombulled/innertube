@@ -1,6 +1,8 @@
 import parse
 import addict
 
+import typing
+
 from . import models
 from . import utils
 
@@ -11,8 +13,8 @@ def response_context(response_context: addict.Dict) -> models.ResponseContext:
         for param in tracker.params:
             services[tracker.service][param.key] = param.value
 
-    request_type = None
-    request_id   = None
+    request_type: typing.Optional[str] = None
+    request_id:   typing.Optional[str] = None
 
     for key, val in services.CSI.items():
         if (result := parse.parse('Get{id}_rid', key)):
