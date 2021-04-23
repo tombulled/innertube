@@ -9,6 +9,7 @@ import urllib.parse
 
 from . import enums
 from . import errors
+from . import infos
 
 attrs = attr.s \
 (
@@ -17,17 +18,33 @@ attrs = attr.s \
 )
 
 @attrs
-class BaseSession(requests.Session):
+class Session(requests.Session):
     def __attrs_pre_init__(self):
         super().__init__()
 
+    def __attrs_post_init__(self):
+        self.headers.update \
+        (
+            {
+                str(enums.Header.USER_AGENT): str(infos.devices[enums.Device.WEB].user_agent()),
+            }
+        )
+
 @attrs
-class BaseUrlSession(BaseSession):
+class BaseUrlSession(Session):
     base_url: typing.Optional[str] = attr.ib \
     (
         default = None,
         init    = False,
     )
+
+    def __attrs_post_init__(self):
+        self.headers.update \
+        (
+            {
+                str(enums.Header.REFERER): self.base_url,
+            }
+        )
 
     def prepare_request(self, request: requests.Request) -> requests.PreparedRequest:
         if self.base_url is not None:
@@ -36,7 +53,21 @@ class BaseUrlSession(BaseSession):
         return super().prepare_request(request)
 
 @attrs
-class Session(BaseUrlSession):
+class SuggestQueriesSession(BaseUrlSession):
+    base_url: str = attr.ib \
+    (
+        default = str(infos.hosts[enums.Host.SUGGEST_QUERIES]),
+        init    = False,
+    )
+
+@attrs
+class InnerTubeSession(BaseUrlSession):
+    base_url: str = attr.ib \
+    (
+        default = str(infos.hosts[enums.Host.YOUTUBEI]),
+        init    = False,
+    )
+
     context: dict = attr.ib \
     (
         default = attr.Factory(dict),

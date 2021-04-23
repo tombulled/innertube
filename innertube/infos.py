@@ -28,14 +28,14 @@ products: typing.Dict[enums.Product, useragent.ProductIdentifier] = \
     )
 }
 
-apis: typing.Dict[enums.Api, models.Host] = \
+hosts: typing.Dict[enums.Host, models.Host] = \
 {
-    enums.Api.YOUTUBEI: models.Host \
+    enums.Host.YOUTUBEI: models.Host \
     (
         domain = 'youtubei.googleapis.com',
         path   = '/youtubei/v1/',
     ),
-    enums.Api.SUGGEST_QUERIES: models.Host \
+    enums.Host.SUGGEST_QUERIES: models.Host \
     (
         domain = 'suggestqueries.google.com',
     ),

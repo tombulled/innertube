@@ -22,7 +22,7 @@ class RequestError(Exception):
     def from_response(cls, response: requests.Response):
         content_type = response.headers.get(enums.Header.CONTENT_TYPE.value).lower()
 
-        mime_type = mime.parse(content_type.lower())
+        mime_type = mime.parse(content_type)
 
         error = addict.Dict \
         (
@@ -35,7 +35,7 @@ class RequestError(Exception):
             data = addict.Dict(response.json())
 
             if (error := data.error):
-                return cls(models.Error(**error))
+                return cls(models.Error.parse_obj(error))
         elif mime_type.subtype == enums.MediaSubtype.HTML:
             soup = bs4.BeautifulSoup(response.text, html.parser.__name__)
 

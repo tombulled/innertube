@@ -1,5 +1,4 @@
 import pydantic
-import babel
 import furl
 
 import useragent
@@ -244,15 +243,15 @@ class Application(BaseModel):
         return utils.filter \
         (
             {
-                enums.YouTubeHeader.CLIENT_NAME.value:    str(self.service.id),
-                enums.YouTubeHeader.CLIENT_VERSION.value: self.client.version,
-                enums.Header.USER_AGENT.value:            str(self.user_agent()),
-                enums.Header.REFERER.value:               str(self.service.host()),
-                enums.Header.ACCEPT_LANGUAGE.value:       locale and locale.accept(),
+                str(enums.YouTubeHeader.CLIENT_NAME):    str(self.service.id),
+                str(enums.YouTubeHeader.CLIENT_VERSION): self.client.version,
+                str(enums.Header.USER_AGENT):            str(self.user_agent()),
+                str(enums.Header.REFERER):               str(self.service.host()),
+                str(enums.Header.ACCEPT_LANGUAGE):       locale and locale.accept(),
             }
         )
 
-    def adaptor(self, locale: babel.Locale = None) -> Adaptor:
+    def adaptor(self, locale: Locale = None) -> Adaptor:
         return Adaptor \
         (
             base_url = self.base_url(),

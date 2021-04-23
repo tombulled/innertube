@@ -43,7 +43,7 @@ class Company(enumb.NoValue):
 class Product(enumb.NoValue):
     MOZILLA: str
 
-class Api(enumb.NoValue):
+class Host(enumb.NoValue):
     YOUTUBEI:        str
     SUGGEST_QUERIES: str
 
