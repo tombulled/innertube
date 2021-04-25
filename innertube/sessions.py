@@ -78,13 +78,13 @@ class InnerTubeSession(BaseUrlSession):
         if not response.ok:
             raise errors.RequestError.from_response(response)
 
-        if (content_type := response.headers.get(enums.Header.CONTENT_TYPE.value)):
+        if (content_type := response.headers.get(str(enums.Header.CONTENT_TYPE))):
             mime_type = mime.parse(content_type.lower())
 
             if mime_type.subtype == enums.MediaSubtype.JSON:
                 data = addict.Dict(response.json())
 
                 if (visitor_data := data.responseContext.visitorData):
-                    self.headers[enums.GoogleHeader.VISITOR_ID.value] = visitor_data
+                    self.headers[str(enums.GoogleHeader.VISITOR_ID)] = visitor_data
 
         return response

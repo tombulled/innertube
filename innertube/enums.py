@@ -51,7 +51,7 @@ class Device(enumb.NoValue):
     WEB:     str
     ANDROID: str
     IOS:     str
-    TV:      str
+    LR:      str
 
 class Service(enumb.NoValue):
     YOUTUBE:        str

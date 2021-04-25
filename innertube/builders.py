@@ -40,6 +40,6 @@ class InnerTube(clients.InnerTubeClient):
             locale = locale,
         )
 
-        self.adaptor.session.headers.update(adaptor.headers)
-        self.adaptor.session.params.update(adaptor.params)
-        self.adaptor.session.context.update(adaptor.context)
+        self.adaptor.headers.update(adaptor.headers)
+        self.adaptor.params.update(adaptor.params)
+        self.adaptor.context.update(adaptor.context)
