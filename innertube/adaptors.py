@@ -31,12 +31,7 @@ class Adaptor(abc.ABC):
         raise NotImplementedError
 
 @attrs
-class SuggestQueriesAdaptor(Adaptor):
-    session: sessions.SuggestQueriesSession = attr.ib \
-    (
-        default = attr.Factory(sessions.SuggestQueriesSession),
-    )
-
+class BaseOuterTubeAdaptor(Adaptor):
     def __call__(self, *args, **kwargs):
         return self.session.get(*args, **kwargs).json()
 
@@ -60,6 +55,13 @@ class BaseInnerTubeAdaptor(Adaptor):
             context  = response_context,
             data     = response_data,
         )
+
+@attrs
+class SuggestQueriesAdaptor(BaseOuterTubeAdaptor):
+    session: sessions.SuggestQueriesSession = attr.ib \
+    (
+        default = attr.Factory(sessions.SuggestQueriesSession),
+    )
 
 @attrs
 class InnerTubeAdaptor(BaseInnerTubeAdaptor):
