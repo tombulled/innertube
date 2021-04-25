@@ -2,7 +2,6 @@ import attr
 import addict
 import furl
 import requests
-import pydantic
 
 import register
 
@@ -13,7 +12,6 @@ import functools
 from . import sessions
 from . import models
 from . import parsers
-from . import enums
 
 attrs = attr.s \
 (
@@ -22,25 +20,35 @@ attrs = attr.s \
 )
 
 @attrs
-class Adaptor(sessions.Session):
-    def __call__(self, *args, **kwargs) -> typing.Union[dict, list]:
-        return self.get(*args, **kwargs)
+class Adaptor(abc.ABC):
+    session: sessions.Session = attr.ib \
+    (
+        default = attr.Factory(sessions.Session),
+    )
+
+    @abc.abstractmethod
+    def __call__(self, *args, **kwargs):
+        raise NotImplementedError
 
 @attrs
-class JSONAdaptor(Adaptor):
-    def send(self, *args, **kwargs) -> typing.Union[dict, list]:
-        return super().send(*args, **kwargs).json()
+class SuggestQueriesAdaptor(Adaptor):
+    session: sessions.SuggestQueriesSession = attr.ib \
+    (
+        default = attr.Factory(sessions.SuggestQueriesSession),
+    )
+
+    def __call__(self, *args, **kwargs):
+        return self.session.get(*args, **kwargs).json()
 
 @attrs
-class SuggestQueriesAdaptor(JSONAdaptor, sessions.SuggestQueriesSession): pass
+class BaseInnerTubeAdaptor(Adaptor):
+    session: sessions.InnerTubeSession = attr.ib \
+    (
+        default = attr.Factory(sessions.InnerTubeSession),
+    )
 
-@attrs
-class BaseInnerTubeAdaptor(Adaptor, sessions.InnerTubeSession):
     def __call__(self, *args, **kwargs) -> models.Response:
-        return self.post(*args, **kwargs)
-
-    def send(self, *args, **kwargs) -> models.Response:
-        response: requests.Response = super().send(*args, **kwargs)
+        response: requests.Response = self.session.post(*args, **kwargs)
 
         response_data: addict.Dict = addict.Dict(response.json())
 
