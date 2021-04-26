@@ -294,7 +294,7 @@ resolved_reference = "c0868e9ea249a8d5411d057188cdb07b39acf11d"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "2dd02fb390caa0a3b7f92276b0018b662d2f760e17b56464c698d512a25afb10"
+content-hash = "7d50208049725893d1c896832357fba3fa2997455fca366ba46257b310f9961a"
 
 [metadata.files]
 addict = [
