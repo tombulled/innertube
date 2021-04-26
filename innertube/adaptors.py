@@ -24,6 +24,7 @@ class Adaptor(abc.ABC):
     session: sessions.Session = attr.ib \
     (
         default = attr.Factory(sessions.Session),
+        init    = False,
     )
 
     @abc.abstractmethod
@@ -40,6 +41,7 @@ class BaseInnerTubeAdaptor(Adaptor):
     session: sessions.InnerTubeSession = attr.ib \
     (
         default = attr.Factory(sessions.InnerTubeSession),
+        init    = False,
     )
 
     def __call__(self, *args, **kwargs) -> models.Response:
@@ -61,6 +63,7 @@ class SuggestQueriesAdaptor(BaseOuterTubeAdaptor):
     session: sessions.SuggestQueriesSession = attr.ib \
     (
         default = attr.Factory(sessions.SuggestQueriesSession),
+        init    = False,
     )
 
 @attrs

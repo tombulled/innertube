@@ -30,6 +30,7 @@ class BaseClient(object):
     adaptor: adaptors.Adaptor = attr.ib \
     (
         default = attr.Factory(adaptors.Adaptor),
+        init    = False,
     )
 
     def __call__(self, *args, **kwargs):
@@ -40,6 +41,7 @@ class BaseSuggestQueriesClient(BaseClient):
     adaptor: adaptors.SuggestQueriesAdaptor = attr.ib \
     (
         default = attr.Factory(adaptors.SuggestQueriesAdaptor),
+        init    = False,
     )
 
 @attrs
@@ -47,6 +49,7 @@ class BaseInnerTubeClient(BaseClient):
     adaptor: adaptors.InnerTubeAdaptor = attr.ib \
     (
         default = attr.Factory(adaptors.InnerTubeAdaptor),
+        init    = False,
     )
 
 @attrs

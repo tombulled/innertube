@@ -118,4 +118,4 @@ class CharBool(enumb.AutoStrEnum):
     FALSE: str
 
 class DataSource(enumb.AutoStrEnum):
-    YOUTUBE: str
+    YOUTUBE: str = 'yt'

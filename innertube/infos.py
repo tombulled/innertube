@@ -132,8 +132,8 @@ clients: typing.Dict[enums.Client, models.Client] = \
     (
         name       = 'WEB',
         version    = '2.20210223.09.00',
-        identifier = 'youtube',
         key        = 'AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8',
+        identifier = 'youtube',
     ),
     enums.Client.WEB_REMIX: models.Client \
     (
@@ -158,134 +158,147 @@ clients: typing.Dict[enums.Client, models.Client] = \
     (
         name    = 'ANDROID',
         version = '16.07.34',
-        package = 'youtube',
         key     = 'AIzaSyA8eiZmM1FaDVjRy-df2KTyQ_vz_yYM39w',
+        package = 'youtube',
     ),
     enums.Client.ANDROID_MUSIC: models.Client \
     (
         name       = 'ANDROID_MUSIC',
         version    = '4.16.51',
+        key        = 'AIzaSyAOghZGza2MQSZkY_zfZ370N-PUdXEo8AI',
         identifier = 'youtube-music-android',
         package    = 'apps.youtube.music',
-        key        = 'AIzaSyAOghZGza2MQSZkY_zfZ370N-PUdXEo8AI',
     ),
     enums.Client.ANDROID_KIDS: models.Client \
     (
         name    = 'ANDROID_KIDS',
         version = '6.02.3',
-        package = 'apps.youtube.kids',
         key     = 'AIzaSyAxxQKWYcEX8jHlflLt2Qcbb-rlolzBhhk',
+        package = 'apps.youtube.kids',
     ),
     enums.Client.ANDROID_CREATOR: models.Client \
     (
         name    = 'ANDROID_CREATOR',
         version = '21.06.103',
-        package = 'apps.youtube.creator',
         key     = 'AIzaSyD_qjV8zaaUMehtLkrKFgVeSX_Iqbtyws8',
+        package = 'apps.youtube.creator',
     ),
     enums.Client.IOS: models.Client \
     (
         name    = 'IOS',
         version = '16.05.7',
-        package = 'youtube',
         key     = 'AIzaSyB-63vPrdThhKuerbB2N_l7Kwwcxj6yUAc',
+        package = 'youtube',
     ),
     enums.Client.IOS_MUSIC: models.Client \
     (
         name       = 'IOS_MUSIC',
         version    = '4.16.1',
+        key        = 'AIzaSyBAETezhkwP0ZWA02RsqT1zu78Fpt0bC_s',
         identifier = 'youtube-music-ios',
         package    = 'youtubemusic',
-        key        = 'AIzaSyBAETezhkwP0ZWA02RsqT1zu78Fpt0bC_s',
     ),
     enums.Client.IOS_KIDS: models.Client \
     (
         name    = 'IOS_KIDS',
         version = '5.42.2',
-        package = 'youtubekids',
         key     = 'AIzaSyA6_JWXwHaVBQnoutCv1-GvV97-rJ949Bc',
+        package = 'youtubekids',
     ),
     enums.Client.IOS_CREATOR: models.Client \
     (
         name    = 'IOS_CREATOR',
         version = '20.47.100',
-        package = 'ytcreator',
         key     = 'AIzaSyAPyF5GfQI-kOa6nZwO8EsNrGdEx9bioNs',
+        package = 'ytcreator',
     ),
     enums.Client.TVHTML5: models.Client \
     (
         name       = 'TVHTML5',
         version    = '7.20210224.00.00',
-        identifier = 'youtube-lr',
         key        = 'AIzaSyDCU8hByM-4DrUqRUYnGn-3llEO78bcxq8',
+        identifier = 'youtube-lr',
     ),
 }
 
-schemas: typing.Dict[enums.Client, models.ClientSchema] = \
-{
-    enums.Client.WEB: models.ClientSchema \
+schemas: typing.Tuple[models.Schema] = \
+(
+    models.Schema \
     (
+        client  = enums.Client.WEB,
         device  = enums.Device.WEB,
         service = enums.Service.YOUTUBE,
     ),
-    enums.Client.WEB_REMIX: models.ClientSchema \
+    models.Schema \
     (
+        client  = enums.Client.WEB_REMIX,
         device  = enums.Device.WEB,
         service = enums.Service.YOUTUBE_MUSIC,
     ),
-    enums.Client.WEB_KIDS: models.ClientSchema \
+    models.Schema \
     (
+        client  = enums.Client.WEB_KIDS,
         device  = enums.Device.WEB,
         service = enums.Service.YOUTUBE_KIDS,
     ),
-    enums.Client.WEB_CREATOR: models.ClientSchema \
+    models.Schema \
     (
+        client  = enums.Client.WEB_CREATOR,
         device  = enums.Device.WEB,
         service = enums.Service.YOUTUBE_STUDIO,
     ),
-    enums.Client.ANDROID: models.ClientSchema \
+    models.Schema \
     (
+        client  = enums.Client.ANDROID,
         device  = enums.Device.ANDROID,
         service = enums.Service.YOUTUBE,
     ),
-    enums.Client.ANDROID_MUSIC: models.ClientSchema \
+    models.Schema \
     (
+        client  = enums.Client.ANDROID_MUSIC,
         device  = enums.Device.ANDROID,
         service = enums.Service.YOUTUBE_MUSIC,
     ),
-    enums.Client.ANDROID_KIDS: models.ClientSchema \
+    models.Schema \
     (
+        client  = enums.Client.ANDROID_KIDS,
         device  = enums.Device.ANDROID,
         service = enums.Service.YOUTUBE_KIDS,
     ),
-    enums.Client.ANDROID_CREATOR: models.ClientSchema \
+    models.Schema \
     (
+        client  = enums.Client.ANDROID_CREATOR,
         device  = enums.Device.ANDROID,
         service = enums.Service.YOUTUBE_STUDIO,
     ),
-    enums.Client.IOS: models.ClientSchema \
+    models.Schema \
     (
+        client  = enums.Client.IOS,
         device  = enums.Device.IOS,
         service = enums.Service.YOUTUBE,
     ),
-    enums.Client.IOS_MUSIC: models.ClientSchema \
+    models.Schema \
     (
+        client  = enums.Client.IOS_MUSIC,
         device  = enums.Device.IOS,
         service = enums.Service.YOUTUBE_MUSIC,
     ),
-    enums.Client.IOS_KIDS: models.ClientSchema \
+    models.Schema \
     (
+        client  = enums.Client.IOS_KIDS,
         device  = enums.Device.IOS,
         service = enums.Service.YOUTUBE_KIDS,
     ),
-    enums.Client.IOS_CREATOR: models.ClientSchema \
+    models.Schema \
     (
+        client  = enums.Client.IOS_CREATOR,
         device  = enums.Device.IOS,
         service = enums.Service.YOUTUBE_STUDIO,
     ),
-    enums.Client.TVHTML5: models.ClientSchema \
+    models.Schema \
     (
+        client  = enums.Client.TVHTML5,
         device  = enums.Device.LR,
         service = enums.Service.YOUTUBE,
     ),
-}
+)

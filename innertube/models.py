@@ -197,7 +197,8 @@ class Client(BaseModel):
             ** (locale.dict() if locale else {}),
         )
 
-class ClientSchema(BaseModel):
+class Schema(BaseModel):
+    client:  enums.Client
     device:  enums.Device
     service: enums.Service
 
