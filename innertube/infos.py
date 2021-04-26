@@ -5,11 +5,6 @@ import useragent
 from . import enums
 from . import models
 
-def client(service: enums.Service, device: enums.Device) -> typing.Optional[enums.Client]:
-    for client, schema in schemas.items():
-        if schema.service == service and schema.device == device:
-            return client
-
 companies: typing.Dict[enums.Company, models.Company] = \
 {
     enums.Company.GOOGLE: models.Company \

@@ -97,12 +97,12 @@ class Header(enumb.AutoNameSlugTitle):
     ACCEPT_LANGUAGE: str
 
 class GoogleHeader(enumb.AutoNameSlugTitle):
-    _generate_next_value_ = lambda name, *_: 'X-Goog-' + enumb.AutoNameSlugTitle._generate_next_value_(name)
+    _generate_next_value_ = lambda name, *_: f'X-Goog-{enumb.AutoNameSlugTitle._generate_next_value_(name)}'
 
     VISITOR_ID: str
 
 class YouTubeHeader(enumb.AutoNameSlugTitle):
-    _generate_next_value_ = lambda name, *_: 'X-YouTube-' + enumb.AutoNameSlugTitle._generate_next_value_(name)
+    _generate_next_value_ = lambda name, *_: f'X-YouTube-{enumb.AutoNameSlugTitle._generate_next_value_(name)}'
 
     CLIENT_NAME:    str
     CLIENT_VERSION: str
