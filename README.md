@@ -48,12 +48,12 @@ Simply put, the data returned by the InnerTube API will need to be parsed and sa
 
 ## Clients
 This table shows all the devices and services that work with the InnerTube API. For example, you could query the API as if you were using the YouTube app on your Tv!
-|         | YouTube | YouTubeMusic | YouTubeKids | YouTubeStudio |
-| ------- | ------- | ------------ | ----------- | ------------- |
-| Web     | &check; | &check;      | &check;     | &check;       |
-| Android | &check; | &check;      | &check;     | &check;       |
-| Ios     | &check; | &check;      | &check;     | &check;       |
-| Tv      | &check; | &cross;      | &cross;     | &cross;       |
+|         | YouTube | YouTubeMusic  | YouTubeKids  | YouTubeStudio   |
+| ------- | ------- | ------------- | ------------ | --------------- |
+| Web     | WEB     | WEB_REMIX     | WEB_KIDS     | WEB_CREATOR     |
+| Android | ANDROID | ANDROID_MUSIC | ANDROID_KIDS | ANDROID_CREATOR |
+| Ios     | IOS     | IOS_MUSIC     | IOS_KIDS     | IOS_CREATOR     |
+| Tv      | TVHTML5 |               |              |                 |
 
 ## Endpoints
 Only the core, unauthenticated endpoints are currently implemented. However, between all of these you should be able to access all the data you need.
