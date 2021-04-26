@@ -24,6 +24,7 @@ register = {git = "https://github.com/tombulled/register.git", rev = "main"}
 useragent = {git = "https://github.com/tombulled/useragent.git", rev = "main"}
 sets = {git = "https://github.com/tombulled/sets.git", rev = "main"}
 enumb = {git = "https://github.com/tombulled/enumb.git", rev = "main"}
+toolz = "^0.11.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

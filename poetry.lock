@@ -243,6 +243,14 @@ optional = false
 python-versions = "*"
 
 [[package]]
+name = "toolz"
+version = "0.11.1"
+description = "List processing tools and functional utilities"
+category = "main"
+optional = false
+python-versions = ">=3.5"
+
+[[package]]
 name = "typing-extensions"
 version = "3.7.4.3"
 description = "Backported and Experimental Type Hints for Python 3.5+"
@@ -286,7 +294,7 @@ resolved_reference = "c0868e9ea249a8d5411d057188cdb07b39acf11d"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "58551fa148daba07312cd02ee167a69e19c7eef39d3c199ab4d0e98bbb49fd40"
+content-hash = "2dd02fb390caa0a3b7f92276b0018b662d2f760e17b56464c698d512a25afb10"
 
 [metadata.files]
 addict = [
@@ -375,6 +383,10 @@ soupsieve = [
 text-unidecode = [
     {file = "text-unidecode-1.3.tar.gz", hash = "sha256:bad6603bb14d279193107714b288be206cac565dfa49aa5b105294dd5c4aab93"},
     {file = "text_unidecode-1.3-py2.py3-none-any.whl", hash = "sha256:1311f10e8b895935241623731c2ba64f4c455287888b18189350b67134a822e8"},
+]
+toolz = [
+    {file = "toolz-0.11.1-py3-none-any.whl", hash = "sha256:1bc473acbf1a1db4e72a1ce587be347450e8f08324908b8a266b486f408f04d5"},
+    {file = "toolz-0.11.1.tar.gz", hash = "sha256:c7a47921f07822fe534fb1c01c9931ab335a4390c782bd28c6bcc7c2f71f3fbf"},
 ]
 typing-extensions = [
     {file = "typing_extensions-3.7.4.3-py2-none-any.whl", hash = "sha256:dafc7639cde7f1b6e1acc0f457842a83e722ccca8eef5270af2d74792619a89f"},

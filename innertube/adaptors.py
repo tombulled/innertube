@@ -2,6 +2,7 @@ import attr
 import addict
 import furl
 import requests
+import toolz
 
 import register
 
@@ -45,16 +46,13 @@ class BaseInnerTubeAdaptor(Adaptor):
     )
 
     def __call__(self, *args, **kwargs) -> models.Response:
-        response: requests.Response = self.session.post(*args, **kwargs)
-
-        response_data: addict.Dict = addict.Dict(response.json())
-
-        response_context: models.ResponseContext = parsers.response_context(response_data.responseContext)
+        response:      requests.Response = self.session.post(*args, **kwargs)
+        response_data: addict.Dict       = addict.Dict(response.json())
 
         return models.Response \
         (
             endpoint = '/'.join(furl.furl(response.url).path.segments[2:]),
-            context  = response_context,
+            context  = parsers.response_context(response_data.responseContext),
             data     = response_data,
         )
 
@@ -83,14 +81,14 @@ class InnerTubeAdaptor(BaseInnerTubeAdaptor):
     )
 
     def __attrs_post_init__(self):
-        self.parsers()(lambda data: data)
+        self.parsers()(toolz.identity)
 
     def __call__(self, *args, **kwargs) -> typing.Any:
         response: models.Response = super().__call__(*args, **kwargs)
 
-        response_fingerprint: models.ResponseFingerprint = response.fingerprint()
+        fingerprint: models.ResponseFingerprint = response.fingerprint()
 
-        response_schema = models.Parser.from_model(response_fingerprint)
+        response_schema = models.Parser.from_model(fingerprint)
 
         for parser, schema in reversed(self.parsers.items()):
             if not schema.any() or (schema & response_schema).any():
