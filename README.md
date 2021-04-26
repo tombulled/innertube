@@ -20,11 +20,7 @@ $ pip install git+https://github.com/tombulled/innertube
 >>> import innertube
 >>>
 >>> # Construct a client
->>> client = innertube.innertube \
-(
-    service = innertube.Service.YOUTUBE, # Could be YOUTUBE_MUSIC, etc.
-    device  = innertube.Device.WEB,      # Could be ANDROID, etc.
-)
+>>> client = innertube.InnerTube(innertube.Client.WEB)
 >>>
 >>> # Get some data!
 >>> data = client.search(query = 'foo fighters')
@@ -33,7 +29,7 @@ $ pip install git+https://github.com/tombulled/innertube
 >>> data = client('browse', json = {'browseId': 'FEwhat_to_watch'})
 >>>
 >>> # The core endpoints are implemented, so the above is equivalent to:
->>> data = client.browse(browse_id = 'FEwhat_to_watch')
+>>> data = client.browse('FEwhat_to_watch')
 ```
 
 ## Why not just use the [YouTube Data API](https://developers.google.com/youtube/v3/)?
@@ -86,3 +82,6 @@ Here's a list of the awesome libraries that helped make `innertube`
 | [attrs](https://pypi.org/project/attrs/) | https://github.com/python-attrs/attrs |
 | [furl](https://pypi.org/project/furl/) | https://github.com/gruns/furl |
 | [beautifulsoup4](https://pypi.org/project/beautifulsoup4/) | https://www.crummy.com/software/BeautifulSoup/ |
+| [humps](https://pypi.org/project/pyhumps/) | https://github.com/nficano/humps |
+| [parse](https://pypi.org/project/parse/) | https://github.com/r1chardj0n3s/parse |
+| [toolz](https://pypi.org/project/toolz/) | https://github.com/pytoolz/toolz |
