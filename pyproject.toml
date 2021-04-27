@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "innertube"
-version = "0.1.1"
+version = "0.1.2"
 description = "Python Client for Google's Private InnerTube API. Works with Youtube, YouTubeMusic etc."
 authors = ["Tom Bulled <26026015+tombulled@users.noreply.github.com>"]
 license = "MIT"
@@ -16,7 +16,6 @@ requests = "^2.25.1"
 addict = "^2.4.0"
 furl = "^2.1.0"
 attrs = "^20.3.0"
-beautifulsoup4 = "^4.9.3"
 parse = "^1.19.0"
 toolz = "^0.11.1"
 mime = {git = "https://github.com/tombulled/mime.git", rev = "main"}

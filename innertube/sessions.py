@@ -10,6 +10,7 @@ import urllib.parse
 from . import enums
 from . import errors
 from . import infos
+from . import models
 
 attrs = attr.s \
 (
@@ -75,16 +76,21 @@ class InnerTubeSession(BaseUrlSession):
     def send(self, request: requests.PreparedRequest, **kwargs) -> requests.Response:
         response = super().send(request, **kwargs)
 
+        content_type = mime.parse(response.headers.get(str(enums.Header.CONTENT_TYPE)))
+
         if not response.ok:
-            raise errors.RequestError.from_response(response)
-
-        if (content_type := response.headers.get(str(enums.Header.CONTENT_TYPE))):
-            mime_type = mime.parse(content_type.lower())
-
-            if mime_type.subtype == enums.MediaSubtype.JSON:
+            if content_type.subtype == mime.MediaSubtype.JSON:
                 data = addict.Dict(response.json())
 
-                if (visitor_data := data.responseContext.visitorData):
-                    self.headers[str(enums.GoogleHeader.VISITOR_ID)] = visitor_data
+                if (error := data.error):
+                    raise errors.HttpException(models.Error.parse_obj(error))
+
+            response.raise_for_status()
+
+        if content_type.subtype == mime.MediaSubtype.JSON:
+            data = addict.Dict(response.json())
+
+            if (visitor_data := data.responseContext.visitorData):
+                self.headers[str(enums.GoogleHeader.VISITOR_ID)] = visitor_data
 
         return response

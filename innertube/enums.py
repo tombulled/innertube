@@ -107,10 +107,6 @@ class YouTubeHeader(enumb.AutoNameSlugTitle):
     CLIENT_NAME:    str
     CLIENT_VERSION: str
 
-class MediaSubtype(enumb.AutoNameLower):
-    JSON: str
-    HTML: str
-
 class CharBool(enumb.AutoStrEnum):
     _generate_next_value_ = lambda name, *_: name[0].lower()
 
