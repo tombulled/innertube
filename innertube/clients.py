@@ -6,6 +6,7 @@ import typing
 
 from . import sessions
 from . import utils
+from . import enums
 
 attrs = attr.s \
 (

@@ -10,6 +10,7 @@ import enum
 import operator
 import typing
 import http
+import http.client
 
 from . import enums
 from . import utils
@@ -36,21 +37,21 @@ class ResponseContext(BaseModel):
     request:      typing.Optional[Request] = pydantic.Field(default_factory = Request)
     flags:        typing.Optional[Flags]   = pydantic.Field(default_factory = Flags)
 
-class Response(BaseModel):
-    endpoint: str
-    context:  ResponseContext
-    data:     addict.Dict
-
-    def fingerprint(self):
-        return ResponseFingerprint \
-        (
-            endpoint  = self.endpoint,
-            request   = self.context.request.type,
-            function  = self.context.function,
-            browse_id = self.context.browse_id,
-            context   = self.context.context,
-            client    = self.context.client.name,
-        )
+# class Response(BaseModel):
+#     endpoint: str
+#     context:  ResponseContext
+#     data:     addict.Dict
+#
+#     def fingerprint(self):
+#         return ResponseFingerprint \
+#         (
+#             endpoint  = self.endpoint,
+#             request   = self.context.request.type,
+#             function  = self.context.function,
+#             browse_id = self.context.browse_id,
+#             context   = self.context.context,
+#             client    = self.context.client.name,
+#         )
 
 class ResponseFingerprint(BaseModel):
     endpoint:  typing.Optional[str]
