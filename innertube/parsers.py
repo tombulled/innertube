@@ -25,20 +25,20 @@ def response_context(response_context: addict.Dict) -> models.ResponseContext:
 
     context = utils.filter \
     (
+        function     = services.CSI.yt_fn,
+        browse_id    = services.GFEEDBACK.browse_id,
+        context      = services.GFEEDBACK.context,
+        visitor_data = response_context.visitorData,
         request = utils.filter \
         (
             type = request_type,
             id   = request_id,
         ),
-        function  = services.CSI.yt_fn,
-        browse_id = services.GFEEDBACK.browse_id,
-        context   = services.GFEEDBACK.context,
-        client    = utils.filter \
+        client = utils.filter \
         (
             name    = services.CSI.c,
             version = services.CSI.cver,
         ),
-        visitor_data = response_context.visitorData,
         flags = utils.filter \
         (
             logged_in = (value := services.GFEEDBACK.logged_in) and bool(int(value)),

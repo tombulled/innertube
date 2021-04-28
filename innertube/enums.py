@@ -37,6 +37,12 @@ class BrowseId(enumb.AutoStrEnum):
     MUSIC_MOODS_AND_GENRES:          str
     MUSIC_MOODS_AND_GENRES_CATEGORY: str
 
+class ErrorStatus(enumb.AutoName):
+    PERMISSION_DENIED:   str
+    INVALID_ARGUMENT:    str
+    FAILED_PRECONDITION: str
+    NOT_FOUND:           str
+
 class Company(enumb.NoValue):
     GOOGLE: str
 

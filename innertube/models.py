@@ -9,6 +9,7 @@ import functools
 import enum
 import operator
 import typing
+import http
 
 from . import enums
 from . import utils
@@ -78,32 +79,52 @@ class Locale(BaseModel):
             )
         )
 
+# class Error(BaseModel):
+#     class Error(BaseModel):
+#         reason:  str
+#         domain:  str
+#         message: str
+#
+#         def __str__(self) -> str:
+#             return f'{self.reason}@{self.domain}: {self.message}'
+#
+#     code:    int
+#     status:  str
+#     message: str
+#     errors:  typing.Optional[typing.List[Error]]
+#
+#     def __str__(self) -> str:
+#         return '\n\t'.join \
+#         (
+#             (
+#                 f'[{self.code}] {self.status}: {self.message}',
+#                 * \
+#                 (
+#                     str(error)
+#                     for error in self.errors or ()
+#                 )
+#             )
+#         )
+
 class Error(BaseModel):
-    class Error(BaseModel):
-        reason:  str
-        domain:  str
-        message: str
-
-        def __str__(self) -> str:
-            return f'{self.reason}@{self.domain}: {self.message}'
-
-    code:    int
-    status:  str
+    code:    http.HTTPStatus
+    status:  enums.ErrorStatus
     message: str
-    errors:  typing.Optional[typing.List[Error]]
+
+    def __repr__(self) -> str:
+        return f'<Error [{self.code} {self.reason}]>'
 
     def __str__(self) -> str:
-        return '\n\t'.join \
+        return f'{self.code} {self.reason}' + \
         (
-            (
-                f'[{self.code}] {self.status}: {self.message}',
-                * \
-                (
-                    str(error)
-                    for error in self.errors or ()
-                )
-            )
+            f': {self.message}'
+            if self.message
+            else ''
         )
+
+    @property
+    def reason(self):
+        return http.client.responses[self.code]
 
 class Adaptor(BaseModel):
     base_url: str

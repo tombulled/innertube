@@ -1,23 +1,11 @@
 import attr
 import addict
-import furl
-import requests
 
-import register
-
-import re
 import abc
 import typing
-import operator
-import functools
 
-from . import enums
-from . import models
-from . import parsers
-from . import infos
 from . import sessions
 from . import utils
-from . import adaptors
 
 attrs = attr.s \
 (
@@ -26,31 +14,46 @@ attrs = attr.s \
 )
 
 @attrs
-class BaseClient(object):
-    adaptor: adaptors.Adaptor = attr.ib \
+class BaseClient(abc.ABC):
+    session: sessions.BaseSession = attr.ib()
+
+    def __call__(self):
+        raise NotImplementedError
+
+@attrs
+class BaseSuggestQueriesClient(BaseClient):
+    session: sessions.SuggestQueriesSession = attr.ib \
     (
-        default = attr.Factory(adaptors.Adaptor),
+        default = attr.Factory(sessions.SuggestQueriesSession),
         init    = False,
     )
 
     def __call__(self, *args, **kwargs):
-        return self.adaptor(*args, **kwargs)
-
-@attrs
-class BaseSuggestQueriesClient(BaseClient):
-    adaptor: adaptors.SuggestQueriesAdaptor = attr.ib \
-    (
-        default = attr.Factory(adaptors.SuggestQueriesAdaptor),
-        init    = False,
-    )
+        return self.session.get(*args, **kwargs).json()
 
 @attrs
 class BaseInnerTubeClient(BaseClient):
-    adaptor: adaptors.InnerTubeAdaptor = attr.ib \
+    session: sessions.InnerTubeSession = attr.ib \
     (
-        default = attr.Factory(adaptors.InnerTubeAdaptor),
+        default = attr.Factory(sessions.InnerTubeSession),
         init    = False,
     )
+
+    def __call__(self, *args, **kwargs) -> addict.Dict:
+        response = self.session.post(*args, **kwargs)
+
+        response_data = addict.Dict(response.json())
+
+        if (context := response_data.responseContext):
+            # TODO: Something with context here...
+            # response_context = context
+
+            del response_data.responseContext
+
+        if (error := response_data.error):
+            del response_data.error
+
+        return response_data
 
 @attrs
 class SuggestQueriesClient(BaseSuggestQueriesClient):
