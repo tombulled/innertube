@@ -129,33 +129,6 @@ class Locale(BaseModel):
             )
         )
 
-# class Error(BaseModel):
-#     class Error(BaseModel):
-#         reason:  str
-#         domain:  str
-#         message: str
-#
-#         def __str__(self) -> str:
-#             return f'{self.reason}@{self.domain}: {self.message}'
-#
-#     code:    int
-#     status:  str
-#     message: str
-#     errors:  typing.Optional[typing.List[Error]]
-#
-#     def __str__(self) -> str:
-#         return '\n\t'.join \
-#         (
-#             (
-#                 f'[{self.code}] {self.status}: {self.message}',
-#                 * \
-#                 (
-#                     str(error)
-#                     for error in self.errors or ()
-#                 )
-#             )
-#         )
-
 class Error(BaseModel):
     code:    http.HTTPStatus
     status:  enums.ErrorStatus
@@ -336,7 +309,7 @@ class Application(BaseModel):
                 str(enums.YouTubeHeader.CLIENT_VERSION): self.client.version,
                 str(enums.Header.USER_AGENT):            str(self.user_agent()),
                 str(enums.Header.REFERER):               str(self.service.host()),
-                str(enums.Header.ACCEPT_LANGUAGE):       locale and locale.accept(),
+                str(enums.Header.ACCEPT_LANGUAGE):       locale and locale.accept_language(),
             }
         )
 

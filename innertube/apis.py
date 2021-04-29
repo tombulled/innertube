@@ -18,8 +18,16 @@ class SuggestQueries(clients.SuggestQueriesClient):
     locale: typing.Optional[models.Locale] = None
 
     def __attrs_post_init__(self):
-        # TODO: initialise...
-        pass
+        super().__attrs_post_init__()
+
+        headers = \
+        {
+            str(enums.Header.USER_AGENT):      str(infos.devices[enums.Device.WEB].user_agent()),
+            str(enums.Header.REFERER):         str(infos.hosts[enums.Host.SUGGEST_QUERIES]),
+            str(enums.Header.ACCEPT_LANGUAGE): self.locale and self.locale.accept_language(),
+        }
+
+        self.session.headers.update(headers)
 
 @attrs
 class InnerTube(clients.InnerTubeClient):
@@ -28,7 +36,7 @@ class InnerTube(clients.InnerTubeClient):
 
     def __attrs_post_init__(self):
         super().__attrs_post_init__()
-        
+
         adaptor = self.info.adaptor \
         (
             locale = self.locale,

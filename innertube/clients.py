@@ -27,6 +27,9 @@ class BaseClient(abc.ABC):
     def __call__(self):
         raise NotImplementedError
 
+    def __attrs_post_init__(self):
+        pass
+
 @attrs
 class BaseSuggestQueriesClient(BaseClient):
     session: sessions.SuggestQueriesSession = attr.ib \
