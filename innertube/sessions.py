@@ -10,6 +10,7 @@ import urllib.parse
 from . import enums
 from . import models
 from . import infos
+from . import errors
 
 attrs = attr.s \
 (
@@ -45,11 +46,24 @@ class JSONSession(BaseUrlSession):
 
         if content_type.subtype != mime.MediaSubtype.JSON:
             if not response.ok:
-                # TODO: Make and use a better implementation of this
-                response.raise_for_status()
+                raise errors.RequestError(models.Error.from_response(response))
 
-            # TODO: Raise better exception
-            raise Exception('response is not json')
+            raise errors.ResponseError \
+            (
+                'Expected response of type {expected_type!r}, got {actual_type!r}'.format \
+                (
+                    expected_type = mime.MimeType \
+                    (
+                        type    = mime.MediaType.APPLICATION,
+                        subtype = mime.MediaSubtype.JSON,
+                    ).__str__(),
+                    actual_type = content_type.__str__ \
+                    (
+                        suffix     = False,
+                        parameters = False,
+                    ),
+                ),
+            )
 
         return response
 
@@ -58,8 +72,7 @@ class OuterTubeSession(JSONSession):
         response = super().send(*args, **kwargs)
 
         if not response.ok:
-            # TODO: Raise better exception
-            raise Exception(response.json())
+            raise errors.RequestError(models.Error.from_response(response))
 
         return response
 
@@ -67,7 +80,7 @@ class OuterTubeSession(JSONSession):
 class SuggestQueriesSession(OuterTubeSession):
     base_url: str = attr.ib \
     (
-        default = str(infos.apis[enums.Api.SUGGEST_QUERIES]),
+        default = str(infos.apis[enums.Host.SUGGEST_QUERIES]),
         init    = False,
     )
 
@@ -75,7 +88,7 @@ class SuggestQueriesSession(OuterTubeSession):
 class InnerTubeSession(JSONSession):
     base_url: str = attr.ib \
     (
-        default = str(infos.apis[enums.Api.YOUTUBEI]),
+        default = str(infos.apis[enums.Host.YOUTUBEI]),
         init    = False,
     )
 
@@ -99,7 +112,7 @@ class InnerTubeSession(JSONSession):
         response_data = addict.Dict(response.json())
 
         if (error := response_data.error):
-            raise requests.HTTPError(models.Error.parse_obj(error))
+            raise errors.RequestError(models.Error.parse_obj(error))
 
         if (visitor_data := response_data.responseContext.visitorData):
             self.headers[str(enums.GoogleHeader.VISITOR_ID)] = visitor_data

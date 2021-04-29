@@ -5,14 +5,14 @@ import useragent
 from . import enums
 from . import models
 
-apis: typing.Dict[enums.Api, models.Api] = \
+apis: typing.Dict[enums.Host, models.Api] = \
 {
-    enums.Api.YOUTUBEI: models.Api \
+    enums.Host.YOUTUBEI: models.Api \
     (
         domain = enums.Host.YOUTUBEI,
         mount  = '/youtubei/v1/',
     ),
-    enums.Api.SUGGEST_QUERIES: models.Api \
+    enums.Host.SUGGEST_QUERIES: models.Api \
     (
         domain = enums.Host.SUGGEST_QUERIES,
     ),

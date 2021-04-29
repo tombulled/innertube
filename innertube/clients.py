@@ -94,19 +94,17 @@ class SuggestQueriesClient(BaseSuggestQueriesClient):
                 *,
                 client:      str,
                 data_source: typing.Optional[str] = None,
-                **kwargs,
             ) -> typing.List[str]:
         return self \
         (
             'complete/search',
             params = utils.filter \
             (
-                **kwargs,
                 client = client,
                 q      = query,
                 ds     = data_source,
-                xhr    = enums.CharBool.TRUE.value,
-                hjson  = enums.CharBool.TRUE.value,
+                xhr    = enums.Bool.TRUE.value,
+                hjson  = enums.Bool.TRUE.value,
             ),
         )
 

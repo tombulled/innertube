@@ -1,5 +1,5 @@
-import slugify
 import furl
+import slugify
 
 import enumb
 
@@ -104,10 +104,6 @@ class GoogleClient(enumb.AutoNameSlug):
     YOUTUBE_MUSIC_ANDROID: str
     YOUTUBE_MUSIC_IOS:     str
     YOUTUBE_LR:            str
-
-class Api(BaseEntity):
-    YOUTUBEI:     str
-    SUGGEST_QUERIES: str
 
 class Device(enumb.AutoNameLower):
     WEB:     str

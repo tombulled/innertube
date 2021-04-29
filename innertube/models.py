@@ -131,7 +131,6 @@ class Locale(BaseModel):
 
 class Error(BaseModel):
     code:    http.HTTPStatus
-    status:  enums.ErrorStatus
     message: str
 
     def __repr__(self) -> str:
@@ -148,6 +147,17 @@ class Error(BaseModel):
     @property
     def reason(self):
         return http.client.responses[self.code]
+
+    @classmethod
+    def from_response(cls, response):
+        return cls \
+        (
+            code    = response.status_code,
+            message = f'{response.request.method} {response.url}',
+        )
+
+class InnerTubeError(Error):
+    status: enums.ErrorStatus
 
 class Adaptor(BaseModel):
     params:   dict
@@ -171,9 +181,6 @@ class Host(BaseModel):
             path   = '/',
         )
 
-    def __truediv__(self, rhs):
-        return self.url() / rhs
-
 class Api(Host):
     mount: str = '/'
 
@@ -185,7 +192,7 @@ class DeviceInfo(BaseModel):
     family:     enums.DeviceFamily
     comments:   typing.List[str]
 
-    def product_identifier(self):
+    def product_identifier(self) -> typing.Optional[useragent.ProductIdentifier]:
         if self.family == enums.DeviceFamily.WEB:
             return useragent.ProductIdentifier \
             (
@@ -193,25 +200,21 @@ class DeviceInfo(BaseModel):
                 version = enums.Product.MOZILLA.version,
             )
 
-    def product(self):
-        return (product_identifier := self.product_identifier()) and useragent.Product \
-        (
-            identifier = product_identifier,
-            comments   = self.comments,
-        )
+    def product(self) -> typing.Optional[useragent.Product]:
+        if (identifier := self.product_identifier()):
+            return useragent.Product \
+            (
+                identifier = identifier,
+                comments   = self.comments,
+            )
 
 class ServiceInfo(BaseModel):
     domain: str
 
-    def url(self) -> str:
-        return str \
+    def host(self) -> Host:
+        return Host \
         (
-            furl.furl \
-            (
-                scheme = enums.Scheme.HTTPS,
-                host   = self.domain,
-                path   = '/',
-            )
+            domain   = self.domain,
         )
 
 class ClientInfo(BaseModel):
@@ -284,7 +287,7 @@ class Client(BaseModel):
                 str(enums.YouTubeHeader.CLIENT_NAME):    self.client.id and str(self.client.id),
                 str(enums.YouTubeHeader.CLIENT_VERSION): self.client.version,
                 str(enums.Header.USER_AGENT):            str(self.product()),
-                str(enums.Header.REFERER):               str(self.service.url()),
+                str(enums.Header.REFERER):               str(self.service.host()),
                 str(enums.Header.ACCEPT_LANGUAGE):       locale and locale.accept_language(),
             }
         )
