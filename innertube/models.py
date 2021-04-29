@@ -1,286 +1,301 @@
+import addict
 import pydantic
-import humps
-import babel
 import furl
+import parse
+import requests
+
+import useragent
+import sets
 
 import functools
 import enum
 import operator
 import typing
+import http
+import http.client
 
 from . import enums
+from . import utils
 
-class BaseModel(pydantic.BaseModel):
-    class Config:
-        allow_population_by_field_name = True
+class BaseModel(pydantic.BaseModel): pass
 
-class Params(BaseModel):
-    key: str
-    alt: enums.Alt
+class ResponseContext(BaseModel):
+    class Request(BaseModel):
+        type: typing.Optional[str]
+        id:   typing.Optional[str]
 
-class Context(BaseModel):
-    client_name:    typing.Optional[str]
-    client_version: typing.Optional[str]
-    gl:             typing.Optional[str]
-    hl:             typing.Optional[str]
+    class Client(BaseModel):
+        name:    typing.Optional[str]
+        version: typing.Optional[str]
 
-    class Config:
-        alias_generator = humps.camelize
+    class Flags(BaseModel):
+        logged_in: typing.Optional[bool]
 
-class Headers(BaseModel):
-    client_name:    typing.Optional[str] = pydantic.Field(..., alias = enums.Header.CLIENT_NAME.value)
-    client_version: typing.Optional[str] = pydantic.Field(..., alias = enums.Header.CLIENT_VERSION.value)
-    user_agent:     typing.Optional[str] = pydantic.Field(..., alias = enums.Header.USER_AGENT.value)
-    referer:        typing.Optional[str] = pydantic.Field(..., alias = enums.Header.REFERER.value)
+    function:     typing.Optional[str]
+    browse_id:    typing.Optional[str]
+    context:      typing.Optional[str]
+    visitor_data: typing.Optional[str]
+    client:       typing.Optional[Client]  = pydantic.Field(default_factory = Client)
+    request:      typing.Optional[Request] = pydantic.Field(default_factory = Request)
+    flags:        typing.Optional[Flags]   = pydantic.Field(default_factory = Flags)
 
-    class Config:
-        alias_generator = lambda field: '-'.join(map(str.title, field.split('_')))
+    @classmethod
+    def parse(cls, response_context: addict.Dict):
+        services = addict.Dict()
 
-class SubError(BaseModel):
-    reason:  str
-    domain:  str
-    message: str
+        for tracker in response_context.serviceTrackingParams:
+            for param in tracker.params:
+                services[tracker.service][param.key] = param.value
 
-class Error(BaseModel):
-    code:    int
-    status:  str
-    message: str
-    errors:  typing.Optional[typing.List[SubError]]
+        request_type: typing.Optional[str] = None
+        request_id:   typing.Optional[str] = None
 
-class Adaptor(BaseModel):
-    base_url: str
-    params:   Params
-    headers:  Headers
-    context:  Context
+        for key, val in services.CSI.items():
+            if (result := parse.parse('Get{id}_rid', key)):
+                result = addict.Dict(result.named)
 
-class ProductIdentifier(BaseModel):
-    name:     str
-    version:  typing.Optional[str]
+                request_type = result.id
+                request_id   = val
 
-    def __str__(self):
-        return '/'.join \
+        context = utils.filter \
+        (
+            function     = services.CSI.yt_fn,
+            browse_id    = services.GFEEDBACK.browse_id,
+            context      = services.GFEEDBACK.context,
+            visitor_data = response_context.visitorData,
+            request = utils.filter \
+            (
+                type = request_type,
+                id   = request_id,
+            ),
+            client = utils.filter \
+            (
+                name    = services.CSI.c,
+                version = services.CSI.cver,
+            ),
+            flags = utils.filter \
+            (
+                logged_in = (value := services.GFEEDBACK.logged_in) and bool(int(value)),
+            ),
+        )
+
+        return cls.parse_obj(context)
+
+    @classmethod
+    def from_response(cls, response: requests.Response):
+        response_data = addict.Dict(response.json())
+
+        if (context := response_data.responseContext):
+            return cls.parse(context)
+
+class ResponseFingerprint(BaseModel):
+    endpoint:  typing.Optional[str]
+    request:   typing.Optional[str]
+    function:  typing.Optional[str]
+    browse_id: typing.Optional[str]
+    context:   typing.Optional[str]
+    client:    typing.Optional[str]
+
+    @classmethod
+    def from_response(cls, response: requests.Response):
+        context = ResponseContext.from_response(response)
+
+        return cls \
+        (
+            endpoint  = '/'.join(furl.furl(response.url).path.segments[2:]),
+            request   = context.request.type,
+            function  = context.function,
+            browse_id = context.browse_id,
+            context   = context.context,
+            client    = context.client.name,
+        )
+
+class Parser(sets.Sets[ResponseFingerprint]): pass
+
+class Locale(BaseModel):
+    hl: str
+    gl: typing.Optional[str]
+
+    def accept_language(self):
+        return ','.join \
         (
             filter \
             (
                 lambda item: item is not None,
                 (
-                    self.name,
-                    self.version,
-                ),
-            ),
-        )
-
-class ProductComment(BaseModel):
-    comments: typing.List[str]
-
-    def __str__(self):
-        return '({comments})'.format \
-        (
-            comments = '; '.join \
-            (
-                self.comments,
-            ),
-        )
-
-class Product(BaseModel):
-    identifier: ProductIdentifier
-    comment:    typing.Optional[ProductComment]
-
-    def __str__(self):
-        return ' '.join \
-        (
-            map \
-            (
-                str,
-                filter \
-                (
-                    lambda item: item is not None,
-                    (
-                        self.identifier,
-                        self.comment,
-                    ),
-                ),
-            ),
-        )
-
-class UserAgent(BaseModel):
-    products: typing.List[Product]
-
-    def __str__(self):
-        return ' '.join(map(str, self.products))
-
-class Company(BaseModel):
-    name:   str
-    domain: str
-
-    def package(self):
-        return '.'.join(self.domain.split('.')[::-1])
-
-class Device(BaseModel):
-    class Product(BaseModel):
-        identifier: typing.Optional[ProductIdentifier]
-        comment:    typing.Optional[ProductComment]
-
-        def product(self):
-            return self.identifier and Product \
-            (
-                identifier = self.identifier,
-                comment    = self.comment,
-            )
-
-    name:    str
-    product: Product
-    project: typing.Optional[str]
-
-class Service(BaseModel):
-    name:   str
-    domain: str
-    id:     typing.Optional[int]
-
-class Host(BaseModel):
-    scheme:  enums.Scheme = enums.Scheme.HTTPS
-    domain:  str
-    port:    typing.Optional[int]
-
-    def __str__(self):
-        return str \
-        (
-            furl.furl \
-            (
-                scheme = self.scheme.value,
-                host   = self.domain,
-                port   = self.port,
-            )
-        )
-
-class Api(BaseModel):
-    host:    Host
-    mount:   typing.Optional[str]
-    version: typing.Optional[str]
-
-    def __str__(self):
-        return str \
-        (
-            functools.reduce \
-            (
-                operator.truediv,
-                (
-                    map \
-                    (
-                        lambda item: item or '',
-                        (
-                            furl.furl(str(self.host)),
-                            self.mount,
-                            self.version,
-                        )
-                    )
+                    self.hl,
+                    self.gl,
                 )
             )
         )
 
-class Authentication(BaseModel):
-    api_key: str
+class Error(BaseModel):
+    code:    http.HTTPStatus
+    message: str
 
-class Client(BaseModel):
-    name:       str
-    version:    str
-    auth:       Authentication
-    module:     typing.Optional[str]
-    identifier: typing.Optional[str]
+    def __repr__(self) -> str:
+        return f'<Error [{self.code} {self.reason}]>'
 
-    def product(self):
-        return ProductIdentifier \
+    def __str__(self) -> str:
+        return f'{self.code} {self.reason}' + \
         (
-            name    = self.name,
-            version = self.version,
+            f': {self.message}'
+            if self.message
+            else ''
         )
 
-class AppSchema(BaseModel):
+    @property
+    def reason(self):
+        return http.client.responses[self.code]
+
+    @classmethod
+    def from_response(cls, response):
+        return cls \
+        (
+            code    = response.status_code,
+            message = f'{response.request.method} {response.url}',
+        )
+
+class InnerTubeError(Error):
+    status: enums.ErrorStatus
+
+class Adaptor(BaseModel):
+    params:  dict
+    headers: dict
+    context: dict
+
+class Host(BaseModel):
+    scheme: str = enums.Scheme.HTTPS
+    domain: str
+    port:   typing.Optional[int]
+
+    def __str__(self):
+        return str(self.url())
+
+    def url(self):
+        return furl.furl \
+        (
+            scheme = self.scheme,
+            host   = self.domain,
+            port   = self.port,
+            path   = '/',
+        )
+
+class Api(Host):
+    mount: str = '/'
+
+    def __str__(self):
+        return str(self.url() / self.mount)
+
+class DeviceInfo(BaseModel):
+    identifier: str
+    family:     enums.DeviceFamily
+    comments:   typing.List[str]
+
+    def product_identifier(self) -> typing.Optional[useragent.ProductIdentifier]:
+        if self.family == enums.DeviceFamily.WEB:
+            return useragent.ProductIdentifier \
+            (
+                name    = enums.Product.MOZILLA.value,
+                version = enums.Product.MOZILLA.version,
+            )
+
+    def product(self) -> typing.Optional[useragent.Product]:
+        if (identifier := self.product_identifier()):
+            return useragent.Product \
+            (
+                identifier = identifier,
+                comments   = self.comments,
+            )
+
+class ServiceInfo(BaseModel):
+    domain: str
+
+    def host(self) -> Host:
+        return Host \
+        (
+            domain = self.domain,
+        )
+
+class ClientInfo(BaseModel):
+    name:    str
+    version: str
+    key:     str
+    id:      typing.Optional[int]
+    project: typing.Optional[str]
+    client:  typing.Optional[str]
+
+    def params(self) -> dict:
+        return dict \
+        (
+            key = self.key,
+            alt = enums.Alt.JSON.value,
+        )
+
+    def context(self, locale: Locale = None) -> dict:
+        return dict \
+        (
+            clientName    = self.name,
+            clientVersion = self.version,
+            ** (locale.dict() if locale else {}),
+        )
+
+class ClientSchema(BaseModel):
     client:  enums.Client
     device:  enums.Device
     service: enums.Service
 
-class App(BaseModel):
-    company: Company
-    client:  Client
-    device:  Device
-    service: Service
-    api:     Api
+class Client(BaseModel):
+    client:  ClientInfo
+    device:  DeviceInfo
+    service: ServiceInfo
 
-    def product(self) -> Product:
-        return self.device.product.product() or Product \
-        (
-            identifier = self.client.product(),
-            comment    = self.device.product.comment,
-        )
-
-    def user_agent(self) -> UserAgent:
-        return UserAgent \
-        (
-            products = [self.product()],
-        )
-
-    def base_url(self) -> str:
-        return str(self.api)
-
-    def package(self) -> str:
-        segments = \
-        (
-            self.company.package(),
-            self.device.project,
-            self.module,
-        )
-
-        if all(segments):
-            return '.'.join(segments)
-
-    def params(self) -> Params:
-        return Params \
-        (
-            key = self.client.auth.api_key,
-            alt = enums.Alt.JSON,
-        )
-
-    def context(self, locale: babel.Locale = None) -> Context:
-        return Context \
-        (
-            client_name    = self.client.name,
-            client_version = self.client.version,
-            gl = locale and (locale.territory or locale.language),
-            hl = locale and '-'.join \
+    def package(self) -> typing.Optional[str]:
+        if self.client.project:
+            return '.'.join \
             (
-                filter \
                 (
-                    lambda item: item is not None,
-                    (
-                        locale.language,
-                        locale.territory,
-                    ),
+                    enums.Domain.GOOGLE.reverse(),
+                    self.device.identifier,
+                    self.client.project,
                 ),
-            ),
-        )
+            )
 
-    def headers(self) -> Headers:
-        return Headers \
+    def product_identifier(self) -> useragent.ProductIdentifier:
+        return \
         (
-            client_name    = self.service.id,
-            client_version = self.client.version,
-            user_agent     = str(self.user_agent()),
-            referer        = str \
+            useragent.ProductIdentifier \
             (
-                furl.furl \
-                (
-                    scheme = enums.Scheme.HTTPS.value,
-                    host   = self.service.domain,
-                ),
-            ),
+                name    = package,
+                version = self.version,
+            )
+            if (package := self.package())
+            else self.device.product_identifier()
         )
 
-    def adaptor(self, locale: babel.Locale = None) -> Adaptor:
+    def product(self) -> useragent.Product:
+        return useragent.Product \
+        (
+            identifier = self.product_identifier(),
+            comments   = self.device.comments,
+        )
+
+    def headers(self, locale: Locale = None) -> dict:
+        return utils.filter \
+        (
+            {
+                str(enums.YouTubeHeader.CLIENT_NAME):    self.client.id and str(self.client.id),
+                str(enums.YouTubeHeader.CLIENT_VERSION): self.client.version,
+                str(enums.Header.USER_AGENT):            str(self.product()),
+                str(enums.Header.REFERER):               str(self.service.host()),
+                str(enums.Header.ACCEPT_LANGUAGE):       locale and locale.accept_language(),
+            }
+        )
+
+    def adaptor(self, locale: Locale = None) -> Adaptor:
         return Adaptor \
         (
-            base_url = self.base_url(),
-            params   = self.params(),
-            context  = self.context(locale = locale),
-            headers  = self.headers(),
+            params  = self.client.params(),
+            context = self.client.context(locale = locale),
+            headers = self.headers(locale = locale),
         )

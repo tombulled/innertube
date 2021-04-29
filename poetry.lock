@@ -21,32 +21,6 @@ tests = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)"
 tests_no_zope = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)", "six"]
 
 [[package]]
-name = "babel"
-version = "2.9.0"
-description = "Internationalization utilities"
-category = "main"
-optional = false
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
-
-[package.dependencies]
-pytz = ">=2015.7"
-
-[[package]]
-name = "beautifulsoup4"
-version = "4.9.3"
-description = "Screen-scraping library"
-category = "main"
-optional = false
-python-versions = "*"
-
-[package.dependencies]
-soupsieve = {version = ">1.2", markers = "python_version >= \"3.0\""}
-
-[package.extras]
-html5lib = ["html5lib"]
-lxml = ["lxml"]
-
-[[package]]
 name = "certifi"
 version = "2020.12.5"
 description = "Python package for providing Mozilla's CA Bundle."
@@ -63,8 +37,28 @@ optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
 [[package]]
+name = "enumb"
+version = "0.1.1"
+description = "Python common enums"
+category = "main"
+optional = false
+python-versions = "^3.8"
+develop = false
+
+[package.dependencies]
+addict = "^2.4.0"
+pyhumps = "^1.6.1"
+python-slugify = "^4.0.1"
+
+[package.source]
+type = "git"
+url = "https://github.com/tombulled/enumb.git"
+reference = "main"
+resolved_reference = "d6078b32e33377252873fd5e2d8256b2e8c7efbf"
+
+[[package]]
 name = "furl"
-version = "2.1.0"
+version = "2.1.2"
 description = "URL manipulation made simple."
 category = "main"
 optional = false
@@ -84,7 +78,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 
 [[package]]
 name = "mime"
-version = "0.1.0"
+version = "0.1.3"
 description = ""
 category = "main"
 optional = false
@@ -92,13 +86,14 @@ python-versions = "^3.8"
 develop = false
 
 [package.dependencies]
+enumb = "rev main"
 pydantic = "^1.8.1"
 
 [package.source]
 type = "git"
 url = "https://github.com/tombulled/mime.git"
 reference = "main"
-resolved_reference = "415b924669c05d1f34863519b54ac8a489a94027"
+resolved_reference = "6376675589e9793cb72afa6674d1c50f4b58cea3"
 
 [[package]]
 name = "orderedmultidict"
@@ -110,6 +105,14 @@ python-versions = "*"
 
 [package.dependencies]
 six = ">=1.8.0"
+
+[[package]]
+name = "parse"
+version = "1.19.0"
+description = "parse() is the opposite of format()"
+category = "main"
+optional = false
+python-versions = "*"
 
 [[package]]
 name = "pydantic"
@@ -135,12 +138,36 @@ optional = false
 python-versions = "*"
 
 [[package]]
-name = "pytz"
-version = "2021.1"
-description = "World timezone definitions, modern and historical"
+name = "python-slugify"
+version = "4.0.1"
+description = "A Python Slugify application that handles Unicode"
 category = "main"
 optional = false
-python-versions = "*"
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
+
+[package.dependencies]
+text-unidecode = ">=1.3"
+
+[package.extras]
+unidecode = ["Unidecode (>=1.1.1)"]
+
+[[package]]
+name = "register"
+version = "0.1.0"
+description = ""
+category = "main"
+optional = false
+python-versions = "^3.8"
+develop = false
+
+[package.dependencies]
+attrs = "^20.3.0"
+
+[package.source]
+type = "git"
+url = "https://github.com/tombulled/register.git"
+reference = "main"
+resolved_reference = "9584074c0076857f2d08eb93e1511ecb246fcafb"
 
 [[package]]
 name = "requests"
@@ -161,6 +188,24 @@ security = ["pyOpenSSL (>=0.14)", "cryptography (>=1.3.4)"]
 socks = ["PySocks (>=1.5.6,!=1.5.7)", "win-inet-pton"]
 
 [[package]]
+name = "sets"
+version = "0.1.0"
+description = "Python library to store and manage a collection of sets"
+category = "main"
+optional = false
+python-versions = "^3.8"
+develop = false
+
+[package.dependencies]
+pydantic = "^1.8.1"
+
+[package.source]
+type = "git"
+url = "https://github.com/tombulled/sets.git"
+reference = "main"
+resolved_reference = "f0a4897ea0f74507eb0f4e5f849f511df394a07a"
+
+[[package]]
 name = "six"
 version = "1.15.0"
 description = "Python 2 and 3 compatibility utilities"
@@ -169,12 +214,20 @@ optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
 
 [[package]]
-name = "soupsieve"
-version = "2.2.1"
-description = "A modern CSS selector implementation for Beautiful Soup."
+name = "text-unidecode"
+version = "1.3"
+description = "The most basic Text::Unidecode port"
 category = "main"
 optional = false
-python-versions = ">=3.6"
+python-versions = "*"
+
+[[package]]
+name = "toolz"
+version = "0.11.1"
+description = "List processing tools and functional utilities"
+category = "main"
+optional = false
+python-versions = ">=3.5"
 
 [[package]]
 name = "typing-extensions"
@@ -197,10 +250,30 @@ secure = ["pyOpenSSL (>=0.14)", "cryptography (>=1.3.4)", "idna (>=2.0.0)", "cer
 socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 brotli = ["brotlipy (>=0.6.0)"]
 
+[[package]]
+name = "useragent"
+version = "0.1.0"
+description = ""
+category = "main"
+optional = false
+python-versions = "^3.8"
+develop = false
+
+[package.dependencies]
+addict = "^2.4.0"
+pydantic = "^1.8.1"
+pyhumps = "^1.6.1"
+
+[package.source]
+type = "git"
+url = "https://github.com/tombulled/useragent.git"
+reference = "main"
+resolved_reference = "c0868e9ea249a8d5411d057188cdb07b39acf11d"
+
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "4fd26d050a8ec30ff60892332afd1c8fb5c78b64b7b27ef62312640379ecc751"
+content-hash = "82e695131b3dacf082ab2f80c1eba73641639d5dfb286630763bc74b2b52bfa2"
 
 [metadata.files]
 addict = [
@@ -211,15 +284,6 @@ attrs = [
     {file = "attrs-20.3.0-py2.py3-none-any.whl", hash = "sha256:31b2eced602aa8423c2aea9c76a724617ed67cf9513173fd3a4f03e3a929c7e6"},
     {file = "attrs-20.3.0.tar.gz", hash = "sha256:832aa3cde19744e49938b91fea06d69ecb9e649c93ba974535d08ad92164f700"},
 ]
-babel = [
-    {file = "Babel-2.9.0-py2.py3-none-any.whl", hash = "sha256:9d35c22fcc79893c3ecc85ac4a56cde1ecf3f19c540bba0922308a6c06ca6fa5"},
-    {file = "Babel-2.9.0.tar.gz", hash = "sha256:da031ab54472314f210b0adcff1588ee5d1d1d0ba4dbd07b94dba82bde791e05"},
-]
-beautifulsoup4 = [
-    {file = "beautifulsoup4-4.9.3-py2-none-any.whl", hash = "sha256:4c98143716ef1cb40bf7f39a8e3eec8f8b009509e74904ba3a7b315431577e35"},
-    {file = "beautifulsoup4-4.9.3-py3-none-any.whl", hash = "sha256:fff47e031e34ec82bf17e00da8f592fe7de69aeea38be00523c04623c04fb666"},
-    {file = "beautifulsoup4-4.9.3.tar.gz", hash = "sha256:84729e322ad1d5b4d25f805bfa05b902dd96450f43842c4e99067d5e1369eb25"},
-]
 certifi = [
     {file = "certifi-2020.12.5-py2.py3-none-any.whl", hash = "sha256:719a74fb9e33b9bd44cc7f3a8d94bc35e4049deebe19ba7d8e108280cfd59830"},
     {file = "certifi-2020.12.5.tar.gz", hash = "sha256:1a4995114262bffbc2413b159f2a1a480c969de6e6eb13ee966d470af86af59c"},
@@ -228,9 +292,10 @@ chardet = [
     {file = "chardet-4.0.0-py2.py3-none-any.whl", hash = "sha256:f864054d66fd9118f2e67044ac8981a54775ec5b67aed0441892edb553d21da5"},
     {file = "chardet-4.0.0.tar.gz", hash = "sha256:0d6f53a15db4120f2b08c94f11e7d93d2c911ee118b6b30a04ec3ee8310179fa"},
 ]
+enumb = []
 furl = [
-    {file = "furl-2.1.0-py2.py3-none-any.whl", hash = "sha256:f4d6f1e5479c376a5b7bdc62795d736d8c1b2a754f366a2ad2816e46e946e22e"},
-    {file = "furl-2.1.0.tar.gz", hash = "sha256:c0e0231a1feee2acd256574b7033df3144775451c610cb587060d6a0d7e0b621"},
+    {file = "furl-2.1.2-py2.py3-none-any.whl", hash = "sha256:a2c6adb472fc5faba2e18b6c28b83464b80201f168fd10b81997895a7cb5d5a6"},
+    {file = "furl-2.1.2.tar.gz", hash = "sha256:f7dba33eafbee7dbc83963534b25e72f816cced48ac53191ee60bfcc62933918"},
 ]
 idna = [
     {file = "idna-2.10-py2.py3-none-any.whl", hash = "sha256:b97d804b1e9b523befed77c48dacec60e6dcb0b5391d57af6a65a312a90648c0"},
@@ -240,6 +305,9 @@ mime = []
 orderedmultidict = [
     {file = "orderedmultidict-1.0.1-py2.py3-none-any.whl", hash = "sha256:43c839a17ee3cdd62234c47deca1a8508a3f2ca1d0678a3bf791c87cf84adbf3"},
     {file = "orderedmultidict-1.0.1.tar.gz", hash = "sha256:04070bbb5e87291cc9bfa51df413677faf2141c73c61d2a5f7b26bea3cd882ad"},
+]
+parse = [
+    {file = "parse-1.19.0.tar.gz", hash = "sha256:9ff82852bcb65d139813e2a5197627a94966245c897796760a3a2a8eb66f020b"},
 ]
 pydantic = [
     {file = "pydantic-1.8.1-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:0c40162796fc8d0aa744875b60e4dc36834db9f2a25dbf9ba9664b1915a23850"},
@@ -269,21 +337,26 @@ pyhumps = [
     {file = "pyhumps-1.6.1-py3-none-any.whl", hash = "sha256:58b367b73c57b64e32d211dc769addabd68ff6db07ce64b2e6565f7d5a12291f"},
     {file = "pyhumps-1.6.1.tar.gz", hash = "sha256:01612603c5ad73a407299d806d30708a3935052276fdd93776953bccc0724e0a"},
 ]
-pytz = [
-    {file = "pytz-2021.1-py2.py3-none-any.whl", hash = "sha256:eb10ce3e7736052ed3623d49975ce333bcd712c7bb19a58b9e2089d4057d0798"},
-    {file = "pytz-2021.1.tar.gz", hash = "sha256:83a4a90894bf38e243cf052c8b58f381bfe9a7a483f6a9cab140bc7f702ac4da"},
+python-slugify = [
+    {file = "python-slugify-4.0.1.tar.gz", hash = "sha256:69a517766e00c1268e5bbfc0d010a0a8508de0b18d30ad5a1ff357f8ae724270"},
 ]
+register = []
 requests = [
     {file = "requests-2.25.1-py2.py3-none-any.whl", hash = "sha256:c210084e36a42ae6b9219e00e48287def368a26d03a048ddad7bfee44f75871e"},
     {file = "requests-2.25.1.tar.gz", hash = "sha256:27973dd4a904a4f13b263a19c866c13b92a39ed1c964655f025f3f8d3d75b804"},
 ]
+sets = []
 six = [
     {file = "six-1.15.0-py2.py3-none-any.whl", hash = "sha256:8b74bedcbbbaca38ff6d7491d76f2b06b3592611af620f8426e82dddb04a5ced"},
     {file = "six-1.15.0.tar.gz", hash = "sha256:30639c035cdb23534cd4aa2dd52c3bf48f06e5f4a941509c8bafd8ce11080259"},
 ]
-soupsieve = [
-    {file = "soupsieve-2.2.1-py3-none-any.whl", hash = "sha256:c2c1c2d44f158cdbddab7824a9af8c4f83c76b1e23e049479aa432feb6c4c23b"},
-    {file = "soupsieve-2.2.1.tar.gz", hash = "sha256:052774848f448cf19c7e959adf5566904d525f33a3f8b6ba6f6f8f26ec7de0cc"},
+text-unidecode = [
+    {file = "text-unidecode-1.3.tar.gz", hash = "sha256:bad6603bb14d279193107714b288be206cac565dfa49aa5b105294dd5c4aab93"},
+    {file = "text_unidecode-1.3-py2.py3-none-any.whl", hash = "sha256:1311f10e8b895935241623731c2ba64f4c455287888b18189350b67134a822e8"},
+]
+toolz = [
+    {file = "toolz-0.11.1-py3-none-any.whl", hash = "sha256:1bc473acbf1a1db4e72a1ce587be347450e8f08324908b8a266b486f408f04d5"},
+    {file = "toolz-0.11.1.tar.gz", hash = "sha256:c7a47921f07822fe534fb1c01c9931ab335a4390c782bd28c6bcc7c2f71f3fbf"},
 ]
 typing-extensions = [
     {file = "typing_extensions-3.7.4.3-py2-none-any.whl", hash = "sha256:dafc7639cde7f1b6e1acc0f457842a83e722ccca8eef5270af2d74792619a89f"},
@@ -294,3 +367,4 @@ urllib3 = [
     {file = "urllib3-1.26.4-py2.py3-none-any.whl", hash = "sha256:2f4da4594db7e1e110a944bb1b551fdf4e6c136ad42e4234131391e21eb5b0df"},
     {file = "urllib3-1.26.4.tar.gz", hash = "sha256:e7b021f7241115872f92f43c6508082facffbd1c048e3c6e2bb9c2a157e28937"},
 ]
+useragent = []

@@ -1,12 +1,12 @@
-import typing
+import addict
 
-def filter(function: typing.Callable[[str, str], bool] = None, **kwargs) -> dict:
-    if not function:
-        function = lambda key, value: value is not None
-
-    return \
-    {
-        key: value
-        for key, value in kwargs.items()
-        if function(key, value)
-    }
+def filter(*args, **kwargs) -> addict.Dict:
+    return addict.Dict \
+    (
+        {
+            key: value
+            for key, value in dict(*args, **kwargs).items()
+            if value is not None \
+                and (not isinstance(value, addict.Dict) or value)
+        }
+    )
