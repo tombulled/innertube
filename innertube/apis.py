@@ -8,6 +8,7 @@ from . import clients
 from . import models
 from . import enums
 from . import infos
+from . import utils
 
 attrs = attr.s \
 (
@@ -22,12 +23,14 @@ class SuggestQueries(clients.SuggestQueriesClient):
     def __attrs_post_init__(self):
         super().__attrs_post_init__()
 
-        headers = \
-        {
-            str(enums.Header.USER_AGENT):      str(infos.devices[enums.Device.WEB].product()),
-            str(enums.Header.REFERER):         enums.Host.SUGGEST_QUERIES.url(),
-            str(enums.Header.ACCEPT_LANGUAGE): self.locale and self.locale.accept_language(),
-        }
+        headers = utils.filter \
+        (
+            {
+                str(enums.Header.USER_AGENT):      str(infos.devices[enums.Device.WEB].product()),
+                str(enums.Header.REFERER):         enums.Host.SUGGEST_QUERIES.url(),
+                str(enums.Header.ACCEPT_LANGUAGE): self.locale and self.locale.accept_language(),
+            }
+        )
 
         self.session.headers.update(headers)
 
