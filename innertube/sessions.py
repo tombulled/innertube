@@ -56,8 +56,8 @@ class JSONSession(BaseUrlSession):
                     (
                         type    = mime.MediaType.APPLICATION,
                         subtype = mime.MediaSubtype.JSON,
-                    ).__str__(),
-                    actual_type = content_type.__str__ \
+                    ).string(),
+                    actual_type = content_type.string \
                     (
                         suffix     = False,
                         parameters = False,
