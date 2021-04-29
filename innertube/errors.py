@@ -17,3 +17,4 @@ class RequestError(ModelException, http.client.HTTPException):
     model: models.Error = attr.ib()
 
 class ResponseError(Exception): pass
+class NoParserFound(Exception): pass

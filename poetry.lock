@@ -38,7 +38,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
 [[package]]
 name = "enumb"
-version = "0.1.0"
+version = "0.1.1"
 description = "Python common enums"
 category = "main"
 optional = false
@@ -54,7 +54,7 @@ python-slugify = "^4.0.1"
 type = "git"
 url = "https://github.com/tombulled/enumb.git"
 reference = "main"
-resolved_reference = "9ed19774f711aa5b6290fb19a6b280cea1ae34b0"
+resolved_reference = "d6078b32e33377252873fd5e2d8256b2e8c7efbf"
 
 [[package]]
 name = "furl"
@@ -78,7 +78,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 
 [[package]]
 name = "mime"
-version = "0.1.2"
+version = "0.1.3"
 description = ""
 category = "main"
 optional = false
@@ -93,7 +93,7 @@ pydantic = "^1.8.1"
 type = "git"
 url = "https://github.com/tombulled/mime.git"
 reference = "main"
-resolved_reference = "d2e7d56f18e33224bc67984404107d9a940f5df6"
+resolved_reference = "6376675589e9793cb72afa6674d1c50f4b58cea3"
 
 [[package]]
 name = "orderedmultidict"

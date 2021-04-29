@@ -12,6 +12,7 @@ from . import sessions
 from . import utils
 from . import enums
 from . import models
+from . import errors
 
 attrs = attr.s \
 (
@@ -82,8 +83,7 @@ class BaseInnerTubeClient(BaseClient):
             if not schema.any() or (schema & parser).any():
                 return parse(response_data)
 
-        # TODO: Raise appropriate exception
-        raise Exception(f'No parser found for response with fingerprint: {fingerprint!s}')
+        raise errors.NoParserFound(f'No parser found for response with fingerprint: {fingerprint!r}')
 
 @attrs
 class SuggestQueriesClient(BaseSuggestQueriesClient):
