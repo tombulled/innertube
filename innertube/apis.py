@@ -38,6 +38,9 @@ class SuggestQueries(clients.SuggestQueriesClient):
 class InnerTube(clients.InnerTubeClient):
     client: enums.Client
     locale: typing.Optional[models.Locale] = None
+    
+    def __repr__(self) -> str:
+        return f'{self.__class__.__name__}({self.schema.client})'
 
     def __attrs_post_init__(self):
         super().__attrs_post_init__()

@@ -94,10 +94,6 @@ class Product(enumb.StrEnum):
 
     MOZILLA: str = ('Mozilla', '5.0')
 
-class BaseEntity(enumb.AutoName):
-    def slug(self):
-        return slugify.slugify(self)
-
 class GoogleClient(enumb.AutoNameSlug):
     YOUTUBE:               str
     YOUTUBE_PEGASUS_WEB:   str
