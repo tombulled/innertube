@@ -1,12 +1,17 @@
 import attr
 import addict
+import toolz
+
+import register
 
 import abc
 import typing
+import functools
 
 from . import sessions
 from . import utils
 from . import enums
+from . import models
 
 attrs = attr.s \
 (
@@ -18,6 +23,7 @@ attrs = attr.s \
 class BaseClient(abc.ABC):
     session: sessions.BaseSession = attr.ib()
 
+    @abc.abstractmethod
     def __call__(self):
         raise NotImplementedError
 
@@ -40,21 +46,41 @@ class BaseInnerTubeClient(BaseClient):
         init    = False,
     )
 
+    parsers: register.HookedRegister = attr.ib \
+    (
+        default = attr.Factory \
+        (
+            functools.partial \
+            (
+                register.HookedRegister,
+                models.Parser,
+            )
+        ),
+        repr = False,
+        init = False,
+    )
+
+    def __attrs_post_init__(self):
+        self.parsers()(toolz.identity)
+
     def __call__(self, *args, **kwargs) -> addict.Dict:
         response = self.session.post(*args, **kwargs)
 
         response_data = addict.Dict(response.json())
 
-        if (context := response_data.responseContext):
-            # TODO: Something with context here...
-            # response_context = context
+        fingerprint = models.ResponseFingerprint.from_response(response)
 
+        parser = models.Parser.from_model(fingerprint)
+
+        if response_data.responseContext:
             del response_data.responseContext
 
-        if (error := response_data.error):
-            del response_data.error
+        for parse, schema in reversed(self.parsers.items()):
+            if not schema.any() or (schema & parser).any():
+                return parse(response_data)
 
-        return response_data
+        # TODO: Raise appropriate exception
+        raise Exception(f'No parser found for response with fingerprint: {fingerprint!s}')
 
 @attrs
 class SuggestQueriesClient(BaseSuggestQueriesClient):

@@ -1,6 +1,8 @@
 import addict
 import pydantic
 import furl
+import parse
+import requests
 
 import useragent
 import sets
@@ -37,21 +39,54 @@ class ResponseContext(BaseModel):
     request:      typing.Optional[Request] = pydantic.Field(default_factory = Request)
     flags:        typing.Optional[Flags]   = pydantic.Field(default_factory = Flags)
 
-# class Response(BaseModel):
-#     endpoint: str
-#     context:  ResponseContext
-#     data:     addict.Dict
-#
-#     def fingerprint(self):
-#         return ResponseFingerprint \
-#         (
-#             endpoint  = self.endpoint,
-#             request   = self.context.request.type,
-#             function  = self.context.function,
-#             browse_id = self.context.browse_id,
-#             context   = self.context.context,
-#             client    = self.context.client.name,
-#         )
+    @classmethod
+    def parse(cls, response_context: addict.Dict):
+        services = addict.Dict()
+
+        for tracker in response_context.serviceTrackingParams:
+            for param in tracker.params:
+                services[tracker.service][param.key] = param.value
+
+        request_type: typing.Optional[str] = None
+        request_id:   typing.Optional[str] = None
+
+        for key, val in services.CSI.items():
+            if (result := parse.parse('Get{id}_rid', key)):
+                result = addict.Dict(result.named)
+
+                request_type = result.id
+                request_id   = val
+
+        context = utils.filter \
+        (
+            function     = services.CSI.yt_fn,
+            browse_id    = services.GFEEDBACK.browse_id,
+            context      = services.GFEEDBACK.context,
+            visitor_data = response_context.visitorData,
+            request = utils.filter \
+            (
+                type = request_type,
+                id   = request_id,
+            ),
+            client = utils.filter \
+            (
+                name    = services.CSI.c,
+                version = services.CSI.cver,
+            ),
+            flags = utils.filter \
+            (
+                logged_in = (value := services.GFEEDBACK.logged_in) and bool(int(value)),
+            ),
+        )
+
+        return cls.parse_obj(context)
+
+    @classmethod
+    def from_response(cls, response: requests.Response):
+        response_data = addict.Dict(response.json())
+
+        if (context := response_data.responseContext):
+            return cls.parse(context)
 
 class ResponseFingerprint(BaseModel):
     endpoint:  typing.Optional[str]
@@ -60,6 +95,20 @@ class ResponseFingerprint(BaseModel):
     browse_id: typing.Optional[str]
     context:   typing.Optional[str]
     client:    typing.Optional[str]
+
+    @classmethod
+    def from_response(cls, response: requests.Response):
+        context = ResponseContext.from_response(response)
+
+        return cls \
+        (
+            endpoint  = '/'.join(furl.furl(response.url).path.segments[2:]),
+            request   = context.request.type,
+            function  = context.function,
+            browse_id = context.browse_id,
+            context   = context.context,
+            client    = context.client.name,
+        )
 
 class Parser(sets.Sets[ResponseFingerprint]): pass
 

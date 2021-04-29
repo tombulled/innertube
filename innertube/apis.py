@@ -27,6 +27,8 @@ class InnerTube(clients.InnerTubeClient):
     locale: typing.Optional[models.Locale] = None
 
     def __attrs_post_init__(self):
+        super().__attrs_post_init__()
+        
         adaptor = self.info.adaptor \
         (
             locale = self.locale,
