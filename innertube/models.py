@@ -150,7 +150,6 @@ class Error(BaseModel):
         return http.client.responses[self.code]
 
 class Adaptor(BaseModel):
-    base_url: str
     params:   dict
     headers:  dict
     context:  dict
@@ -159,79 +158,75 @@ class Host(BaseModel):
     scheme:  str = enums.Scheme.HTTPS
     domain:  str
     port:    typing.Optional[int]
-    path:    str = '/'
 
     def __str__(self):
+        return str(self.url())
+
+    def url(self):
+        return furl.furl \
+        (
+            scheme = self.scheme,
+            host   = self.domain,
+            port   = self.port,
+            path   = '/',
+        )
+
+    def __truediv__(self, rhs):
+        return self.url() / rhs
+
+class Api(Host):
+    mount: str = '/'
+
+    def __str__(self):
+        return str(self.url() / self.mount)
+
+class DeviceInfo(BaseModel):
+    family:   enums.DeviceFamily
+    comments: typing.List[str]
+
+    def product_identifier(self):
+        if self.family == enums.DeviceFamily.WEB:
+            return useragent.ProductIdentifier \
+            (
+                name    = enums.Product.MOZILLA.value,
+                version = enums.Product.MOZILLA.version,
+            )
+
+    def product(self):
+        return (product_identifier := self.product_identifier()) and useragent.Product \
+        (
+            identifier = product_identifier,
+            comments   = self.comments,
+        )
+
+class ServiceInfo(BaseModel):
+    domain: str
+
+    def url(self) -> str:
         return str \
         (
             furl.furl \
             (
-                scheme = self.scheme,
+                scheme = enums.Scheme.HTTPS,
                 host   = self.domain,
-                port   = self.port,
-                path   = self.path,
+                path   = '/',
             )
         )
 
-    def __truediv__(self, rhs):
-        return self.copy \
+class ClientInfo(BaseModel):
+    name:    str
+    version: str
+    key:     str
+    id:      typing.Optional[int]
+    package: typing.Optional[str]
+    client:  typing.Optional[str]
+
+    def params(self) -> dict:
+        return dict \
         (
-            update = dict \
-            (
-                path = str(furl.Path(self.path) / rhs),
-            ),
+            key = self.key,
+            alt = enums.Alt.JSON.value,
         )
-
-class Company(BaseModel):
-    name:   str
-    domain: str
-
-    def package(self):
-        return '.'.join(self.domain.split('.')[::-1])
-
-    def host(self):
-        return Host \
-        (
-            domain = self.domain,
-        )
-
-class Device(BaseModel):
-    name:       str
-    identifier: str
-    comments:   typing.List[str]
-    product:    typing.Optional[useragent.ProductIdentifier]
-
-    def user_agent(self) -> typing.Optional[useragent.UserAgent]:
-        return (identifier := self.product) and useragent.UserAgent \
-        (
-            products = \
-            [
-                useragent.Product \
-                (
-                    identifier = identifier,
-                    comments   = self.comments,
-                )
-            ],
-        )
-
-class Service(BaseModel):
-    name:       str
-    identifier: str
-    domain:     str
-    id:         typing.Optional[int]
-
-    def host(self) -> Host:
-        return Host \
-        (
-            domain = self.domain,
-        )
-
-class Client(BaseModel):
-    name:       str
-    version:    str
-    key:        str
-    package:    typing.Optional[str]
-    identifier: typing.Optional[str]
 
     def context(self, locale: Locale = None) -> dict:
         return dict \
@@ -241,74 +236,38 @@ class Client(BaseModel):
             ** (locale.dict() if locale else {}),
         )
 
-class Schema(BaseModel):
+    def product_identifier(self) -> typing.Optional[useragent.ProductIdentifier]:
+        return self.package and useragent.ProductIdentifier \
+        (
+            name    = self.package,
+            version = self.version,
+        )
+
+class ClientSchema(BaseModel):
     client:  enums.Client
     device:  enums.Device
     service: enums.Service
 
-class Application(BaseModel):
-    client:   Client
-    service:  Service
-    device:   Device
-    api:      Host
-    company:  Company
-
-    def base_url(self) -> str:
-        return str(self.api)
-
-    def package(self) -> typing.Optional[str]:
-        segments = \
-        (
-            self.company.package(),
-            self.device.identifier,
-            self.client.package,
-        )
-
-        if all(segments):
-            return '.'.join(segments)
-
-    def params(self) -> dict:
-        return dict \
-        (
-            key = self.client.key,
-            alt = enums.Alt.JSON.value,
-        )
+class Client(BaseModel):
+    client:  ClientInfo
+    device:  DeviceInfo
+    service: ServiceInfo
 
     def product(self) -> useragent.Product:
-        if (identifier := self.device.product):
-            return useragent.Product \
-            (
-                identifier = identifier,
-                comments   = self.device.comments,
-            )
-        else:
-            return useragent.Product \
-            (
-                identifier = useragent.ProductIdentifier \
-                (
-                    name    = self.package(),
-                    version = self.client.version,
-                ),
-                comments = self.device.comments,
-            )
-
-    def user_agent(self) -> useragent.UserAgent:
-        return useragent.UserAgent \
+        return useragent.Product \
         (
-            products = \
-            [
-                self.product(),
-            ],
+            identifier = self.client.product_identifier() or self.device.product_identifier(),
+            comments   = self.device.comments,
         )
 
     def headers(self, locale: Locale = None) -> dict:
         return utils.filter \
         (
             {
-                str(enums.YouTubeHeader.CLIENT_NAME):    str(self.service.id),
+                str(enums.YouTubeHeader.CLIENT_NAME):    self.client.id and str(self.client.id),
                 str(enums.YouTubeHeader.CLIENT_VERSION): self.client.version,
-                str(enums.Header.USER_AGENT):            str(self.user_agent()),
-                str(enums.Header.REFERER):               str(self.service.host()),
+                str(enums.Header.USER_AGENT):            str(self.product()),
+                str(enums.Header.REFERER):               str(self.service.url()),
                 str(enums.Header.ACCEPT_LANGUAGE):       locale and locale.accept_language(),
             }
         )
@@ -316,8 +275,7 @@ class Application(BaseModel):
     def adaptor(self, locale: Locale = None) -> Adaptor:
         return Adaptor \
         (
-            base_url = self.base_url(),
-            params   = self.params(),
+            params   = self.client.params(),
             context  = self.client.context(locale = locale),
             headers  = self.headers(locale = locale),
         )

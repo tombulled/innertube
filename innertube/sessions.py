@@ -67,7 +67,7 @@ class OuterTubeSession(JSONSession):
 class SuggestQueriesSession(OuterTubeSession):
     base_url: str = attr.ib \
     (
-        default = str(infos.hosts[enums.Host.SUGGEST_QUERIES]),
+        default = str(infos.apis[enums.Api.SUGGEST_QUERIES]),
         init    = False,
     )
 
@@ -75,7 +75,7 @@ class SuggestQueriesSession(OuterTubeSession):
 class InnerTubeSession(JSONSession):
     base_url: str = attr.ib \
     (
-        default = str(infos.hosts[enums.Host.YOUTUBEI]),
+        default = str(infos.apis[enums.Api.YOUTUBEI]),
         init    = False,
     )
 

@@ -1,4 +1,38 @@
+import slugify
+import furl
+
 import enumb
+
+class BaseDomain(enumb.AutoStrEnum):
+    def reverse(self):
+        return '.'.join(reversed(self.split('.')))
+
+    def url(self):
+        return str \
+        (
+            furl.furl \
+            (
+                scheme = Scheme.HTTPS,
+                host   = self,
+                path   = '/',
+            )
+        )
+
+class Domain(BaseDomain):
+    _generate_next_value_ = lambda name, *_: name.replace('_', '').lower() + '.com'
+
+    GOOGLE:       str
+    GOOGLE_APIS:  str
+    YOUTUBE:      str
+    YOUTUBE_KIDS: str
+
+class Host(BaseDomain):
+    YOUTUBEI:        str = f'youtubei.{Domain.GOOGLE_APIS}'
+    SUGGEST_QUERIES: str = f'suggestqueries.{Domain.GOOGLE}'
+    YOUTUBE:         str = f'www.{Domain.YOUTUBE}'
+    YOUTUBE_MUSIC:   str = f'music.{Domain.YOUTUBE}'
+    YOUTUBE_STUDIO:  str = f'studio.{Domain.YOUTUBE}'
+    YOUTUBE_KIDS:    str = f'www.{Domain.YOUTUBE_KIDS}'
 
 class Request(enumb.AutoNamePascal):
     CONFIG:                                str
@@ -43,29 +77,56 @@ class ErrorStatus(enumb.AutoName):
     FAILED_PRECONDITION: str
     NOT_FOUND:           str
 
-class Company(enumb.NoValue):
-    GOOGLE: str
+class Company(enumb.AutoNameTitle):
+    GOOGLE:  str
 
-class Product(enumb.NoValue):
-    MOZILLA: str
+class ProductName(enumb.AutoNameTitle):
+    MOZILLA:  str
 
-class Host(enumb.NoValue):
-    YOUTUBEI:        str
+class Product(enumb.StrEnum):
+    def __new__(cls, name, version):
+        obj = str.__new__(cls, name)
+
+        obj._value_ = name
+
+        obj.version = version
+
+        return obj
+
+    MOZILLA: str = ('Mozilla', '5.0')
+
+class BaseEntity(enumb.AutoName):
+    def slug(self):
+        return slugify.slugify(self)
+
+class GoogleClient(enumb.AutoNameSlug):
+    YOUTUBE:               str
+    YOUTUBE_PEGASUS_WEB:   str
+    YOUTUBE_MUSIC_ANDROID: str
+    YOUTUBE_MUSIC_IOS:     str
+    YOUTUBE_LR:            str
+
+class Api(BaseEntity):
+    YOUTUBEI:     str
     SUGGEST_QUERIES: str
 
-class Device(enumb.NoValue):
+class Device(enumb.AutoNameLower):
     WEB:     str
     ANDROID: str
     IOS:     str
     LR:      str
 
-class Service(enumb.NoValue):
+class DeviceFamily(enumb.AutoName):
+    WEB:    str
+    MOBILE: str
+
+class Service(enumb.AutoNameSlug):
     YOUTUBE:        str
     YOUTUBE_MUSIC:  str
     YOUTUBE_KIDS:   str
     YOUTUBE_STUDIO: str
 
-class Client(enumb.NoValue):
+class Client(enumb.AutoName):
     WEB:             str
     WEB_REMIX:       str
     WEB_KIDS:        str
@@ -79,6 +140,42 @@ class Client(enumb.NoValue):
     IOS_KIDS:        str
     IOS_CREATOR:     str
     TVHTML5:         str
+
+class ClientId(enumb.IntEnum):
+    WEB:         int = 1
+    WEB_REMIX:   int = 62
+    WEB_KIDS:    int = 67
+    WEB_CREATOR: int = 76
+
+class AndroidPackage(enumb.StrEnum):
+    def __new__(cls, value):
+        value = f'{Domain.GOOGLE.reverse()}.{Device.ANDROID}.{value}'
+
+        obj = str.__new__(cls, value)
+
+        obj._value_ = value
+
+        return obj
+
+    YOUTUBE:         str = 'youtube'
+    YOUTUBE_MUSIC:   str = 'apps.youtube.music'
+    YOUTUBE_KIDS:    str = 'apps.youtube.kids'
+    YOUTUBE_CREATOR: str = 'apps.youtube.creator'
+
+class IosPackage(enumb.StrEnum):
+    def __new__(cls, value):
+        value = f'{Domain.GOOGLE.reverse()}.{Device.IOS}.{value}'
+
+        obj = str.__new__(cls, value)
+
+        obj._value_ = value
+
+        return obj
+
+    YOUTUBE:         str = 'youtube'
+    YOUTUBE_MUSIC:   str = 'youtubemusic'
+    YOUTUBE_KIDS:    str = 'youtubekids'
+    YOUTUBE_CREATOR: str = 'ytcreator'
 
 class Alt(enumb.AutoNameLower):
     JSON: str
@@ -101,11 +198,14 @@ class Header(enumb.AutoNameSlugTitle):
     REFERER:         str
     CONTENT_TYPE:    str
     ACCEPT_LANGUAGE: str
+    AUTHORIZATION:   str
 
 class GoogleHeader(enumb.AutoNameSlugTitle):
     _generate_next_value_ = lambda name, *_: f'X-Goog-{enumb.AutoNameSlugTitle._generate_next_value_(name)}'
 
-    VISITOR_ID: str
+    VISITOR_ID:         str
+    DEVICE_AUTH:        str
+    API_FORMAT_VERSION: str
 
 class YouTubeHeader(enumb.AutoNameSlugTitle):
     _generate_next_value_ = lambda name, *_: f'X-YouTube-{enumb.AutoNameSlugTitle._generate_next_value_(name)}'
@@ -113,7 +213,7 @@ class YouTubeHeader(enumb.AutoNameSlugTitle):
     CLIENT_NAME:    str
     CLIENT_VERSION: str
 
-class CharBool(enumb.AutoStrEnum):
+class Bool(enumb.AutoStrEnum):
     _generate_next_value_ = lambda name, *_: name[0].lower()
 
     TRUE:  str

@@ -2,6 +2,8 @@ import attr
 
 import typing
 
+import useragent
+
 from . import clients
 from . import models
 from . import enums
@@ -22,8 +24,8 @@ class SuggestQueries(clients.SuggestQueriesClient):
 
         headers = \
         {
-            str(enums.Header.USER_AGENT):      str(infos.devices[enums.Device.WEB].user_agent()),
-            str(enums.Header.REFERER):         str(infos.hosts[enums.Host.SUGGEST_QUERIES]),
+            str(enums.Header.USER_AGENT):      str(infos.devices[enums.Device.WEB].product()),
+            str(enums.Header.REFERER):         enums.Host.SUGGEST_QUERIES.url(),
             str(enums.Header.ACCEPT_LANGUAGE): self.locale and self.locale.accept_language(),
         }
 
@@ -47,7 +49,7 @@ class InnerTube(clients.InnerTubeClient):
         self.session.context.update(adaptor.context)
 
     @property
-    def schema(self) -> models.Schema:
+    def schema(self) -> models.ClientSchema:
         return next \
         (
             filter \
@@ -59,21 +61,4 @@ class InnerTube(clients.InnerTubeClient):
 
     @property
     def info(self) -> models.Client:
-        schema = self.schema
-
-        return models.Application \
-        (
-            client  = infos.clients[self.client],
-            service = infos.services[self.schema.service],
-            device  = infos.devices[self.schema.device],
-            api     = infos.hosts[enums.Host.YOUTUBEI],
-            company = infos.companies[enums.Company.GOOGLE],
-        )
-
-    @property
-    def device(self) -> models.Device:
-        return infos.devices[self.schema.device]
-
-    @property
-    def service(self) -> models.Service:
-        return infos.services[self.schema.service]
+        return infos.clients[self.client]
