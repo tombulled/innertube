@@ -160,14 +160,14 @@ class InnerTubeError(Error):
     status: enums.ErrorStatus
 
 class Adaptor(BaseModel):
-    params:   dict
-    headers:  dict
-    context:  dict
+    params:  dict
+    headers: dict
+    context: dict
 
 class Host(BaseModel):
-    scheme:  str = enums.Scheme.HTTPS
-    domain:  str
-    port:    typing.Optional[int]
+    scheme: str = enums.Scheme.HTTPS
+    domain: str
+    port:   typing.Optional[int]
 
     def __str__(self):
         return str(self.url())
@@ -214,7 +214,7 @@ class ServiceInfo(BaseModel):
     def host(self) -> Host:
         return Host \
         (
-            domain   = self.domain,
+            domain = self.domain,
         )
 
 class ClientInfo(BaseModel):
@@ -258,7 +258,7 @@ class Client(BaseModel):
                     enums.Domain.GOOGLE.reverse(),
                     self.device.identifier,
                     self.client.project,
-                )
+                ),
             )
 
     def product_identifier(self) -> useragent.ProductIdentifier:
@@ -295,7 +295,7 @@ class Client(BaseModel):
     def adaptor(self, locale: Locale = None) -> Adaptor:
         return Adaptor \
         (
-            params   = self.client.params(),
-            context  = self.client.context(locale = locale),
-            headers  = self.headers(locale = locale),
+            params  = self.client.params(),
+            context = self.client.context(locale = locale),
+            headers = self.headers(locale = locale),
         )

@@ -5,16 +5,25 @@ import http.client
 
 from . import models
 
-@attr.s
+attrs = attr.s \
+(
+    auto_detect  = True,
+    auto_attribs = True,
+)
+
+@attrs
 class ModelException(Exception):
-    model: pydantic.BaseModel = attr.ib()
+    model: pydantic.BaseModel
 
     def __str__(self) -> str:
         return str(self.model)
 
-@attr.s
+@attrs
 class RequestError(ModelException, http.client.HTTPException):
-    model: models.Error = attr.ib()
+    model: models.Error
 
+@attrs
 class ResponseError(Exception): pass
+
+@attrs
 class NoParserFound(Exception): pass
