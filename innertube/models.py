@@ -181,8 +181,9 @@ class Api(Host):
         return str(self.url() / self.mount)
 
 class DeviceInfo(BaseModel):
-    family:   enums.DeviceFamily
-    comments: typing.List[str]
+    identifier: str
+    family:     enums.DeviceFamily
+    comments:   typing.List[str]
 
     def product_identifier(self):
         if self.family == enums.DeviceFamily.WEB:
@@ -218,7 +219,7 @@ class ClientInfo(BaseModel):
     version: str
     key:     str
     id:      typing.Optional[int]
-    package: typing.Optional[str]
+    project: typing.Optional[str]
     client:  typing.Optional[str]
 
     def params(self) -> dict:
@@ -236,13 +237,6 @@ class ClientInfo(BaseModel):
             ** (locale.dict() if locale else {}),
         )
 
-    def product_identifier(self) -> typing.Optional[useragent.ProductIdentifier]:
-        return self.package and useragent.ProductIdentifier \
-        (
-            name    = self.package,
-            version = self.version,
-        )
-
 class ClientSchema(BaseModel):
     client:  enums.Client
     device:  enums.Device
@@ -253,10 +247,33 @@ class Client(BaseModel):
     device:  DeviceInfo
     service: ServiceInfo
 
+    def package(self) -> typing.Optional[str]:
+        if self.client.project:
+            return '.'.join \
+            (
+                (
+                    enums.Domain.GOOGLE.reverse(),
+                    self.device.identifier,
+                    self.client.project,
+                )
+            )
+
+    def product_identifier(self) -> useragent.ProductIdentifier:
+        return \
+        (
+            useragent.ProductIdentifier \
+            (
+                name    = package,
+                version = self.version,
+            )
+            if (package := self.package())
+            else self.device.product_identifier()
+        )
+
     def product(self) -> useragent.Product:
         return useragent.Product \
         (
-            identifier = self.client.product_identifier() or self.device.product_identifier(),
+            identifier = self.product_identifier(),
             comments   = self.device.comments,
         )
 

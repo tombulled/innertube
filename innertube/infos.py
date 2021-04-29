@@ -22,8 +22,9 @@ devices: typing.Dict[enums.Device, models.DeviceInfo] = \
 {
     enums.Device.WEB: models.DeviceInfo \
     (
-        family   = enums.DeviceFamily.WEB,
-        comments = \
+        identifier = enums.Device.WEB,
+        family     = enums.DeviceFamily.WEB,
+        comments   = \
         (
             'Windows NT 10.0',
             'Win64',
@@ -33,8 +34,9 @@ devices: typing.Dict[enums.Device, models.DeviceInfo] = \
     ),
     enums.Device.ANDROID: models.DeviceInfo \
     (
-        family   = enums.DeviceFamily.MOBILE,
-        comments = \
+        identifier = enums.Device.ANDROID,
+        family     = enums.DeviceFamily.MOBILE,
+        comments   = \
         (
             'Linux',
             'U',
@@ -45,8 +47,9 @@ devices: typing.Dict[enums.Device, models.DeviceInfo] = \
     ),
     enums.Device.IOS: models.DeviceInfo \
     (
-        family   = enums.DeviceFamily.MOBILE,
-        comments = \
+        identifier = enums.Device.IOS,
+        family     = enums.DeviceFamily.MOBILE,
+        comments   = \
         (
             'iPhone10,5',
             'U',
@@ -56,8 +59,9 @@ devices: typing.Dict[enums.Device, models.DeviceInfo] = \
     ),
     enums.Device.LR: models.DeviceInfo \
     (
-        family   = enums.DeviceFamily.WEB,
-        comments = \
+        identifier = enums.Device.LR,
+        family     = enums.DeviceFamily.WEB,
+        comments   = \
         (
             'PlayStation',
             'PlayStation 4/8.03',
@@ -122,43 +126,43 @@ clients: typing.Dict[enums.Client, models.ClientInfo] = \
         name    = enums.Client.ANDROID,
         version = '16.07.34',
         key     = 'AIzaSyA8eiZmM1FaDVjRy-df2KTyQ_vz_yYM39w',
-        package = enums.AndroidPackage.YOUTUBE,
+        project = 'youtube',
     ),
     enums.Client.ANDROID_MUSIC: models.ClientInfo \
     (
         name    = enums.Client.ANDROID_MUSIC,
         version = '4.16.51',
         key     = 'AIzaSyAOghZGza2MQSZkY_zfZ370N-PUdXEo8AI',
+        project = 'apps.youtube.music',
         client  = enums.GoogleClient.YOUTUBE_MUSIC_ANDROID,
-        package = enums.AndroidPackage.YOUTUBE_MUSIC,
     ),
     enums.Client.ANDROID_KIDS: models.ClientInfo \
     (
         name    = enums.Client.ANDROID_KIDS,
         version = '6.02.3',
         key     = 'AIzaSyAxxQKWYcEX8jHlflLt2Qcbb-rlolzBhhk',
-        package = enums.AndroidPackage.YOUTUBE_KIDS,
+        project = 'apps.youtube.kids',
     ),
     enums.Client.ANDROID_CREATOR: models.ClientInfo \
     (
         name    = enums.Client.ANDROID_CREATOR,
         version = '21.06.103',
         key     = 'AIzaSyD_qjV8zaaUMehtLkrKFgVeSX_Iqbtyws8',
-        package = enums.AndroidPackage.YOUTUBE_CREATOR,
+        project = 'apps.youtube.creator',
     ),
     enums.Client.IOS: models.ClientInfo \
     (
         name    = enums.Client.IOS,
         version = '16.05.7',
         key     = 'AIzaSyB-63vPrdThhKuerbB2N_l7Kwwcxj6yUAc',
-        package = enums.IosPackage.YOUTUBE,
+        project = 'youtube',
     ),
     enums.Client.IOS_MUSIC: models.ClientInfo \
     (
         name    = enums.Client.IOS_MUSIC,
         version = '4.16.1',
         key     = 'AIzaSyBAETezhkwP0ZWA02RsqT1zu78Fpt0bC_s',
-        package = enums.IosPackage.YOUTUBE_MUSIC,
+        project = 'youtubemusic',
         client  = enums.GoogleClient.YOUTUBE_MUSIC_IOS,
     ),
     enums.Client.IOS_KIDS: models.ClientInfo \
@@ -166,14 +170,14 @@ clients: typing.Dict[enums.Client, models.ClientInfo] = \
         name    = enums.Client.IOS_KIDS,
         version = '5.42.2',
         key     = 'AIzaSyA6_JWXwHaVBQnoutCv1-GvV97-rJ949Bc',
-        package = enums.IosPackage.YOUTUBE_KIDS,
+        project = 'youtubekids',
     ),
     enums.Client.IOS_CREATOR: models.ClientInfo \
     (
         name    = enums.Client.IOS_CREATOR,
         version = '20.47.100',
         key     = 'AIzaSyAPyF5GfQI-kOa6nZwO8EsNrGdEx9bioNs',
-        package = enums.IosPackage.YOUTUBE_CREATOR,
+        project = 'ytcreator',
     ),
     enums.Client.TVHTML5: models.ClientInfo \
     (

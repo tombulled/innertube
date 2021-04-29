@@ -88,7 +88,6 @@ class Product(enumb.StrEnum):
         obj = str.__new__(cls, name)
 
         obj._value_ = name
-
         obj.version = version
 
         return obj
@@ -146,36 +145,6 @@ class ClientId(enumb.IntEnum):
     WEB_REMIX:   int = 62
     WEB_KIDS:    int = 67
     WEB_CREATOR: int = 76
-
-class AndroidPackage(enumb.StrEnum):
-    def __new__(cls, value):
-        value = f'{Domain.GOOGLE.reverse()}.{Device.ANDROID}.{value}'
-
-        obj = str.__new__(cls, value)
-
-        obj._value_ = value
-
-        return obj
-
-    YOUTUBE:         str = 'youtube'
-    YOUTUBE_MUSIC:   str = 'apps.youtube.music'
-    YOUTUBE_KIDS:    str = 'apps.youtube.kids'
-    YOUTUBE_CREATOR: str = 'apps.youtube.creator'
-
-class IosPackage(enumb.StrEnum):
-    def __new__(cls, value):
-        value = f'{Domain.GOOGLE.reverse()}.{Device.IOS}.{value}'
-
-        obj = str.__new__(cls, value)
-
-        obj._value_ = value
-
-        return obj
-
-    YOUTUBE:         str = 'youtube'
-    YOUTUBE_MUSIC:   str = 'youtubemusic'
-    YOUTUBE_KIDS:    str = 'youtubekids'
-    YOUTUBE_CREATOR: str = 'ytcreator'
 
 class Alt(enumb.AutoNameLower):
     JSON: str
