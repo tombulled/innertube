@@ -1,5 +1,4 @@
 import furl
-import slugify
 
 import enumb
 

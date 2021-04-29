@@ -1,6 +1,6 @@
-import typing
-
 import useragent
+
+import typing
 
 from . import enums
 from . import models

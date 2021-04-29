@@ -1,8 +1,6 @@
 import addict
 
-import typing
-
-def filter(*args, **kwargs):
+def filter(*args, **kwargs) -> addict.Dict:
     return addict.Dict \
     (
         {
