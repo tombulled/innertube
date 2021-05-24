@@ -8,17 +8,17 @@ python-versions = "*"
 
 [[package]]
 name = "attrs"
-version = "20.3.0"
+version = "21.2.0"
 description = "Classes Without Boilerplate"
 category = "main"
 optional = false
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
 [package.extras]
-dev = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)", "six", "zope.interface", "furo", "sphinx", "pre-commit"]
-docs = ["furo", "sphinx", "zope.interface"]
-tests = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)", "six", "zope.interface"]
-tests_no_zope = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)", "six"]
+dev = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)", "six", "mypy", "pytest-mypy-plugins", "zope.interface", "furo", "sphinx", "sphinx-notfound-page", "pre-commit"]
+docs = ["furo", "sphinx", "zope.interface", "sphinx-notfound-page"]
+tests = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)", "six", "mypy", "pytest-mypy-plugins", "zope.interface"]
+tests_no_zope = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)", "six", "mypy", "pytest-mypy-plugins"]
 
 [[package]]
 name = "certifi"
@@ -153,7 +153,7 @@ unidecode = ["Unidecode (>=1.1.1)"]
 
 [[package]]
 name = "register"
-version = "0.1.0"
+version = "0.1.1"
 description = ""
 category = "main"
 optional = false
@@ -161,13 +161,13 @@ python-versions = "^3.8"
 develop = false
 
 [package.dependencies]
-attrs = "^20.3.0"
+attrs = "^21.2.0"
 
 [package.source]
 type = "git"
 url = "https://github.com/tombulled/register.git"
 reference = "main"
-resolved_reference = "9584074c0076857f2d08eb93e1511ecb246fcafb"
+resolved_reference = "cfce14f7324be21437893aade44c7b25ba349bce"
 
 [[package]]
 name = "requests"
@@ -273,7 +273,7 @@ resolved_reference = "c0868e9ea249a8d5411d057188cdb07b39acf11d"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "82e695131b3dacf082ab2f80c1eba73641639d5dfb286630763bc74b2b52bfa2"
+content-hash = "ceea19b83252f977c240be399be7897fef6f9eb43c45728fd7b4f64c9f00c75d"
 
 [metadata.files]
 addict = [
@@ -281,8 +281,8 @@ addict = [
     {file = "addict-2.4.0.tar.gz", hash = "sha256:b3b2210e0e067a281f5646c8c5db92e99b7231ea8b0eb5f74dbdf9e259d4e494"},
 ]
 attrs = [
-    {file = "attrs-20.3.0-py2.py3-none-any.whl", hash = "sha256:31b2eced602aa8423c2aea9c76a724617ed67cf9513173fd3a4f03e3a929c7e6"},
-    {file = "attrs-20.3.0.tar.gz", hash = "sha256:832aa3cde19744e49938b91fea06d69ecb9e649c93ba974535d08ad92164f700"},
+    {file = "attrs-21.2.0-py2.py3-none-any.whl", hash = "sha256:149e90d6d8ac20db7a955ad60cf0e6881a3f20d37096140088356da6c716b0b1"},
+    {file = "attrs-21.2.0.tar.gz", hash = "sha256:ef6aaac3ca6cd92904cdd0d83f629a15f18053ec84e6432106f7a4d04ae4f5fb"},
 ]
 certifi = [
     {file = "certifi-2020.12.5-py2.py3-none-any.whl", hash = "sha256:719a74fb9e33b9bd44cc7f3a8d94bc35e4049deebe19ba7d8e108280cfd59830"},
