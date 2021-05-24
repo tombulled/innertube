@@ -267,7 +267,7 @@ class Client(BaseModel):
             useragent.ProductIdentifier \
             (
                 name    = package,
-                version = self.version,
+                version = self.client.version,
             )
             if (package := self.package())
             else self.device.product_identifier()
