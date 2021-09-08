@@ -109,7 +109,7 @@ clients: typing.Dict[enums.Client, models.ClientInfo] = \
     enums.Client.WEB_KIDS: models.ClientInfo \
     (
         name    = enums.Client.WEB_KIDS,
-        version = '2.1.3',
+        version = '2.1.4',
         key     = 'AIzaSyBbZV_fZ3an51sF-mvs5w37OqqbsTOzwtU',
         client  = enums.GoogleClient.YOUTUBE_PEGASUS_WEB,
         id      = enums.ClientId.WEB_KIDS,
