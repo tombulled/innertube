@@ -93,6 +93,7 @@ class Product(enumb.StrEnum):
 
     MOZILLA: str = ('Mozilla', '5.0')
 
+# TODO: Rename this to 'FrontEnd' as per: https://support.google.com/gsa/answer/6329266
 class GoogleClient(enumb.AutoNameSlug):
     YOUTUBE:               str
     YOUTUBE_PEGASUS_WEB:   str
