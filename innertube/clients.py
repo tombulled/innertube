@@ -32,17 +32,6 @@ class BaseClient(abc.ABC):
         pass
 
 @attrs
-class BaseSuggestQueriesClient(BaseClient):
-    session: sessions.SuggestQueriesSession = attr.ib \
-    (
-        default = attr.Factory(sessions.SuggestQueriesSession),
-        init    = False,
-    )
-
-    def __call__(self, *args, **kwargs):
-        return self.session.get(*args, **kwargs).json()
-
-@attrs
 class BaseInnerTubeClient(BaseClient):
     session: sessions.InnerTubeSession = attr.ib \
     (
@@ -84,29 +73,6 @@ class BaseInnerTubeClient(BaseClient):
                 return parse(response_data)
 
         raise errors.NoParserFound(f'No parser found for response with fingerprint: {fingerprint!r}')
-
-@attrs
-class SuggestQueriesClient(BaseSuggestQueriesClient):
-    def complete_search \
-            (
-                self,
-                query:       str,
-                *,
-                client:      str,
-                data_source: typing.Optional[str] = None,
-            ) -> typing.List[str]:
-        return self \
-        (
-            'complete/search',
-            params = utils.filter \
-            (
-                client = client,
-                q      = query,
-                ds     = data_source,
-                xhr    = enums.Bool.TRUE.value,
-                hjson  = enums.Bool.TRUE.value,
-            ),
-        )
 
 @attrs
 class InnerTubeClient(BaseInnerTubeClient):

@@ -2,7 +2,7 @@ import furl
 
 import enumb
 
-class BaseDomain(enumb.AutoStrEnum):
+class BaseDomain(enumb.StrEnum):
     def reverse(self):
         return '.'.join(reversed(self.split('.')))
 
@@ -33,7 +33,7 @@ class Host(BaseDomain):
     YOUTUBE_STUDIO:  str = f'studio.{Domain.YOUTUBE}'
     YOUTUBE_KIDS:    str = f'www.{Domain.YOUTUBE_KIDS}'
 
-class Request(enumb.AutoNamePascal):
+class Request(enumb.Pascal):
     CONFIG:                                str
     SEARCH:                                str
     PLAYER:                                str
@@ -57,10 +57,10 @@ class Request(enumb.AutoNamePascal):
     MOBILE_MAIN_APP_GUIDE:                 str
     WEB_MAIN_APP_GUIDE:                    str
 
-class RequestContext(enumb.AutoNameLower):
+class RequestContext(enumb.Snake):
     CHANNEL_CREATOR: str
 
-class BrowseId(enumb.AutoStrEnum):
+class BrowseId(enumb.StrEnum):
     _generate_next_value_ = lambda name, *_: f'FE{name.lower()}'
 
     MUSIC_EXPLORE:                   str
@@ -70,16 +70,16 @@ class BrowseId(enumb.AutoStrEnum):
     MUSIC_MOODS_AND_GENRES:          str
     MUSIC_MOODS_AND_GENRES_CATEGORY: str
 
-class ErrorStatus(enumb.AutoName):
+class ErrorStatus(enumb.Macro):
     PERMISSION_DENIED:   str
     INVALID_ARGUMENT:    str
     FAILED_PRECONDITION: str
     NOT_FOUND:           str
 
-class Company(enumb.AutoNameTitle):
+class Company(enumb.Pascal):
     GOOGLE:  str
 
-class ProductName(enumb.AutoNameTitle):
+class ProductName(enumb.Pascal):
     MOZILLA:  str
 
 class Product(enumb.StrEnum):
@@ -93,30 +93,31 @@ class Product(enumb.StrEnum):
 
     MOZILLA: str = ('Mozilla', '5.0')
 
-class GoogleClient(enumb.AutoNameSlug):
+# ref: https://support.google.com/gsa/answer/6329266
+class FrontEnd(enumb.Kebab):
     YOUTUBE:               str
     YOUTUBE_PEGASUS_WEB:   str
     YOUTUBE_MUSIC_ANDROID: str
     YOUTUBE_MUSIC_IOS:     str
     YOUTUBE_LR:            str
 
-class Device(enumb.AutoNameLower):
+class Device(enumb.Lower):
     WEB:     str
     ANDROID: str
     IOS:     str
     LR:      str
 
-class DeviceFamily(enumb.AutoName):
+class DeviceFamily(enumb.Upper):
     WEB:    str
     MOBILE: str
 
-class Service(enumb.AutoNameSlug):
+class Service(enumb.Kebab):
     YOUTUBE:        str
     YOUTUBE_MUSIC:  str
     YOUTUBE_KIDS:   str
     YOUTUBE_STUDIO: str
 
-class Client(enumb.AutoName):
+class Client(enumb.Macro):
     WEB:             str
     WEB_REMIX:       str
     WEB_KIDS:        str
@@ -137,14 +138,14 @@ class ClientId(enumb.IntEnum):
     WEB_KIDS:    int = 67
     WEB_CREATOR: int = 76
 
-class Alt(enumb.AutoNameLower):
+class Alt(enumb.Lower):
     JSON: str
 
-class Scheme(enumb.AutoNameLower):
+class Scheme(enumb.Lower):
     HTTP:  str
     HTTPS: str
 
-class Method(enumb.AutoName):
+class Method(enumb.Upper):
     PUT:     str
     GET:     str
     POST:    str
@@ -153,31 +154,22 @@ class Method(enumb.AutoName):
     DELETE:  str
     OPTIONS: str
 
-class Header(enumb.AutoNameSlugTitle):
+class Header(enumb.Train):
     USER_AGENT:      str
     REFERER:         str
     CONTENT_TYPE:    str
     ACCEPT_LANGUAGE: str
     AUTHORIZATION:   str
 
-class GoogleHeader(enumb.AutoNameSlugTitle):
-    _generate_next_value_ = lambda name, *_: f'X-Goog-{enumb.AutoNameSlugTitle._generate_next_value_(name)}'
+class GoogleHeader(enumb.Train):
+    _generate_next_value_ = lambda name, *_: f'X-Goog-{enumb.Train._generate_next_value_(name, -1, -1, [])}'
 
     VISITOR_ID:         str
     DEVICE_AUTH:        str
     API_FORMAT_VERSION: str
 
-class YouTubeHeader(enumb.AutoNameSlugTitle):
-    _generate_next_value_ = lambda name, *_: f'X-YouTube-{enumb.AutoNameSlugTitle._generate_next_value_(name)}'
+class YouTubeHeader(enumb.Train):
+    _generate_next_value_ = lambda name, *_: f'X-YouTube-{enumb.Train._generate_next_value_(name, -1, -1, [])}'
 
     CLIENT_NAME:    str
     CLIENT_VERSION: str
-
-class Bool(enumb.AutoStrEnum):
-    _generate_next_value_ = lambda name, *_: name[0].lower()
-
-    TRUE:  str
-    FALSE: str
-
-class DataSource(enumb.AutoStrEnum):
-    YOUTUBE: str = 'yt'
