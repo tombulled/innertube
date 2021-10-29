@@ -96,7 +96,7 @@ clients: typing.Dict[enums.Client, models.ClientInfo] = \
         name    = enums.Client.WEB,
         version = '2.20210223.09.00',
         key     = 'AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8',
-        client  = enums.GoogleClient.YOUTUBE,
+        client  = enums.FrontEnd.YOUTUBE,
         id      = enums.ClientId.WEB,
     ),
     enums.Client.WEB_REMIX: models.ClientInfo \
@@ -111,7 +111,7 @@ clients: typing.Dict[enums.Client, models.ClientInfo] = \
         name    = enums.Client.WEB_KIDS,
         version = '2.1.4',
         key     = 'AIzaSyBbZV_fZ3an51sF-mvs5w37OqqbsTOzwtU',
-        client  = enums.GoogleClient.YOUTUBE_PEGASUS_WEB,
+        client  = enums.FrontEnd.YOUTUBE_PEGASUS_WEB,
         id      = enums.ClientId.WEB_KIDS,
     ),
     enums.Client.WEB_CREATOR: models.ClientInfo \
@@ -134,7 +134,7 @@ clients: typing.Dict[enums.Client, models.ClientInfo] = \
         version = '4.16.51',
         key     = 'AIzaSyAOghZGza2MQSZkY_zfZ370N-PUdXEo8AI',
         project = 'apps.youtube.music',
-        client  = enums.GoogleClient.YOUTUBE_MUSIC_ANDROID,
+        client  = enums.FrontEnd.YOUTUBE_MUSIC_ANDROID,
     ),
     enums.Client.ANDROID_KIDS: models.ClientInfo \
     (
@@ -163,7 +163,7 @@ clients: typing.Dict[enums.Client, models.ClientInfo] = \
         version = '4.16.1',
         key     = 'AIzaSyBAETezhkwP0ZWA02RsqT1zu78Fpt0bC_s',
         project = 'youtubemusic',
-        client  = enums.GoogleClient.YOUTUBE_MUSIC_IOS,
+        client  = enums.FrontEnd.YOUTUBE_MUSIC_IOS,
     ),
     enums.Client.IOS_KIDS: models.ClientInfo \
     (
@@ -184,7 +184,7 @@ clients: typing.Dict[enums.Client, models.ClientInfo] = \
         name    = enums.Client.TVHTML5,
         version = '7.20210224.00.00',
         key     = 'AIzaSyDCU8hByM-4DrUqRUYnGn-3llEO78bcxq8',
-        client  = enums.GoogleClient.YOUTUBE_LR,
+        client  = enums.FrontEnd.YOUTUBE_LR,
     ),
 }
 
