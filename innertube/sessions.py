@@ -67,23 +67,6 @@ class JSONSession(BaseUrlSession):
 
         return response
 
-class OuterTubeSession(JSONSession):
-    def send(self, *args, **kwargs):
-        response = super().send(*args, **kwargs)
-
-        if not response.ok:
-            raise errors.RequestError(models.Error.from_response(response))
-
-        return response
-
-@attrs
-class SuggestQueriesSession(OuterTubeSession):
-    base_url: str = attr.ib \
-    (
-        default = str(infos.apis[enums.Host.SUGGEST_QUERIES]),
-        init    = False,
-    )
-
 @attrs
 class InnerTubeSession(JSONSession):
     base_url: str = attr.ib \
