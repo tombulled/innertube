@@ -21,8 +21,23 @@ tests = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)"
 tests_no_zope = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)", "six", "mypy", "pytest-mypy-plugins"]
 
 [[package]]
+name = "case"
+version = "0.1.2"
+description = "String case conversion, identification and parsing"
+category = "main"
+optional = false
+python-versions = "^3.8"
+develop = false
+
+[package.source]
+type = "git"
+url = "https://github.com/tombulled/case.git"
+reference = "main"
+resolved_reference = "ce667e49c5ca22df0155eeaff0fc87db22da605d"
+
+[[package]]
 name = "certifi"
-version = "2021.5.30"
+version = "2021.10.8"
 description = "Python package for providing Mozilla's CA Bundle."
 category = "main"
 optional = false
@@ -30,7 +45,7 @@ python-versions = "*"
 
 [[package]]
 name = "charset-normalizer"
-version = "2.0.4"
+version = "2.0.7"
 description = "The Real First Universal Charset Detector. Open, modern and actively maintained alternative to Chardet."
 category = "main"
 optional = false
@@ -41,27 +56,41 @@ unicode_backport = ["unicodedata2"]
 
 [[package]]
 name = "enumb"
-version = "0.1.1"
-description = "Python common enums"
+version = "0.1.2"
+description = "Concise, Pythonic Enums"
 category = "main"
 optional = false
 python-versions = "^3.8"
 develop = false
 
 [package.dependencies]
-addict = "^2.4.0"
-pyhumps = "^1.6.1"
-python-slugify = "^4.0.1"
+case = "rev main"
+export = "rev main"
 
 [package.source]
 type = "git"
 url = "https://github.com/tombulled/enumb.git"
 reference = "main"
-resolved_reference = "d6078b32e33377252873fd5e2d8256b2e8c7efbf"
+resolved_reference = "750c756a4f49afc6421568231ddc03d039d3db07"
+
+[[package]]
+name = "export"
+version = "0.1.1"
+description = "Selectively expose module functionality"
+category = "main"
+optional = false
+python-versions = "^3.8"
+develop = false
+
+[package.source]
+type = "git"
+url = "https://github.com/tombulled/export.git"
+reference = "main"
+resolved_reference = "fd9a082a4231b39da69b11afa04d33dc548fa498"
 
 [[package]]
 name = "furl"
-version = "2.1.2"
+version = "2.1.3"
 description = "URL manipulation made simple."
 category = "main"
 optional = false
@@ -73,7 +102,7 @@ six = ">=1.8.0"
 
 [[package]]
 name = "idna"
-version = "3.2"
+version = "3.3"
 description = "Internationalized Domain Names in Applications (IDNA)"
 category = "main"
 optional = false
@@ -81,8 +110,8 @@ python-versions = ">=3.5"
 
 [[package]]
 name = "mime"
-version = "0.1.3"
-description = ""
+version = "0.1.4"
+description = "Mime Type parsing and creation"
 category = "main"
 optional = false
 python-versions = "^3.8"
@@ -90,13 +119,12 @@ develop = false
 
 [package.dependencies]
 enumb = "rev main"
-pydantic = "^1.8.1"
 
 [package.source]
 type = "git"
 url = "https://github.com/tombulled/mime.git"
 reference = "main"
-resolved_reference = "6376675589e9793cb72afa6674d1c50f4b58cea3"
+resolved_reference = "831da897b46a1dfba967e363cd167b7650f7ba1d"
 
 [[package]]
 name = "orderedmultidict"
@@ -131,28 +159,6 @@ typing-extensions = ">=3.7.4.3"
 [package.extras]
 dotenv = ["python-dotenv (>=0.10.4)"]
 email = ["email-validator (>=1.0.3)"]
-
-[[package]]
-name = "pyhumps"
-version = "1.6.1"
-description = "🐫  Convert strings (and dictionary keys) between snake case, camel case and pascal case in Python. Inspired by Humps for Node"
-category = "main"
-optional = false
-python-versions = "*"
-
-[[package]]
-name = "python-slugify"
-version = "4.0.1"
-description = "A Python Slugify application that handles Unicode"
-category = "main"
-optional = false
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
-
-[package.dependencies]
-text-unidecode = ">=1.3"
-
-[package.extras]
-unidecode = ["Unidecode (>=1.1.1)"]
 
 [[package]]
 name = "register"
@@ -193,7 +199,7 @@ use_chardet_on_py3 = ["chardet (>=3.0.2,<5)"]
 [[package]]
 name = "sets"
 version = "0.1.0"
-description = "Python library to store and manage a collection of sets"
+description = "Store and manage a collection of sets"
 category = "main"
 optional = false
 python-versions = "^3.8"
@@ -206,7 +212,7 @@ pydantic = "^1.8.1"
 type = "git"
 url = "https://github.com/tombulled/sets.git"
 reference = "main"
-resolved_reference = "f0a4897ea0f74507eb0f4e5f849f511df394a07a"
+resolved_reference = "e96f58ba9259a28b0c86524cb9ac27f9624ebc89"
 
 [[package]]
 name = "six"
@@ -215,14 +221,6 @@ description = "Python 2 and 3 compatibility utilities"
 category = "main"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
-
-[[package]]
-name = "text-unidecode"
-version = "1.3"
-description = "The most basic Text::Unidecode port"
-category = "main"
-optional = false
-python-versions = "*"
 
 [[package]]
 name = "toolz"
@@ -242,7 +240,7 @@ python-versions = "*"
 
 [[package]]
 name = "urllib3"
-version = "1.26.6"
+version = "1.26.7"
 description = "HTTP library with thread-safe connection pooling, file post, and more."
 category = "main"
 optional = false
@@ -255,23 +253,22 @@ socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 
 [[package]]
 name = "useragent"
-version = "0.1.0"
-description = ""
+version = "0.1.1"
+description = "User Agent parsing and creation"
 category = "main"
 optional = false
 python-versions = "^3.8"
 develop = false
 
 [package.dependencies]
-addict = "^2.4.0"
-pydantic = "^1.8.1"
-pyhumps = "^1.6.1"
+enumb = "rev main"
+parse = "^1.19.0"
 
 [package.source]
 type = "git"
 url = "https://github.com/tombulled/useragent.git"
 reference = "main"
-resolved_reference = "c0868e9ea249a8d5411d057188cdb07b39acf11d"
+resolved_reference = "d31e04874158c2795b78d8b000db7c05fcc96a42"
 
 [metadata]
 lock-version = "1.1"
@@ -287,22 +284,24 @@ attrs = [
     {file = "attrs-21.2.0-py2.py3-none-any.whl", hash = "sha256:149e90d6d8ac20db7a955ad60cf0e6881a3f20d37096140088356da6c716b0b1"},
     {file = "attrs-21.2.0.tar.gz", hash = "sha256:ef6aaac3ca6cd92904cdd0d83f629a15f18053ec84e6432106f7a4d04ae4f5fb"},
 ]
+case = []
 certifi = [
-    {file = "certifi-2021.5.30-py2.py3-none-any.whl", hash = "sha256:50b1e4f8446b06f41be7dd6338db18e0990601dce795c2b1686458aa7e8fa7d8"},
-    {file = "certifi-2021.5.30.tar.gz", hash = "sha256:2bbf76fd432960138b3ef6dda3dde0544f27cbf8546c458e60baf371917ba9ee"},
+    {file = "certifi-2021.10.8-py2.py3-none-any.whl", hash = "sha256:d62a0163eb4c2344ac042ab2bdf75399a71a2d8c7d47eac2e2ee91b9d6339569"},
+    {file = "certifi-2021.10.8.tar.gz", hash = "sha256:78884e7c1d4b00ce3cea67b44566851c4343c120abd683433ce934a68ea58872"},
 ]
 charset-normalizer = [
-    {file = "charset-normalizer-2.0.4.tar.gz", hash = "sha256:f23667ebe1084be45f6ae0538e4a5a865206544097e4e8bbcacf42cd02a348f3"},
-    {file = "charset_normalizer-2.0.4-py3-none-any.whl", hash = "sha256:0c8911edd15d19223366a194a513099a302055a962bca2cec0f54b8b63175d8b"},
+    {file = "charset-normalizer-2.0.7.tar.gz", hash = "sha256:e019de665e2bcf9c2b64e2e5aa025fa991da8720daa3c1138cadd2fd1856aed0"},
+    {file = "charset_normalizer-2.0.7-py3-none-any.whl", hash = "sha256:f7af805c321bfa1ce6714c51f254e0d5bb5e5834039bc17db7ebe3a4cec9492b"},
 ]
 enumb = []
+export = []
 furl = [
-    {file = "furl-2.1.2-py2.py3-none-any.whl", hash = "sha256:a2c6adb472fc5faba2e18b6c28b83464b80201f168fd10b81997895a7cb5d5a6"},
-    {file = "furl-2.1.2.tar.gz", hash = "sha256:f7dba33eafbee7dbc83963534b25e72f816cced48ac53191ee60bfcc62933918"},
+    {file = "furl-2.1.3-py2.py3-none-any.whl", hash = "sha256:9ab425062c4217f9802508e45feb4a83e54324273ac4b202f1850363309666c0"},
+    {file = "furl-2.1.3.tar.gz", hash = "sha256:5a6188fe2666c484a12159c18be97a1977a71d632ef5bb867ef15f54af39cc4e"},
 ]
 idna = [
-    {file = "idna-3.2-py3-none-any.whl", hash = "sha256:14475042e284991034cb48e06f6851428fb14c4dc953acd9be9a5e95c7b6dd7a"},
-    {file = "idna-3.2.tar.gz", hash = "sha256:467fbad99067910785144ce333826c71fb0e63a425657295239737f7ecd125f3"},
+    {file = "idna-3.3-py3-none-any.whl", hash = "sha256:84d9dd047ffa80596e0f246e2eab0b391788b0503584e8945f2368256d2735ff"},
+    {file = "idna-3.3.tar.gz", hash = "sha256:9d643ff0a55b762d5cdb124b8eaa99c66322e2157b69160bc32796e824360e6d"},
 ]
 mime = []
 orderedmultidict = [
@@ -336,13 +335,6 @@ pydantic = [
     {file = "pydantic-1.8.2-py3-none-any.whl", hash = "sha256:fec866a0b59f372b7e776f2d7308511784dace622e0992a0b59ea3ccee0ae833"},
     {file = "pydantic-1.8.2.tar.gz", hash = "sha256:26464e57ccaafe72b7ad156fdaa4e9b9ef051f69e175dbbb463283000c05ab7b"},
 ]
-pyhumps = [
-    {file = "pyhumps-1.6.1-py3-none-any.whl", hash = "sha256:58b367b73c57b64e32d211dc769addabd68ff6db07ce64b2e6565f7d5a12291f"},
-    {file = "pyhumps-1.6.1.tar.gz", hash = "sha256:01612603c5ad73a407299d806d30708a3935052276fdd93776953bccc0724e0a"},
-]
-python-slugify = [
-    {file = "python-slugify-4.0.1.tar.gz", hash = "sha256:69a517766e00c1268e5bbfc0d010a0a8508de0b18d30ad5a1ff357f8ae724270"},
-]
 register = []
 requests = [
     {file = "requests-2.26.0-py2.py3-none-any.whl", hash = "sha256:6c1246513ecd5ecd4528a0906f910e8f0f9c6b8ec72030dc9fd154dc1a6efd24"},
@@ -352,10 +344,6 @@ sets = []
 six = [
     {file = "six-1.16.0-py2.py3-none-any.whl", hash = "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"},
     {file = "six-1.16.0.tar.gz", hash = "sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926"},
-]
-text-unidecode = [
-    {file = "text-unidecode-1.3.tar.gz", hash = "sha256:bad6603bb14d279193107714b288be206cac565dfa49aa5b105294dd5c4aab93"},
-    {file = "text_unidecode-1.3-py2.py3-none-any.whl", hash = "sha256:1311f10e8b895935241623731c2ba64f4c455287888b18189350b67134a822e8"},
 ]
 toolz = [
     {file = "toolz-0.11.1-py3-none-any.whl", hash = "sha256:1bc473acbf1a1db4e72a1ce587be347450e8f08324908b8a266b486f408f04d5"},
@@ -367,7 +355,7 @@ typing-extensions = [
     {file = "typing_extensions-3.10.0.2.tar.gz", hash = "sha256:49f75d16ff11f1cd258e1b988ccff82a3ca5570217d7ad8c5f48205dd99a677e"},
 ]
 urllib3 = [
-    {file = "urllib3-1.26.6-py2.py3-none-any.whl", hash = "sha256:39fb8672126159acb139a7718dd10806104dec1e2f0f6c88aab05d17df10c8d4"},
-    {file = "urllib3-1.26.6.tar.gz", hash = "sha256:f57b4c16c62fa2760b7e3d97c35b255512fb6b59a259730f36ba32ce9f8e342f"},
+    {file = "urllib3-1.26.7-py2.py3-none-any.whl", hash = "sha256:c4fdf4019605b6e5423637e01bc9fe4daef873709a7973e195ceba0a62bbc844"},
+    {file = "urllib3-1.26.7.tar.gz", hash = "sha256:4987c65554f7a2dbf30c18fd48778ef124af6fab771a377103da0585e2336ece"},
 ]
 useragent = []
