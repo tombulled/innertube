@@ -2,7 +2,7 @@ import attr
 import addict
 import requests
 
-import mime
+import mediatype
 
 import typing
 import urllib.parse
@@ -42,9 +42,9 @@ class JSONSession(BaseUrlSession):
     def send(self, request, **kwargs):
         response = super().send(request, **kwargs)
 
-        content_type = mime.parse(response.headers.get(str(enums.Header.CONTENT_TYPE)))
+        content_type = mediatype.parse(response.headers.get(str(enums.Header.CONTENT_TYPE)))
 
-        if content_type.subtype != mime.MediaSubtype.JSON:
+        if content_type.subtype != mediatype.MediaSubtype.JSON:
             if not response.ok:
                 raise errors.RequestError(models.Error.from_response(response))
 
@@ -52,10 +52,10 @@ class JSONSession(BaseUrlSession):
             (
                 'Expected response of type {expected_type!r}, got {actual_type!r}'.format \
                 (
-                    expected_type = mime.MimeType \
+                    expected_type = mediatype.MimeType \
                     (
-                        type    = mime.MediaType.APPLICATION,
-                        subtype = mime.MediaSubtype.JSON,
+                        type    = mediatype.MediaType.APPLICATION,
+                        subtype = mediatype.MediaSubtype.JSON,
                     ).string(),
                     actual_type = content_type.string \
                     (

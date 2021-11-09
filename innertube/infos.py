@@ -1,5 +1,3 @@
-import useragent
-
 import typing
 
 from . import enums

@@ -2,7 +2,7 @@ import attr
 import addict
 import toolz
 
-import register
+import registrate
 
 import abc
 import typing
@@ -39,13 +39,13 @@ class BaseInnerTubeClient(BaseClient):
         init    = False,
     )
 
-    parsers: register.HookedRegister = attr.ib \
+    parsers: registrate.Register = attr.ib \
     (
         default = attr.Factory \
         (
             functools.partial \
             (
-                register.HookedRegister,
+                registrate.Register,
                 models.Parser,
             )
         ),

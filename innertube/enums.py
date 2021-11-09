@@ -133,10 +133,15 @@ class Client(enumb.Macro):
     TVHTML5:         str
 
 class ClientId(enumb.IntEnum):
-    WEB:         int = 1
-    WEB_REMIX:   int = 62
-    WEB_KIDS:    int = 67
-    WEB_CREATOR: int = 76
+    WEB:                     int = 1
+    ANDROID:                 int = 3
+    ANDROID_CREATOR:         int = 14
+    ANDROID_MUSIC:           int = 21
+    ANDROID_EMBEDDED_PLAYER: int = 55
+    WEB_REMIX:               int = 62
+    WEB_KIDS:                int = 67
+    WEB_CREATOR:             int = 76
+    WEB_EMBEDDED_PLAYER:     int = 56
 
 class Alt(enumb.Lower):
     JSON: str
