@@ -4,7 +4,7 @@ import furl
 import parse
 import requests
 
-import useragent
+import agency
 import sets
 
 import functools
@@ -192,17 +192,17 @@ class DeviceInfo(BaseModel):
     family:     enums.DeviceFamily
     comments:   typing.List[str]
 
-    def product_identifier(self) -> typing.Optional[useragent.ProductIdentifier]:
+    def product_identifier(self) -> typing.Optional[agency.ProductIdentifier]:
         if self.family == enums.DeviceFamily.WEB:
-            return useragent.ProductIdentifier \
+            return agency.ProductIdentifier \
             (
                 name    = enums.Product.MOZILLA.value,
                 version = enums.Product.MOZILLA.version,
             )
 
-    def product(self) -> typing.Optional[useragent.Product]:
+    def product(self) -> typing.Optional[agency.Product]:
         if (identifier := self.product_identifier()):
-            return useragent.Product \
+            return agency.Product \
             (
                 identifier = identifier,
                 comments   = self.comments,
@@ -261,10 +261,10 @@ class Client(BaseModel):
                 ),
             )
 
-    def product_identifier(self) -> useragent.ProductIdentifier:
+    def product_identifier(self) -> agency.ProductIdentifier:
         return \
         (
-            useragent.ProductIdentifier \
+            agency.ProductIdentifier \
             (
                 name    = package,
                 version = self.client.version,
@@ -273,8 +273,8 @@ class Client(BaseModel):
             else self.device.product_identifier()
         )
 
-    def product(self) -> useragent.Product:
-        return useragent.Product \
+    def product(self) -> agency.Product:
+        return agency.Product \
         (
             identifier = self.product_identifier(),
             comments   = self.device.comments,

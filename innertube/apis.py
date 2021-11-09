@@ -2,8 +2,6 @@ import attr
 
 import typing
 
-import useragent
-
 from . import clients
 from . import models
 from . import enums

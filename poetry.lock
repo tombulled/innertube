@@ -7,6 +7,18 @@ optional = false
 python-versions = "*"
 
 [[package]]
+name = "agency"
+version = "0.1.2"
+description = "User Agent parsing and creation"
+category = "main"
+optional = false
+python-versions = ">=3.8,<4.0"
+
+[package.dependencies]
+enumb = ">=0.1.2,<0.2.0"
+parse = ">=1.19.0,<2.0.0"
+
+[[package]]
 name = "attrs"
 version = "21.2.0"
 description = "Classes Without Boilerplate"
@@ -21,19 +33,12 @@ tests = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)"
 tests_no_zope = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)", "six", "mypy", "pytest-mypy-plugins"]
 
 [[package]]
-name = "case"
-version = "0.1.2"
+name = "cassidy"
+version = "0.1.4"
 description = "String case conversion, identification and parsing"
 category = "main"
 optional = false
-python-versions = "^3.8"
-develop = false
-
-[package.source]
-type = "git"
-url = "https://github.com/tombulled/case.git"
-reference = "main"
-resolved_reference = "ce667e49c5ca22df0155eeaff0fc87db22da605d"
+python-versions = ">=3.8,<4.0"
 
 [[package]]
 name = "certifi"
@@ -56,37 +61,23 @@ unicode_backport = ["unicodedata2"]
 
 [[package]]
 name = "enumb"
-version = "0.1.2"
+version = "0.1.4"
 description = "Concise, Pythonic Enums"
 category = "main"
 optional = false
-python-versions = "^3.8"
-develop = false
+python-versions = ">=3.8,<4.0"
 
 [package.dependencies]
-case = "rev main"
-export = "rev main"
-
-[package.source]
-type = "git"
-url = "https://github.com/tombulled/enumb.git"
-reference = "main"
-resolved_reference = "750c756a4f49afc6421568231ddc03d039d3db07"
+cassidy = ">=0.1.2,<0.2.0"
+expo = ">=0.1.1,<0.2.0"
 
 [[package]]
-name = "export"
-version = "0.1.1"
+name = "expo"
+version = "0.1.2"
 description = "Selectively expose module functionality"
 category = "main"
 optional = false
-python-versions = "^3.8"
-develop = false
-
-[package.source]
-type = "git"
-url = "https://github.com/tombulled/export.git"
-reference = "main"
-resolved_reference = "fd9a082a4231b39da69b11afa04d33dc548fa498"
+python-versions = ">=3.8,<4.0"
 
 [[package]]
 name = "furl"
@@ -109,22 +100,15 @@ optional = false
 python-versions = ">=3.5"
 
 [[package]]
-name = "mime"
-version = "0.1.4"
-description = "Mime Type parsing and creation"
+name = "mediatype"
+version = "0.1.5"
+description = "Media Type parsing and creation"
 category = "main"
 optional = false
-python-versions = "^3.8"
-develop = false
+python-versions = ">=3.8,<4.0"
 
 [package.dependencies]
-enumb = "rev main"
-
-[package.source]
-type = "git"
-url = "https://github.com/tombulled/mime.git"
-reference = "main"
-resolved_reference = "831da897b46a1dfba967e363cd167b7650f7ba1d"
+enumb = ">=0.1.4,<0.2.0"
 
 [[package]]
 name = "orderedmultidict"
@@ -161,22 +145,12 @@ dotenv = ["python-dotenv (>=0.10.4)"]
 email = ["email-validator (>=1.0.3)"]
 
 [[package]]
-name = "register"
-version = "0.1.1"
-description = ""
+name = "registrate"
+version = "0.1.3"
+description = "Register your data"
 category = "main"
 optional = false
-python-versions = "^3.8"
-develop = false
-
-[package.dependencies]
-attrs = "^21.2.0"
-
-[package.source]
-type = "git"
-url = "https://github.com/tombulled/register.git"
-reference = "main"
-resolved_reference = "cfce14f7324be21437893aade44c7b25ba349bce"
+python-versions = ">=3.8,<4.0"
 
 [[package]]
 name = "requests"
@@ -197,24 +171,6 @@ socks = ["PySocks (>=1.5.6,!=1.5.7)", "win-inet-pton"]
 use_chardet_on_py3 = ["chardet (>=3.0.2,<5)"]
 
 [[package]]
-name = "sets"
-version = "0.1.0"
-description = "Store and manage a collection of sets"
-category = "main"
-optional = false
-python-versions = "^3.8"
-develop = false
-
-[package.dependencies]
-pydantic = "^1.8.1"
-
-[package.source]
-type = "git"
-url = "https://github.com/tombulled/sets.git"
-reference = "main"
-resolved_reference = "e96f58ba9259a28b0c86524cb9ac27f9624ebc89"
-
-[[package]]
 name = "six"
 version = "1.16.0"
 description = "Python 2 and 3 compatibility utilities"
@@ -223,8 +179,19 @@ optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
 
 [[package]]
+name = "soset"
+version = "0.1.1"
+description = "Store and manage a collection of sets"
+category = "main"
+optional = false
+python-versions = ">=3.8,<4.0"
+
+[package.dependencies]
+pydantic = ">=1.8.1,<2.0.0"
+
+[[package]]
 name = "toolz"
-version = "0.11.1"
+version = "0.11.2"
 description = "List processing tools and functional utilities"
 category = "main"
 optional = false
@@ -251,40 +218,28 @@ brotli = ["brotlipy (>=0.6.0)"]
 secure = ["pyOpenSSL (>=0.14)", "cryptography (>=1.3.4)", "idna (>=2.0.0)", "certifi", "ipaddress"]
 socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 
-[[package]]
-name = "useragent"
-version = "0.1.1"
-description = "User Agent parsing and creation"
-category = "main"
-optional = false
-python-versions = "^3.8"
-develop = false
-
-[package.dependencies]
-enumb = "rev main"
-parse = "^1.19.0"
-
-[package.source]
-type = "git"
-url = "https://github.com/tombulled/useragent.git"
-reference = "main"
-resolved_reference = "d31e04874158c2795b78d8b000db7c05fcc96a42"
-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "ceea19b83252f977c240be399be7897fef6f9eb43c45728fd7b4f64c9f00c75d"
+content-hash = "f0b2fe27b47215bd95e77ba0bd3d13722683f25ddb79f6e727d5940b71b98575"
 
 [metadata.files]
 addict = [
     {file = "addict-2.4.0-py3-none-any.whl", hash = "sha256:249bb56bbfd3cdc2a004ea0ff4c2b6ddc84d53bc2194761636eb314d5cfa5dfc"},
     {file = "addict-2.4.0.tar.gz", hash = "sha256:b3b2210e0e067a281f5646c8c5db92e99b7231ea8b0eb5f74dbdf9e259d4e494"},
 ]
+agency = [
+    {file = "agency-0.1.2-py3-none-any.whl", hash = "sha256:ed5082807775ea558a02b71d8571686e404aa9e6d95bc168c3ad0084a55997a8"},
+    {file = "agency-0.1.2.tar.gz", hash = "sha256:455278179650df6536022c9982e9746a8425c1b0e111047b6884d319d5dd0c9a"},
+]
 attrs = [
     {file = "attrs-21.2.0-py2.py3-none-any.whl", hash = "sha256:149e90d6d8ac20db7a955ad60cf0e6881a3f20d37096140088356da6c716b0b1"},
     {file = "attrs-21.2.0.tar.gz", hash = "sha256:ef6aaac3ca6cd92904cdd0d83f629a15f18053ec84e6432106f7a4d04ae4f5fb"},
 ]
-case = []
+cassidy = [
+    {file = "cassidy-0.1.4-py3-none-any.whl", hash = "sha256:9e6fdfff81accd7766f9b3e6665a1c0a914fd7b23c6da16d9face886bc1fb7d8"},
+    {file = "cassidy-0.1.4.tar.gz", hash = "sha256:d51a0f4210a614f6b092e25fe29c981de0d9b769c42129b43708e8f847e22bee"},
+]
 certifi = [
     {file = "certifi-2021.10.8-py2.py3-none-any.whl", hash = "sha256:d62a0163eb4c2344ac042ab2bdf75399a71a2d8c7d47eac2e2ee91b9d6339569"},
     {file = "certifi-2021.10.8.tar.gz", hash = "sha256:78884e7c1d4b00ce3cea67b44566851c4343c120abd683433ce934a68ea58872"},
@@ -293,8 +248,14 @@ charset-normalizer = [
     {file = "charset-normalizer-2.0.7.tar.gz", hash = "sha256:e019de665e2bcf9c2b64e2e5aa025fa991da8720daa3c1138cadd2fd1856aed0"},
     {file = "charset_normalizer-2.0.7-py3-none-any.whl", hash = "sha256:f7af805c321bfa1ce6714c51f254e0d5bb5e5834039bc17db7ebe3a4cec9492b"},
 ]
-enumb = []
-export = []
+enumb = [
+    {file = "enumb-0.1.4-py3-none-any.whl", hash = "sha256:f395214111801a0fdae1d1cf0fc6914bfd0b5b8044da82f48b974fdeffc016f6"},
+    {file = "enumb-0.1.4.tar.gz", hash = "sha256:e5713af4ccbc2ec2ff3021d105fdfb7bb533aabbbd1ee883d7c25916dc233570"},
+]
+expo = [
+    {file = "expo-0.1.2-py3-none-any.whl", hash = "sha256:a36d64c6954de353ee67491351362b04c1b3281acb69afa8534b41279ecd2306"},
+    {file = "expo-0.1.2.tar.gz", hash = "sha256:df9042d9d73307bf987e89791b6e36744c5fa99f7464210e956e76d7fe3e84bd"},
+]
 furl = [
     {file = "furl-2.1.3-py2.py3-none-any.whl", hash = "sha256:9ab425062c4217f9802508e45feb4a83e54324273ac4b202f1850363309666c0"},
     {file = "furl-2.1.3.tar.gz", hash = "sha256:5a6188fe2666c484a12159c18be97a1977a71d632ef5bb867ef15f54af39cc4e"},
@@ -303,7 +264,10 @@ idna = [
     {file = "idna-3.3-py3-none-any.whl", hash = "sha256:84d9dd047ffa80596e0f246e2eab0b391788b0503584e8945f2368256d2735ff"},
     {file = "idna-3.3.tar.gz", hash = "sha256:9d643ff0a55b762d5cdb124b8eaa99c66322e2157b69160bc32796e824360e6d"},
 ]
-mime = []
+mediatype = [
+    {file = "mediatype-0.1.5-py3-none-any.whl", hash = "sha256:9481ad9ff4ef7ade5d0440004862eb9ab15d7b107ac4776802c15ae64b0ec0f1"},
+    {file = "mediatype-0.1.5.tar.gz", hash = "sha256:f95e998898dbd91b2367307106098edfdb199e8183944922154d99abadfa0e37"},
+]
 orderedmultidict = [
     {file = "orderedmultidict-1.0.1-py2.py3-none-any.whl", hash = "sha256:43c839a17ee3cdd62234c47deca1a8508a3f2ca1d0678a3bf791c87cf84adbf3"},
     {file = "orderedmultidict-1.0.1.tar.gz", hash = "sha256:04070bbb5e87291cc9bfa51df413677faf2141c73c61d2a5f7b26bea3cd882ad"},
@@ -335,19 +299,25 @@ pydantic = [
     {file = "pydantic-1.8.2-py3-none-any.whl", hash = "sha256:fec866a0b59f372b7e776f2d7308511784dace622e0992a0b59ea3ccee0ae833"},
     {file = "pydantic-1.8.2.tar.gz", hash = "sha256:26464e57ccaafe72b7ad156fdaa4e9b9ef051f69e175dbbb463283000c05ab7b"},
 ]
-register = []
+registrate = [
+    {file = "registrate-0.1.3-py3-none-any.whl", hash = "sha256:46889e06faa73e025b6ed3ad772f3ec7e59c88853a6e08a55fb9f88ba87603b7"},
+    {file = "registrate-0.1.3.tar.gz", hash = "sha256:d7636382124d76cc3a4af441be6156c6b45b65c60cee8ff4b155b493f7969ceb"},
+]
 requests = [
     {file = "requests-2.26.0-py2.py3-none-any.whl", hash = "sha256:6c1246513ecd5ecd4528a0906f910e8f0f9c6b8ec72030dc9fd154dc1a6efd24"},
     {file = "requests-2.26.0.tar.gz", hash = "sha256:b8aa58f8cf793ffd8782d3d8cb19e66ef36f7aba4353eec859e74678b01b07a7"},
 ]
-sets = []
 six = [
     {file = "six-1.16.0-py2.py3-none-any.whl", hash = "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"},
     {file = "six-1.16.0.tar.gz", hash = "sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926"},
 ]
+soset = [
+    {file = "soset-0.1.1-py3-none-any.whl", hash = "sha256:2421fceb1de6f6a7454340f1c0a0dcfbe541a4b5381d2c3f7baa12b0c1863b0a"},
+    {file = "soset-0.1.1.tar.gz", hash = "sha256:9f53cb7040f1ed2fa8827aea46c6090b8253912a51e7a997be09d40115d950de"},
+]
 toolz = [
-    {file = "toolz-0.11.1-py3-none-any.whl", hash = "sha256:1bc473acbf1a1db4e72a1ce587be347450e8f08324908b8a266b486f408f04d5"},
-    {file = "toolz-0.11.1.tar.gz", hash = "sha256:c7a47921f07822fe534fb1c01c9931ab335a4390c782bd28c6bcc7c2f71f3fbf"},
+    {file = "toolz-0.11.2-py3-none-any.whl", hash = "sha256:a5700ce83414c64514d82d60bcda8aabfde092d1c1a8663f9200c07fdcc6da8f"},
+    {file = "toolz-0.11.2.tar.gz", hash = "sha256:6b312d5e15138552f1bda8a4e66c30e236c831b612b2bf0005f8a1df10a4bc33"},
 ]
 typing-extensions = [
     {file = "typing_extensions-3.10.0.2-py2-none-any.whl", hash = "sha256:d8226d10bc02a29bcc81df19a26e56a9647f8b0a6d4a83924139f4a8b01f17b7"},
@@ -358,4 +328,3 @@ urllib3 = [
     {file = "urllib3-1.26.7-py2.py3-none-any.whl", hash = "sha256:c4fdf4019605b6e5423637e01bc9fe4daef873709a7973e195ceba0a62bbc844"},
     {file = "urllib3-1.26.7.tar.gz", hash = "sha256:4987c65554f7a2dbf30c18fd48778ef124af6fab771a377103da0585e2336ece"},
 ]
-useragent = []
