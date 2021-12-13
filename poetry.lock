@@ -61,7 +61,7 @@ unicode_backport = ["unicodedata2"]
 
 [[package]]
 name = "enumb"
-version = "0.1.4"
+version = "0.1.5"
 description = "Concise, Pythonic Enums"
 category = "main"
 optional = false
@@ -221,7 +221,7 @@ socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "f0b2fe27b47215bd95e77ba0bd3d13722683f25ddb79f6e727d5940b71b98575"
+content-hash = "d4a2ddfc326e7279b844017fa21df93be322dace00f6cfba2a21316f2010ef25"
 
 [metadata.files]
 addict = [
@@ -249,8 +249,8 @@ charset-normalizer = [
     {file = "charset_normalizer-2.0.7-py3-none-any.whl", hash = "sha256:f7af805c321bfa1ce6714c51f254e0d5bb5e5834039bc17db7ebe3a4cec9492b"},
 ]
 enumb = [
-    {file = "enumb-0.1.4-py3-none-any.whl", hash = "sha256:f395214111801a0fdae1d1cf0fc6914bfd0b5b8044da82f48b974fdeffc016f6"},
-    {file = "enumb-0.1.4.tar.gz", hash = "sha256:e5713af4ccbc2ec2ff3021d105fdfb7bb533aabbbd1ee883d7c25916dc233570"},
+    {file = "enumb-0.1.5-py3-none-any.whl", hash = "sha256:1fd798bc347eecb598de9f95bc71cedd96baea3d4ad95601bfc9e18700b1e097"},
+    {file = "enumb-0.1.5.tar.gz", hash = "sha256:02a6eda94322ae06a52754e46be6d89310b21e0751a9fc5c9546e977b4fa1884"},
 ]
 expo = [
     {file = "expo-0.1.2-py3-none-any.whl", hash = "sha256:a36d64c6954de353ee67491351362b04c1b3281acb69afa8534b41279ecd2306"},
