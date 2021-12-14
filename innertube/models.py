@@ -224,6 +224,7 @@ class ClientInfo(BaseModel):
     id:      typing.Optional[int]
     project: typing.Optional[str]
     client:  typing.Optional[str]
+    screen:  typing.Optional[str]
 
     def params(self) -> dict:
         return dict \

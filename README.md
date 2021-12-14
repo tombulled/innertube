@@ -57,8 +57,9 @@ This table shows all the devices and services that work with the InnerTube API. 
 | ------- | ------- | ------------- | ------------ | --------------- |
 | Web     | WEB     | WEB_REMIX     | WEB_KIDS     | WEB_CREATOR     |
 | Android | ANDROID | ANDROID_MUSIC | ANDROID_KIDS | ANDROID_CREATOR |
-| Ios     | IOS     | IOS_MUSIC     | IOS_KIDS     | IOS_CREATOR     |
-| Tv      | TVHTML5 |               |              |                 |
+| iOS     | IOS     | IOS_MUSIC     | IOS_KIDS     | IOS_CREATOR     |
+| TV      | TVHTML5 |               |              |                 |
+| Mobile  | MWEB    |               |              |                 |
 
 ## Endpoints
 Only the core, unauthenticated endpoints are currently implemented. However, between all of these you should be able to access all the data you need.
