@@ -43,7 +43,7 @@ class JSONSession(BaseUrlSession):
     def send(self, request: requests.Request, **kwargs: typing.Any) -> requests.Response:
         response: requests.Response = super().send(request, **kwargs)
 
-        content_type: mediatype.MediaType = mediatype(response.headers.get(str(enums.Header.CONTENT_TYPE)))
+        content_type: mediatype.MediaType = mediatype.parse(response.headers.get(str(enums.Header.CONTENT_TYPE)))
 
         if content_type.subtype != mediatype.MediaTypeSubtype.JSON:
             if not response.ok:
