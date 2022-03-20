@@ -57,8 +57,9 @@ This table shows all the devices and services that work with the InnerTube API. 
 | ------- | ------- | ------------- | ------------ | --------------- |
 | Web     | WEB     | WEB_REMIX     | WEB_KIDS     | WEB_CREATOR     |
 | Android | ANDROID | ANDROID_MUSIC | ANDROID_KIDS | ANDROID_CREATOR |
-| Ios     | IOS     | IOS_MUSIC     | IOS_KIDS     | IOS_CREATOR     |
-| Tv      | TVHTML5 |               |              |                 |
+| iOS     | IOS     | IOS_MUSIC     | IOS_KIDS     | IOS_CREATOR     |
+| TV      | TVHTML5 |               |              |                 |
+| Mobile  | MWEB    |               |              |                 |
 
 ## Endpoints
 Only the core, unauthenticated endpoints are currently implemented. However, between all of these you should be able to access all the data you need.
@@ -88,4 +89,3 @@ Here's a list of the awesome libraries that helped make `innertube`
 | [furl](https://pypi.org/project/furl/) | https://github.com/gruns/furl |
 | [humps](https://pypi.org/project/pyhumps/) | https://github.com/nficano/humps |
 | [parse](https://pypi.org/project/parse/) | https://github.com/r1chardj0n3s/parse |
-| [toolz](https://pypi.org/project/toolz/) | https://github.com/pytoolz/toolz |

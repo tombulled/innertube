@@ -32,6 +32,32 @@ class Host(BaseDomain):
     YOUTUBE_MUSIC:   str = f'music.{Domain.YOUTUBE}'
     YOUTUBE_STUDIO:  str = f'studio.{Domain.YOUTUBE}'
     YOUTUBE_KIDS:    str = f'www.{Domain.YOUTUBE_KIDS}'
+    YOUTUBE_MOBILE:  str = f'm.{Domain.YOUTUBE}'
+
+class ClientFormFactor(enumb.Macro):
+    UNKNOWN_FORM_FACTOR: str
+
+class ConnectionType(enumb.Macro):
+    CONN_CELLULAR_4G: str
+
+class PlayerType(enumb.Macro):
+    UNIPLAYER: str
+
+class UserInterfaceTheme(enumb.Macro):
+    LIGHT: str = 'USER_INTERFACE_THEME_LIGHT'
+
+class OperatingSystem(enumb.Pascal):
+    ANDROID: str
+
+class Platform(enumb.Macro):
+    MOBILE: str
+    ANDROID: str
+
+class DeviceMake(enumb.Pascal):
+    GOOGLE: str
+
+class DeviceModel(enumb.Title):
+    NEXUS_5: str
 
 class Request(enumb.Pascal):
     CONFIG:                                str
@@ -100,6 +126,7 @@ class FrontEnd(enumb.Kebab):
     YOUTUBE_MUSIC_ANDROID: str
     YOUTUBE_MUSIC_IOS:     str
     YOUTUBE_LR:            str
+    YOUTUBE_REDUCED:       str
 
 class Device(enumb.Lower):
     WEB:     str
@@ -118,30 +145,42 @@ class Service(enumb.Kebab):
     YOUTUBE_STUDIO: str
 
 class Client(enumb.Macro):
-    WEB:             str
-    WEB_REMIX:       str
-    WEB_KIDS:        str
-    WEB_CREATOR:     str
-    ANDROID:         str
-    ANDROID_MUSIC:   str
-    ANDROID_KIDS:    str
-    ANDROID_CREATOR: str
-    IOS:             str
-    IOS_MUSIC:       str
-    IOS_KIDS:        str
-    IOS_CREATOR:     str
-    TVHTML5:         str
+    WEB:                     str
+    WEB_REMIX:               str
+    WEB_KIDS:                str
+    WEB_CREATOR:             str
+    ANDROID:                 str
+    ANDROID_MUSIC:           str
+    ANDROID_KIDS:            str
+    ANDROID_CREATOR:         str
+    IOS:                     str
+    IOS_MUSIC:               str
+    IOS_KIDS:                str
+    IOS_CREATOR:             str
+    TVHTML5:                 str
+    MWEB:                    str
+    WEB_EMBEDDED_PLAYER:     str
+    ANDROID_EMBEDDED_PLAYER: str
+    IOS_MESSAGES_EXTENSION:  str
 
 class ClientId(enumb.IntEnum):
     WEB:                     int = 1
+    MWEB:                    int = 2
     ANDROID:                 int = 3
+    IOS:                     int = 5
     ANDROID_CREATOR:         int = 14
+    IOS_CREATOR:             int = 15
     ANDROID_MUSIC:           int = 21
+    IOS_MUSIC:               int = 26
     ANDROID_EMBEDDED_PLAYER: int = 55
     WEB_REMIX:               int = 62
+    IOS_MESSAGES_EXTENSION:  int = 66
     WEB_KIDS:                int = 67
     WEB_CREATOR:             int = 76
     WEB_EMBEDDED_PLAYER:     int = 56
+
+class ClientScreen(enumb.Macro):
+    EMBED: str
 
 class Alt(enumb.Lower):
     JSON: str

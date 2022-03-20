@@ -1,6 +1,5 @@
 import attr
 import addict
-import toolz
 
 import registrate
 
@@ -54,7 +53,7 @@ class BaseInnerTubeClient(BaseClient):
     )
 
     def __attrs_post_init__(self):
-        self.parsers()(toolz.identity)
+        self.parsers()(lambda x: x)
 
     def __call__(self, *args, **kwargs) -> addict.Dict:
         response = self.session.post(*args, **kwargs)

@@ -42,9 +42,9 @@ class JSONSession(BaseUrlSession):
     def send(self, request, **kwargs):
         response = super().send(request, **kwargs)
 
-        content_type = mediatype.parse(response.headers.get(str(enums.Header.CONTENT_TYPE)))
+        content_type = mediatype(response.headers.get(str(enums.Header.CONTENT_TYPE)))
 
-        if content_type.subtype != mediatype.MediaSubtype.JSON:
+        if content_type.subtype != mediatype.MediaTypeSubtype.JSON:
             if not response.ok:
                 raise errors.RequestError(models.Error.from_response(response))
 
@@ -52,10 +52,10 @@ class JSONSession(BaseUrlSession):
             (
                 'Expected response of type {expected_type!r}, got {actual_type!r}'.format \
                 (
-                    expected_type = mediatype.MimeType \
+                    expected_type = mediatype.MediaType \
                     (
-                        type    = mediatype.MediaType.APPLICATION,
-                        subtype = mediatype.MediaSubtype.JSON,
+                        type    = mediatype.MediaTypeType.APPLICATION,
+                        subtype = mediatype.MediaTypeSubtype.JSON,
                     ).string(),
                     actual_type = content_type.string \
                     (

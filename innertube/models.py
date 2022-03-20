@@ -5,7 +5,7 @@ import parse
 import requests
 
 import agency
-import sets
+import soset
 
 import functools
 import enum
@@ -110,7 +110,7 @@ class ResponseFingerprint(BaseModel):
             client    = context.client.name,
         )
 
-class Parser(sets.Sets[ResponseFingerprint]): pass
+class Parser(soset.Sets[ResponseFingerprint]): pass
 
 class Locale(BaseModel):
     hl: str
@@ -224,6 +224,7 @@ class ClientInfo(BaseModel):
     id:      typing.Optional[int]
     project: typing.Optional[str]
     client:  typing.Optional[str]
+    screen:  typing.Optional[str]
 
     def params(self) -> dict:
         return dict \

@@ -89,13 +89,21 @@ services: typing.Dict[enums.Service, models.ServiceInfo] = \
 
 clients: typing.Dict[enums.Client, models.ClientInfo] = \
 {
+    enums.Client.MWEB: models.ClientInfo \
+    (
+        name    = enums.Client.MWEB,
+        version = '2.20211214.00.00',
+        key     = 'AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8',
+        id      = enums.ClientId.MWEB,
+        client  = enums.FrontEnd.YOUTUBE_REDUCED,
+    ),
     enums.Client.WEB: models.ClientInfo \
     (
         name    = enums.Client.WEB,
         version = '2.20210223.09.00',
         key     = 'AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8',
-        client  = enums.FrontEnd.YOUTUBE,
         id      = enums.ClientId.WEB,
+        client  = enums.FrontEnd.YOUTUBE,
     ),
     enums.Client.WEB_REMIX: models.ClientInfo \
     (
@@ -109,8 +117,8 @@ clients: typing.Dict[enums.Client, models.ClientInfo] = \
         name    = enums.Client.WEB_KIDS,
         version = '2.1.4',
         key     = 'AIzaSyBbZV_fZ3an51sF-mvs5w37OqqbsTOzwtU',
-        client  = enums.FrontEnd.YOUTUBE_PEGASUS_WEB,
         id      = enums.ClientId.WEB_KIDS,
+        client  = enums.FrontEnd.YOUTUBE_PEGASUS_WEB,
     ),
     enums.Client.WEB_CREATOR: models.ClientInfo \
     (
@@ -124,6 +132,7 @@ clients: typing.Dict[enums.Client, models.ClientInfo] = \
         name    = enums.Client.ANDROID,
         version = '16.07.34',
         key     = 'AIzaSyA8eiZmM1FaDVjRy-df2KTyQ_vz_yYM39w',
+        id      = enums.ClientId.ANDROID,
         project = 'youtube',
     ),
     enums.Client.ANDROID_MUSIC: models.ClientInfo \
@@ -131,6 +140,7 @@ clients: typing.Dict[enums.Client, models.ClientInfo] = \
         name    = enums.Client.ANDROID_MUSIC,
         version = '4.16.51',
         key     = 'AIzaSyAOghZGza2MQSZkY_zfZ370N-PUdXEo8AI',
+        id      = enums.ClientId.ANDROID_MUSIC,
         project = 'apps.youtube.music',
         client  = enums.FrontEnd.YOUTUBE_MUSIC_ANDROID,
     ),
@@ -146,6 +156,7 @@ clients: typing.Dict[enums.Client, models.ClientInfo] = \
         name    = enums.Client.ANDROID_CREATOR,
         version = '21.06.103',
         key     = 'AIzaSyD_qjV8zaaUMehtLkrKFgVeSX_Iqbtyws8',
+        id      = enums.ClientId.ANDROID_CREATOR,
         project = 'apps.youtube.creator',
     ),
     enums.Client.IOS: models.ClientInfo \
@@ -153,6 +164,7 @@ clients: typing.Dict[enums.Client, models.ClientInfo] = \
         name    = enums.Client.IOS,
         version = '16.05.7',
         key     = 'AIzaSyB-63vPrdThhKuerbB2N_l7Kwwcxj6yUAc',
+        id      = enums.ClientId.IOS,
         project = 'youtube',
     ),
     enums.Client.IOS_MUSIC: models.ClientInfo \
@@ -160,6 +172,7 @@ clients: typing.Dict[enums.Client, models.ClientInfo] = \
         name    = enums.Client.IOS_MUSIC,
         version = '4.16.1',
         key     = 'AIzaSyBAETezhkwP0ZWA02RsqT1zu78Fpt0bC_s',
+        id      = enums.ClientId.IOS_MUSIC,
         project = 'youtubemusic',
         client  = enums.FrontEnd.YOUTUBE_MUSIC_IOS,
     ),
@@ -175,6 +188,7 @@ clients: typing.Dict[enums.Client, models.ClientInfo] = \
         name    = enums.Client.IOS_CREATOR,
         version = '20.47.100',
         key     = 'AIzaSyAPyF5GfQI-kOa6nZwO8EsNrGdEx9bioNs',
+        id      = enums.ClientId.IOS_CREATOR,
         project = 'ytcreator',
     ),
     enums.Client.TVHTML5: models.ClientInfo \
@@ -183,6 +197,30 @@ clients: typing.Dict[enums.Client, models.ClientInfo] = \
         version = '7.20210224.00.00',
         key     = 'AIzaSyDCU8hByM-4DrUqRUYnGn-3llEO78bcxq8',
         client  = enums.FrontEnd.YOUTUBE_LR,
+    ),
+    enums.Client.WEB_EMBEDDED_PLAYER: models.ClientInfo \
+    (
+        name    = enums.Client.WEB_EMBEDDED_PLAYER,
+        version = '1.20210620.0.1',
+        key     = 'AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8',
+        id      = enums.ClientId.WEB_EMBEDDED_PLAYER,
+        screen  = enums.ClientScreen.EMBED,
+    ),
+    enums.Client.ANDROID_EMBEDDED_PLAYER: models.ClientInfo \
+    (
+        name    = enums.Client.ANDROID_EMBEDDED_PLAYER,
+        version = '16.20',
+        key     = 'AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8',
+        id      = enums.ClientId.ANDROID_EMBEDDED_PLAYER,
+        screen  = enums.ClientScreen.EMBED,
+    ),
+    enums.Client.IOS_MESSAGES_EXTENSION: models.ClientInfo \
+    (
+        name    = enums.Client.IOS_MESSAGES_EXTENSION,
+        version = '16.20',
+        key     = 'AIzaSyDCU8hByM-4DrUqRUYnGn-3llEO78bcxq8',
+        id      = enums.ClientId.IOS_MESSAGES_EXTENSION,
+        screen  = enums.ClientScreen.EMBED,
     ),
 }
 
@@ -264,6 +302,36 @@ schemas: typing.Tuple[models.ClientSchema] = \
     (
         client  = enums.Client.TVHTML5,
         device  = enums.Device.LR,
+        service = enums.Service.YOUTUBE,
+    ),
+    models.ClientSchema \
+    (
+        client  = enums.Client.MWEB,
+        device  = enums.Device.WEB,
+        service = enums.Service.YOUTUBE,
+    ),
+    models.ClientSchema \
+    (
+        client  = enums.Client.MWEB,
+        device  = enums.Device.WEB,
+        service = enums.Service.YOUTUBE,
+    ),
+    models.ClientSchema \
+    (
+        client  = enums.Client.WEB_EMBEDDED_PLAYER,
+        device  = enums.Device.WEB,
+        service = enums.Service.YOUTUBE,
+    ),
+    models.ClientSchema \
+    (
+        client  = enums.Client.ANDROID_EMBEDDED_PLAYER,
+        device  = enums.Device.WEB,
+        service = enums.Service.YOUTUBE,
+    ),
+    models.ClientSchema \
+    (
+        client  = enums.Client.IOS_MESSAGES_EXTENSION,
+        device  = enums.Device.WEB,
         service = enums.Service.YOUTUBE,
     ),
 )
