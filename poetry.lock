@@ -299,14 +299,6 @@ tomli = ">=1.0.0"
 testing = ["argcomplete", "hypothesis (>=3.56)", "mock", "nose", "pygments (>=2.7.2)", "requests", "xmlschema"]
 
 [[package]]
-name = "registrate"
-version = "0.1.6"
-description = "Python object registers. Keep track of your classes, functions and data. "
-category = "main"
-optional = false
-python-versions = ">=3.8,<4.0"
-
-[[package]]
 name = "requests"
 version = "2.27.1"
 description = "Python HTTP for Humans."
@@ -323,6 +315,14 @@ urllib3 = ">=1.21.1,<1.27"
 [package.extras]
 socks = ["PySocks (>=1.5.6,!=1.5.7)", "win-inet-pton"]
 use_chardet_on_py3 = ["chardet (>=3.0.2,<5)"]
+
+[[package]]
+name = "roster"
+version = "0.1.8"
+description = "Python object registers. Keep track of your classes, functions and data."
+category = "main"
+optional = false
+python-versions = ">=3.8,<4.0"
 
 [[package]]
 name = "six"
@@ -386,7 +386,7 @@ socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "146b53139ae6b1b77dfbe3bdca7b66944a6bfdc849c0214c571e87c8bbf160a6"
+content-hash = "6462a455a8c6ce295d03eaca3b9bdb5eaf6c72c1e656a4d50c2962a5d40a2bab"
 
 [metadata.files]
 addict = [
@@ -571,13 +571,13 @@ pytest = [
     {file = "pytest-7.1.1-py3-none-any.whl", hash = "sha256:92f723789a8fdd7180b6b06483874feca4c48a5c76968e03bb3e7f806a1869ea"},
     {file = "pytest-7.1.1.tar.gz", hash = "sha256:841132caef6b1ad17a9afde46dc4f6cfa59a05f9555aae5151f73bdf2820ca63"},
 ]
-registrate = [
-    {file = "registrate-0.1.6-py3-none-any.whl", hash = "sha256:8ed7dda6fd6b6fe29ac22af5473143eb749a622f1e4e3ed7043b5142a0b7db43"},
-    {file = "registrate-0.1.6.tar.gz", hash = "sha256:75d375bed963ad4faa02953f8ebdcbed6fa7f78a53f2da1d23ab76b0ae464b8e"},
-]
 requests = [
     {file = "requests-2.27.1-py2.py3-none-any.whl", hash = "sha256:f22fa1e554c9ddfd16e6e41ac79759e17be9e492b3587efa038054674760e72d"},
     {file = "requests-2.27.1.tar.gz", hash = "sha256:68d7c56fd5a8999887728ef304a6d12edc7be74f1cfa47714fc8b414525c9a61"},
+]
+roster = [
+    {file = "roster-0.1.8-py3-none-any.whl", hash = "sha256:1996902111671440965a0031a8e4e1e55adf8f40d07836da10a66554584ba763"},
+    {file = "roster-0.1.8.tar.gz", hash = "sha256:adbe7a9e035aa9b3220892663dc99eba3af8cf91bc13ad267ca8ab255d9f0fb5"},
 ]
 six = [
     {file = "six-1.16.0-py2.py3-none-any.whl", hash = "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"},
