@@ -261,8 +261,8 @@ class Client(BaseModel):
             return self.device.product()
 
         return ua.Product(
-            name    = self.package(),
-            version = self.client.version,
+            name     = package,
+            version  = self.client.version,
             comments = self.device.comments
         )
 
