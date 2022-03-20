@@ -7,18 +7,6 @@ optional = false
 python-versions = "*"
 
 [[package]]
-name = "agency"
-version = "0.1.2"
-description = "User Agent parsing and creation"
-category = "main"
-optional = false
-python-versions = ">=3.8,<4.0"
-
-[package.dependencies]
-enumb = ">=0.1.2,<0.2.0"
-parse = ">=1.19.0,<2.0.0"
-
-[[package]]
 name = "attrs"
 version = "21.4.0"
 description = "Classes Without Boilerplate"
@@ -198,6 +186,17 @@ optional = false
 python-versions = ">=3.6"
 
 [[package]]
+name = "ua"
+version = "0.1.5"
+description = "User-Agent parsing and creation"
+category = "main"
+optional = false
+python-versions = ">=3.8,<4.0"
+
+[package.dependencies]
+parse = ">=1.19.0,<2.0.0"
+
+[[package]]
 name = "urllib3"
 version = "1.26.9"
 description = "HTTP library with thread-safe connection pooling, file post, and more."
@@ -213,16 +212,12 @@ socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "fb2cd4b30c45df5d1a48bde9dd7afef77fed7284bca4b9e0c7b9d8f3f04fa141"
+content-hash = "6e20bc37cbf68c387e094cf50910f99b3213a3a9d96c5f086e0142140174b836"
 
 [metadata.files]
 addict = [
     {file = "addict-2.4.0-py3-none-any.whl", hash = "sha256:249bb56bbfd3cdc2a004ea0ff4c2b6ddc84d53bc2194761636eb314d5cfa5dfc"},
     {file = "addict-2.4.0.tar.gz", hash = "sha256:b3b2210e0e067a281f5646c8c5db92e99b7231ea8b0eb5f74dbdf9e259d4e494"},
-]
-agency = [
-    {file = "agency-0.1.2-py3-none-any.whl", hash = "sha256:ed5082807775ea558a02b71d8571686e404aa9e6d95bc168c3ad0084a55997a8"},
-    {file = "agency-0.1.2.tar.gz", hash = "sha256:455278179650df6536022c9982e9746a8425c1b0e111047b6884d319d5dd0c9a"},
 ]
 attrs = [
     {file = "attrs-21.4.0-py2.py3-none-any.whl", hash = "sha256:2d27e3784d7a565d36ab851fe94887c5eccd6a463168875832a1be79c82828b4"},
@@ -323,6 +318,10 @@ soset = [
 typing-extensions = [
     {file = "typing_extensions-4.1.1-py3-none-any.whl", hash = "sha256:21c85e0fe4b9a155d0799430b0ad741cdce7e359660ccbd8b530613e8df88ce2"},
     {file = "typing_extensions-4.1.1.tar.gz", hash = "sha256:1a9462dcc3347a79b1f1c0271fbe79e844580bb598bafa1ed208b94da3cdcd42"},
+]
+ua = [
+    {file = "ua-0.1.5-py3-none-any.whl", hash = "sha256:2d67cf3a8f63e62f34b912d456d27fbfaa691b3ec34fab78da66ce9050b9ca4e"},
+    {file = "ua-0.1.5.tar.gz", hash = "sha256:01bda1d1ae3b9c90e693bb18fb72c8a513aff5c7c9009f03b5a997512beaae62"},
 ]
 urllib3 = [
     {file = "urllib3-1.26.9-py2.py3-none-any.whl", hash = "sha256:44ece4d53fb1706f667c9bd1c648f5469a2ec925fcf3a776667042d645472c14"},

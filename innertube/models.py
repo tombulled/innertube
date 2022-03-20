@@ -4,7 +4,7 @@ import furl
 import parse
 import requests
 
-import agency
+import ua
 import soset
 
 import functools
@@ -192,20 +192,12 @@ class DeviceInfo(BaseModel):
     family:     enums.DeviceFamily
     comments:   typing.List[str]
 
-    def product_identifier(self) -> typing.Optional[agency.ProductIdentifier]:
+    def product(self) -> typing.Optional[ua.Product]:
         if self.family == enums.DeviceFamily.WEB:
-            return agency.ProductIdentifier \
-            (
-                name    = enums.Product.MOZILLA.value,
-                version = enums.Product.MOZILLA.version,
-            )
-
-    def product(self) -> typing.Optional[agency.Product]:
-        if (identifier := self.product_identifier()):
-            return agency.Product \
-            (
-                identifier = identifier,
-                comments   = self.comments,
+            return ua.Product(
+                name     = enums.Product.MOZILLA.value,
+                version  = enums.Product.MOZILLA.version,
+                comments = self.comments,
             )
 
 class ServiceInfo(BaseModel):
@@ -262,23 +254,16 @@ class Client(BaseModel):
                 ),
             )
 
-    def product_identifier(self) -> agency.ProductIdentifier:
-        return \
-        (
-            agency.ProductIdentifier \
-            (
-                name    = package,
-                version = self.client.version,
-            )
-            if (package := self.package())
-            else self.device.product_identifier()
-        )
+    def product(self) -> ua.Product:
+        package: typing.Optional[str] = self.package()
 
-    def product(self) -> agency.Product:
-        return agency.Product \
-        (
-            identifier = self.product_identifier(),
-            comments   = self.device.comments,
+        if package is None:
+            return self.device.product()
+
+        return ua.Product(
+            name    = self.package(),
+            version = self.client.version,
+            comments = self.device.comments
         )
 
     def headers(self, locale: Locale = None) -> dict:
