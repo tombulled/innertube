@@ -89,4 +89,3 @@ Here's a list of the awesome libraries that helped make `innertube`
 | [furl](https://pypi.org/project/furl/) | https://github.com/gruns/furl |
 | [humps](https://pypi.org/project/pyhumps/) | https://github.com/nficano/humps |
 | [parse](https://pypi.org/project/parse/) | https://github.com/r1chardj0n3s/parse |
-| [toolz](https://pypi.org/project/toolz/) | https://github.com/pytoolz/toolz |
