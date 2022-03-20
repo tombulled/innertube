@@ -1,5 +1,6 @@
 import attr
 import addict
+import requests
 
 import roster
 
@@ -22,10 +23,10 @@ class BaseClient(abc.ABC):
     session: sessions.BaseSession = attr.ib()
 
     @abc.abstractmethod
-    def __call__(self):
-        raise NotImplementedError
+    def __call__(self) -> addict.Dict:
+        ...
 
-    def __attrs_post_init__(self):
+    def __attrs_post_init__(self) -> None:
         pass
 
 
@@ -51,18 +52,20 @@ class BaseInnerTubeClient(BaseClient):
         def identity(data: addict.Dict, /) -> addict.Dict:
             return data
 
-    def __call__(self, *args, **kwargs) -> addict.Dict:
-        response = self.session.post(*args, **kwargs)
+    def __call__(self, *args: typing.Any, **kwargs: typing.Any) -> addict.Dict:
+        response: requests.Response = self.session.post(*args, **kwargs)
 
-        response_data = addict.Dict(response.json())
+        response_data: addict.Dict = addict.Dict(response.json())
 
-        fingerprint = models.ResponseFingerprint.from_response(response)
+        fingerprint: models.ResponseFingerprint = models.ResponseFingerprint.from_response(response)
 
-        parser = models.Parser.from_model(fingerprint)
+        parser: models.Parser = models.Parser.from_model(fingerprint)
 
         if response_data.responseContext:
             del response_data.responseContext
 
+        parse: typing.Callable[[addict.Dict], addict.Dict]
+        schema: models.Parser
         for parse, schema in reversed(self.parsers.items()):
             if not schema.any() or (schema & parser).any():
                 return parse(response_data)

@@ -7,9 +7,6 @@ import requests
 import ua
 import soset
 
-import functools
-import enum
-import operator
 import typing
 import http
 import http.client
@@ -44,23 +41,28 @@ class ResponseContext(BaseModel):
 
     @classmethod
     def parse(cls, response_context: addict.Dict):
-        services = addict.Dict()
+        services: addict.Dict = addict.Dict()
 
+        tracker: addict.Dict
         for tracker in response_context.serviceTrackingParams:
+            param: addict.Dict
             for param in tracker.params:
                 services[tracker.service][param.key] = param.value
 
         request_type: typing.Optional[str] = None
         request_id: typing.Optional[str] = None
 
+        key: str
+        val: str
         for key, val in services.CSI.items():
+            result: typing.Optional[parse.Result]
             if result := parse.parse("Get{id}_rid", key):
-                result = addict.Dict(result.named)
+                result: addict.Dict = addict.Dict(result.named)
 
                 request_type = result.id
                 request_id = val
 
-        context = utils.filter(
+        context: addict.Dict = utils.filter(
             function=services.CSI.yt_fn,
             browse_id=services.GFEEDBACK.browse_id,
             context=services.GFEEDBACK.context,
@@ -81,9 +83,10 @@ class ResponseContext(BaseModel):
         return cls.parse_obj(context)
 
     @classmethod
-    def from_response(cls, response: requests.Response):
-        response_data = addict.Dict(response.json())
+    def from_response(cls, response: requests.Response) -> typing.Optional['ResponseContext']:
+        response_data: addict.Dict = addict.Dict(response.json())
 
+        context: addict.Dict
         if context := response_data.responseContext:
             return cls.parse(context)
 
@@ -97,8 +100,8 @@ class ResponseFingerprint(BaseModel):
     client: typing.Optional[str]
 
     @classmethod
-    def from_response(cls, response: requests.Response):
-        context = ResponseContext.from_response(response)
+    def from_response(cls, response: requests.Response) -> 'ResponseFingerprint':
+        context: ResponseContext = ResponseContext.from_response(response)
 
         return cls(
             endpoint="/".join(furl.furl(response.url).path.segments[2:]),
@@ -118,16 +121,8 @@ class Locale(BaseModel):
     hl: str
     gl: typing.Optional[str]
 
-    def accept_language(self):
-        return ",".join(
-            filter(
-                lambda item: item is not None,
-                (
-                    self.hl,
-                    self.gl,
-                ),
-            )
-        )
+    def accept_language(self) -> str:
+        return ','.join(item for item in (self.hl, self.gl) if item is not None)
 
 
 class Error(BaseModel):
@@ -143,11 +138,11 @@ class Error(BaseModel):
         )
 
     @property
-    def reason(self):
+    def reason(self) -> str:
         return http.client.responses[self.code]
 
     @classmethod
-    def from_response(cls, response):
+    def from_response(cls, response: requests.Response) -> 'Error':
         return cls(
             code=response.status_code,
             message=f"{response.request.method} {response.url}",
@@ -169,10 +164,10 @@ class Host(BaseModel):
     domain: str
     port: typing.Optional[int]
 
-    def __str__(self):
+    def __str__(self) -> str:
         return str(self.url())
 
-    def url(self):
+    def url(self) -> furl.furl:
         return furl.furl(
             scheme=self.scheme,
             host=self.domain,
@@ -184,7 +179,7 @@ class Host(BaseModel):
 class Api(Host):
     mount: str = "/"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return str(self.url() / self.mount)
 
 
@@ -226,7 +221,7 @@ class ClientInfo(BaseModel):
             alt=enums.Alt.JSON.value,
         )
 
-    def context(self, locale: Locale = None) -> dict:
+    def context(self, locale: typing.Optional[Locale] = None) -> typing.Dict[str, str]:
         return dict(
             clientName=self.name,
             clientVersion=self.version,
@@ -265,7 +260,7 @@ class Client(BaseModel):
             name=package, version=self.client.version, comments=self.device.comments
         )
 
-    def headers(self, locale: Locale = None) -> dict:
+    def headers(self, locale: typing.Optional[Locale] = None) -> typing.Dict[str, str]:
         return utils.filter(
             {
                 str(enums.YouTubeHeader.CLIENT_NAME): self.client.id
@@ -277,7 +272,7 @@ class Client(BaseModel):
             }
         )
 
-    def adaptor(self, locale: Locale = None) -> Adaptor:
+    def adaptor(self, locale: typing.Optional[Locale] = None) -> Adaptor:
         return Adaptor(
             params=self.client.params(),
             context=self.client.context(locale=locale),

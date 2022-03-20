@@ -6,26 +6,23 @@ from . import clients
 from . import models
 from . import enums
 from . import infos
-from . import utils
 
-attrs = attr.s(
+
+@attr.s(
     auto_detect=True,
     auto_attribs=True,
 )
-
-
-@attrs
 class InnerTube(clients.InnerTubeClient):
     client: enums.Client
     locale: typing.Optional[models.Locale] = None
 
     def __repr__(self) -> str:
-        return f"{self.__class__.__name__}({self.schema.client})"
+        return f"{type(self).__name__}({self.schema.client})"
 
-    def __attrs_post_init__(self):
+    def __attrs_post_init__(self) -> None:
         super().__attrs_post_init__()
 
-        adaptor = self.info.adaptor(
+        adaptor: models.Adaptor = self.info.adaptor(
             locale=self.locale,
         )
 
@@ -34,13 +31,11 @@ class InnerTube(clients.InnerTubeClient):
         self.session.context.update(adaptor.context)
 
     @property
-    def schema(self) -> models.ClientSchema:
-        return next(
-            filter(
-                lambda schema: schema.client == self.client,
-                infos.schemas,
-            ),
-        )
+    def schema(self) -> typing.Optional[models.ClientSchema]:
+        schema: models.ClientSchema
+        for schema in infos.schemas:
+            if schema.client == self.client:
+                return schema
 
     @property
     def info(self) -> models.Client:

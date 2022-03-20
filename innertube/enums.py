@@ -4,10 +4,10 @@ import enumb
 
 
 class BaseDomain(enumb.StrEnum):
-    def reverse(self):
+    def reverse(self) -> str:
         return ".".join(reversed(self.split(".")))
 
-    def url(self):
+    def url(self) -> str:
         return str(
             furl.furl(
                 scheme=Scheme.HTTPS,
@@ -136,7 +136,6 @@ class Product(enumb.StrEnum):
     MOZILLA: str = ("Mozilla", "5.0")
 
 
-# ref: https://support.google.com/gsa/answer/6329266
 class FrontEnd(enumb.Kebab):
     YOUTUBE: str
     YOUTUBE_PEGASUS_WEB: str

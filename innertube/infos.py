@@ -282,7 +282,7 @@ schemas: typing.Tuple[models.ClientSchema] = (
     ),
 )
 
-clients = {
+clients: typing.Dict[enums.Client, models.Client] = {
     schema.client: models.Client(
         client=clients[schema.client],
         device=devices[schema.device],

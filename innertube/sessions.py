@@ -20,7 +20,7 @@ attrs = attr.s(
 
 @attrs
 class BaseSession(requests.Session):
-    def __attrs_pre_init__(self):
+    def __attrs_pre_init__(self) -> None:
         super().__init__()
 
 
@@ -40,10 +40,10 @@ class BaseUrlSession(BaseSession):
 
 @attrs
 class JSONSession(BaseUrlSession):
-    def send(self, request, **kwargs):
-        response = super().send(request, **kwargs)
+    def send(self, request: requests.Request, **kwargs: typing.Any) -> requests.Response:
+        response: requests.Response = super().send(request, **kwargs)
 
-        content_type = mediatype(response.headers.get(str(enums.Header.CONTENT_TYPE)))
+        content_type: mediatype.MediaType = mediatype.parse(response.headers.get(str(enums.Header.CONTENT_TYPE)))
 
         if content_type.subtype != mediatype.MediaTypeSubtype.JSON:
             if not response.ok:
@@ -77,7 +77,7 @@ class InnerTubeSession(JSONSession):
         init=False,
     )
 
-    def prepare_request(self, request):
+    def prepare_request(self, request: requests.Request) -> requests.PreparedRequest:
         if request.method == enums.Method.POST and self.context:
             request.json = addict.Dict(request.json or {})
 
@@ -85,14 +85,16 @@ class InnerTubeSession(JSONSession):
 
         return super().prepare_request(request)
 
-    def send(self, request, **kwargs):
-        response = super().send(request, **kwargs)
+    def send(self, request: requests.Request, **kwargs: typing.Any) -> requests.Response:
+        response: requests.Response = super().send(request, **kwargs)
 
-        response_data = addict.Dict(response.json())
+        response_data: addict.Dict = addict.Dict(response.json())
 
+        error: addict.Dict
         if error := response_data.error:
             raise errors.RequestError(models.Error.parse_obj(error))
 
+        visitor_data: typing.Union[addict.Dict, str]
         if visitor_data := response_data.responseContext.visitorData:
             self.headers[str(enums.GoogleHeader.VISITOR_ID)] = visitor_data
 
