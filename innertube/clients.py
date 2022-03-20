@@ -1,15 +1,13 @@
 import attr
 import addict
 
-import registrate
+import roster
 
 import abc
 import typing
-import functools
 
 from . import sessions
 from . import utils
-from . import enums
 from . import models
 from . import errors
 
@@ -38,19 +36,20 @@ class BaseInnerTubeClient(BaseClient):
         init=False,
     )
 
-    parsers: registrate.Register = attr.ib(
-        default=attr.Factory(
-            functools.partial(
-                registrate.Register,
-                models.Parser,
-            )
-        ),
+    parsers: roster.Register[
+        typing.Callable[[addict.Dict], addict.Dict], models.Parser
+    ] = attr.ib(
+        default=attr.Factory(roster.Register),
         repr=False,
         init=False,
     )
 
-    def __attrs_post_init__(self):
-        self.parsers()(lambda x: x)
+    def __attrs_post_init__(self) -> None:
+        parser = self.parsers.value(models.Parser)
+
+        @parser()
+        def identity(data: addict.Dict, /) -> addict.Dict:
+            return data
 
     def __call__(self, *args, **kwargs) -> addict.Dict:
         response = self.session.post(*args, **kwargs)
