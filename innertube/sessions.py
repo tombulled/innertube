@@ -12,23 +12,23 @@ from . import models
 from . import infos
 from . import errors
 
-attrs = attr.s \
-(
-    auto_detect  = True,
-    auto_attribs = True,
+attrs = attr.s(
+    auto_detect=True,
+    auto_attribs=True,
 )
+
 
 @attrs
 class BaseSession(requests.Session):
     def __attrs_pre_init__(self):
         super().__init__()
 
+
 @attrs
 class BaseUrlSession(BaseSession):
-    base_url: typing.Optional[str] = attr.ib \
-    (
-        default = None,
-        init    = False,
+    base_url: typing.Optional[str] = attr.ib(
+        default=None,
+        init=False,
     )
 
     def prepare_request(self, request: requests.Request) -> requests.PreparedRequest:
@@ -36,6 +36,7 @@ class BaseUrlSession(BaseSession):
             request.url = urllib.parse.urljoin(self.base_url, request.url)
 
         return super().prepare_request(request)
+
 
 @attrs
 class JSONSession(BaseUrlSession):
@@ -48,37 +49,32 @@ class JSONSession(BaseUrlSession):
             if not response.ok:
                 raise errors.RequestError(models.Error.from_response(response))
 
-            raise errors.ResponseError \
-            (
-                'Expected response of type {expected_type!r}, got {actual_type!r}'.format \
-                (
-                    expected_type = mediatype.MediaType \
-                    (
-                        type    = mediatype.MediaTypeType.APPLICATION,
-                        subtype = mediatype.MediaTypeSubtype.JSON,
+            raise errors.ResponseError(
+                "Expected response of type {expected_type!r}, got {actual_type!r}".format(
+                    expected_type=mediatype.MediaType(
+                        type=mediatype.MediaTypeType.APPLICATION,
+                        subtype=mediatype.MediaTypeSubtype.JSON,
                     ).string(),
-                    actual_type = content_type.string \
-                    (
-                        suffix     = False,
-                        parameters = False,
+                    actual_type=content_type.string(
+                        suffix=False,
+                        parameters=False,
                     ),
                 ),
             )
 
         return response
 
+
 @attrs
 class InnerTubeSession(JSONSession):
-    base_url: str = attr.ib \
-    (
-        default = str(infos.apis[enums.Host.YOUTUBEI]),
-        init    = False,
+    base_url: str = attr.ib(
+        default=str(infos.apis[enums.Host.YOUTUBEI]),
+        init=False,
     )
 
-    context: dict = attr.ib \
-    (
-        default = attr.Factory(dict),
-        init    = False,
+    context: dict = attr.ib(
+        default=attr.Factory(dict),
+        init=False,
     )
 
     def prepare_request(self, request):
@@ -94,10 +90,10 @@ class InnerTubeSession(JSONSession):
 
         response_data = addict.Dict(response.json())
 
-        if (error := response_data.error):
+        if error := response_data.error:
             raise errors.RequestError(models.Error.parse_obj(error))
 
-        if (visitor_data := response_data.responseContext.visitorData):
+        if visitor_data := response_data.responseContext.visitorData:
             self.headers[str(enums.GoogleHeader.VISITOR_ID)] = visitor_data
 
         return response
