@@ -19,7 +19,7 @@ parse = "^1.19.0"
 attrs = "^21.2.0"
 soset = "^0.1.0"
 enumb = "^0.1.5"
-mediatype = "^0.1.5"
+mediatype = "^0.1.6"
 ua = "^0.1.5"
 roster = "^0.1.8"
 
