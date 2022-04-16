@@ -441,7 +441,7 @@ parse = ">=1.19.0,<2.0.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "545b3b954456ca98bb8128a6ad1a72a4c06568470aadf8ae32de74f608890698"
+content-hash = "e3ef14f8f47887af6a79f3ddb04eeeb1d59eb692eafbd46a2c0200b670be7d62"
 
 [metadata.files]
 addict = [
