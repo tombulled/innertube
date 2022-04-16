@@ -72,7 +72,9 @@ class InnerTubeSession(JSONSession):
 
         error: addict.Dict
         if error := response_data.error:
-            raise errors.RequestError(models.Error.parse_obj(error))
+            raise errors.RequestError(
+                models.Error(code=error.code, message=error.message)
+            )
 
         visitor_data: Union[addict.Dict, str]
         if visitor_data := response_data.responseContext.visitorData:

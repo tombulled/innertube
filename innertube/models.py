@@ -1,42 +1,41 @@
+import dataclasses
 import http
 import http.client
-from typing import Dict, List, Optional
+from typing import Dict, Iterable, List, Optional, Set
 
 import addict
 import furl
 import httpx
 import parse
-import pydantic
-import soset
 import ua
 from typing_extensions import Self
 
 from . import enums, utils
 
 
-class BaseModel(pydantic.BaseModel):
-    pass
+@dataclasses.dataclass
+class ResponseContext:
+    @dataclasses.dataclass
+    class Request:
+        type: Optional[str] = None
+        id: Optional[str] = None
 
+    @dataclasses.dataclass
+    class Client:
+        name: Optional[str] = None
+        version: Optional[str] = None
 
-class ResponseContext(BaseModel):
-    class Request(BaseModel):
-        type: Optional[str]
-        id: Optional[str]
+    @dataclasses.dataclass
+    class Flags:
+        logged_in: Optional[bool] = None
 
-    class Client(BaseModel):
-        name: Optional[str]
-        version: Optional[str]
-
-    class Flags(BaseModel):
-        logged_in: Optional[bool]
-
-    function: Optional[str]
-    browse_id: Optional[str]
-    context: Optional[str]
-    visitor_data: Optional[str]
-    client: Optional[Client] = pydantic.Field(default_factory=Client)
-    request: Optional[Request] = pydantic.Field(default_factory=Request)
-    flags: Optional[Flags] = pydantic.Field(default_factory=Flags)
+    function: Optional[str] = None
+    browse_id: Optional[str] = None
+    context: Optional[str] = None
+    visitor_data: Optional[str] = None
+    client: Optional[Client] = dataclasses.field(default_factory=Client)
+    request: Optional[Request] = dataclasses.field(default_factory=Request)
+    flags: Optional[Flags] = dataclasses.field(default_factory=Flags)
 
     @classmethod
     def parse(cls, response_context: addict.Dict):
@@ -61,25 +60,24 @@ class ResponseContext(BaseModel):
                 request_type = result.id
                 request_id = val
 
-        context: addict.Dict = utils.filter(
-            function=services.CSI.yt_fn,
-            browse_id=services.GFEEDBACK.browse_id,
-            context=services.GFEEDBACK.context,
-            visitor_data=response_context.visitorData,
-            request=utils.filter(
-                type=request_type,
-                id=request_id,
+        return cls(
+            function=services.CSI.yt_fn or None,
+            browse_id=services.GFEEDBACK.browse_id or None,
+            context=services.GFEEDBACK.context or None,
+            visitor_data=response_context.visitorData or None,
+            request=cls.Request(
+                type=request_type or None,
+                id=request_id or None,
             ),
-            client=utils.filter(
-                name=services.CSI.c,
-                version=services.CSI.cver,
+            client=cls.Client(
+                name=services.CSI.c or None,
+                version=services.CSI.cver or None,
             ),
-            flags=utils.filter(
-                logged_in=(value := services.GFEEDBACK.logged_in) and bool(int(value)),
+            flags=cls.Flags(
+                logged_in=(value := services.GFEEDBACK.logged_in or None)
+                and bool(int(value)),
             ),
         )
-
-        return cls.parse_obj(context)
 
     @classmethod
     def from_response(cls, response: httpx.Response) -> Optional[Self]:
@@ -90,13 +88,14 @@ class ResponseContext(BaseModel):
             return cls.parse(context)
 
 
-class ResponseFingerprint(BaseModel):
-    endpoint: Optional[str]
-    request: Optional[str]
-    function: Optional[str]
-    browse_id: Optional[str]
-    context: Optional[str]
-    client: Optional[str]
+@dataclasses.dataclass
+class ResponseFingerprint:
+    endpoint: Optional[str] = None
+    request: Optional[str] = None
+    function: Optional[str] = None
+    browse_id: Optional[str] = None
+    context: Optional[str] = None
+    client: Optional[str] = None
 
     @classmethod
     def from_response(cls, response: httpx.Response) -> Self:
@@ -112,19 +111,78 @@ class ResponseFingerprint(BaseModel):
         )
 
 
-class Parser(soset.Sets[ResponseFingerprint]):
-    pass
+@dataclasses.dataclass
+class Parser:
+    endpoint: Set[str] = dataclasses.field(default_factory=set)
+    request: Set[str] = dataclasses.field(default_factory=set)
+    function: Set[str] = dataclasses.field(default_factory=set)
+    browse_id: Set[str] = dataclasses.field(default_factory=set)
+    context: Set[str] = dataclasses.field(default_factory=set)
+    client: Set[str] = dataclasses.field(default_factory=set)
+
+    @classmethod
+    def from_response_fingerprints(
+        cls, *response_fingerprints: ResponseFingerprint
+    ) -> Self:
+        parser: Self = cls()
+
+        response_fingerprint: ResponseFingerprint
+        for response_fingerprint in response_fingerprints:
+            key: str
+            value: str
+            for key, value in dataclasses.asdict(response_fingerprint).items():
+                if value is not None:
+                    getattr(parser, key).add(value)
+
+        return parser
+
+    def keys(self) -> Iterable[str]:
+        return dataclasses.asdict(self).keys()
+
+    def values(self) -> Iterable[str]:
+        return dataclasses.asdict(self).values()
+
+    def any(self) -> bool:
+        return any(self.values())
+
+    def all(self) -> bool:
+        return all(self.values())
+
+    def intersect(self, rhs: Self) -> Self:
+        parser: Self = type(self)()
+
+        key: str
+        value: str
+        for key, value in dataclasses.asdict(self).items():
+            if value in getattr(rhs, key):
+                getattr(parser, key).add(value)
+
+        return parser
+
+    def union(self, rhs: Self) -> Self:
+        parser: Self = type(self)()
+
+        child: Self
+        for child in (self, rhs):
+            key: str
+            value: str
+            for key, value in dataclasses.asdict(child).items():
+                getattr(parser, key).add(value)
+
+        return parser
 
 
-class Locale(BaseModel):
+@dataclasses.dataclass
+class Locale:
     hl: str
-    gl: Optional[str]
+    gl: Optional[str] = None
 
     def accept_language(self) -> str:
         return ",".join(item for item in (self.hl, self.gl) if item is not None)
 
 
-class Error(BaseModel):
+@dataclasses.dataclass
+class Error:
     code: http.HTTPStatus
     message: str
 
@@ -148,20 +206,23 @@ class Error(BaseModel):
         )
 
 
+@dataclasses.dataclass
 class InnerTubeError(Error):
     status: enums.ErrorStatus
 
 
-class Adaptor(BaseModel):
+@dataclasses.dataclass
+class Adaptor:
     params: dict
     headers: dict
     context: dict
 
 
-class Host(BaseModel):
-    scheme: str = enums.Scheme.HTTPS
+@dataclasses.dataclass
+class Host:
     domain: str
-    port: Optional[int]
+    scheme: str = enums.Scheme.HTTPS
+    port: Optional[int] = None
 
     def __str__(self) -> str:
         return str(self.url())
@@ -175,6 +236,7 @@ class Host(BaseModel):
         )
 
 
+@dataclasses.dataclass
 class Api(Host):
     mount: str = "/"
 
@@ -182,7 +244,8 @@ class Api(Host):
         return str(self.url() / self.mount)
 
 
-class DeviceInfo(BaseModel):
+@dataclasses.dataclass
+class DeviceInfo:
     identifier: str
     family: enums.DeviceFamily
     comments: List[str]
@@ -196,7 +259,8 @@ class DeviceInfo(BaseModel):
             )
 
 
-class ServiceInfo(BaseModel):
+@dataclasses.dataclass
+class ServiceInfo:
     domain: str
 
     def host(self) -> Host:
@@ -205,14 +269,15 @@ class ServiceInfo(BaseModel):
         )
 
 
-class ClientInfo(BaseModel):
+@dataclasses.dataclass
+class ClientInfo:
     name: str
     version: str
     key: str
-    id: Optional[int]
-    project: Optional[str]
-    client: Optional[str]
-    screen: Optional[str]
+    id: Optional[int] = None
+    project: Optional[str] = None
+    client: Optional[str] = None
+    screen: Optional[str] = None
 
     def params(self) -> dict:
         return dict(
@@ -228,13 +293,15 @@ class ClientInfo(BaseModel):
         )
 
 
-class ClientSchema(BaseModel):
+@dataclasses.dataclass
+class ClientSchema:
     client: enums.Client
     device: enums.Device
     service: enums.Service
 
 
-class Client(BaseModel):
+@dataclasses.dataclass
+class Client:
     client: ClientInfo
     device: DeviceInfo
     service: ServiceInfo

@@ -57,7 +57,7 @@ class BaseInnerTubeClient(BaseClient):
             models.ResponseFingerprint.from_response(response)
         )
 
-        parser: models.Parser = models.Parser.from_model(fingerprint)
+        parser: models.Parser = models.Parser.from_response_fingerprints(fingerprint)
 
         if response_data.responseContext:
             del response_data.responseContext
@@ -65,7 +65,7 @@ class BaseInnerTubeClient(BaseClient):
         parse: typing.Callable[[addict.Dict], addict.Dict]
         schema: models.Parser
         for parse, schema in reversed(self.parsers.items()):
-            if not schema.any() or (schema & parser).any():
+            if not schema.any() or schema.intersect(parser).any():
                 return parse(response_data)
 
         raise errors.NoParserFound(
