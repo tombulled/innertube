@@ -98,7 +98,7 @@ class ResponseFingerprint:
     client: Optional[str] = None
 
     @classmethod
-    def from_response(cls, response: httpx.Response) -> Self:
+    def from_response(cls, response: httpx.Response, /) -> Self:
         context: ResponseContext = ResponseContext.from_response(response)
 
         return cls(
