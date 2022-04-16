@@ -1,18 +1,17 @@
-import addict
-import pydantic
-import furl
-import parse
-import requests
-
-import ua
-import soset
-
-import typing
 import http
 import http.client
+from typing import Dict, List, Optional
 
-from . import enums
-from . import utils
+import addict
+import furl
+import httpx
+import parse
+import pydantic
+import soset
+import ua
+from typing_extensions import Self
+
+from . import enums, utils
 
 
 class BaseModel(pydantic.BaseModel):
@@ -21,23 +20,23 @@ class BaseModel(pydantic.BaseModel):
 
 class ResponseContext(BaseModel):
     class Request(BaseModel):
-        type: typing.Optional[str]
-        id: typing.Optional[str]
+        type: Optional[str]
+        id: Optional[str]
 
     class Client(BaseModel):
-        name: typing.Optional[str]
-        version: typing.Optional[str]
+        name: Optional[str]
+        version: Optional[str]
 
     class Flags(BaseModel):
-        logged_in: typing.Optional[bool]
+        logged_in: Optional[bool]
 
-    function: typing.Optional[str]
-    browse_id: typing.Optional[str]
-    context: typing.Optional[str]
-    visitor_data: typing.Optional[str]
-    client: typing.Optional[Client] = pydantic.Field(default_factory=Client)
-    request: typing.Optional[Request] = pydantic.Field(default_factory=Request)
-    flags: typing.Optional[Flags] = pydantic.Field(default_factory=Flags)
+    function: Optional[str]
+    browse_id: Optional[str]
+    context: Optional[str]
+    visitor_data: Optional[str]
+    client: Optional[Client] = pydantic.Field(default_factory=Client)
+    request: Optional[Request] = pydantic.Field(default_factory=Request)
+    flags: Optional[Flags] = pydantic.Field(default_factory=Flags)
 
     @classmethod
     def parse(cls, response_context: addict.Dict):
@@ -49,13 +48,13 @@ class ResponseContext(BaseModel):
             for param in tracker.params:
                 services[tracker.service][param.key] = param.value
 
-        request_type: typing.Optional[str] = None
-        request_id: typing.Optional[str] = None
+        request_type: Optional[str] = None
+        request_id: Optional[str] = None
 
         key: str
         val: str
         for key, val in services.CSI.items():
-            result: typing.Optional[parse.Result]
+            result: Optional[parse.Result]
             if result := parse.parse("Get{id}_rid", key):
                 result: addict.Dict = addict.Dict(result.named)
 
@@ -83,7 +82,7 @@ class ResponseContext(BaseModel):
         return cls.parse_obj(context)
 
     @classmethod
-    def from_response(cls, response: requests.Response) -> typing.Optional['ResponseContext']:
+    def from_response(cls, response: httpx.Response) -> Optional[Self]:
         response_data: addict.Dict = addict.Dict(response.json())
 
         context: addict.Dict
@@ -92,15 +91,15 @@ class ResponseContext(BaseModel):
 
 
 class ResponseFingerprint(BaseModel):
-    endpoint: typing.Optional[str]
-    request: typing.Optional[str]
-    function: typing.Optional[str]
-    browse_id: typing.Optional[str]
-    context: typing.Optional[str]
-    client: typing.Optional[str]
+    endpoint: Optional[str]
+    request: Optional[str]
+    function: Optional[str]
+    browse_id: Optional[str]
+    context: Optional[str]
+    client: Optional[str]
 
     @classmethod
-    def from_response(cls, response: requests.Response) -> 'ResponseFingerprint':
+    def from_response(cls, response: httpx.Response) -> Self:
         context: ResponseContext = ResponseContext.from_response(response)
 
         return cls(
@@ -119,10 +118,10 @@ class Parser(soset.Sets[ResponseFingerprint]):
 
 class Locale(BaseModel):
     hl: str
-    gl: typing.Optional[str]
+    gl: Optional[str]
 
     def accept_language(self) -> str:
-        return ','.join(item for item in (self.hl, self.gl) if item is not None)
+        return ",".join(item for item in (self.hl, self.gl) if item is not None)
 
 
 class Error(BaseModel):
@@ -142,7 +141,7 @@ class Error(BaseModel):
         return http.client.responses[self.code]
 
     @classmethod
-    def from_response(cls, response: requests.Response) -> 'Error':
+    def from_response(cls, response: httpx.Response) -> Self:
         return cls(
             code=response.status_code,
             message=f"{response.request.method} {response.url}",
@@ -162,7 +161,7 @@ class Adaptor(BaseModel):
 class Host(BaseModel):
     scheme: str = enums.Scheme.HTTPS
     domain: str
-    port: typing.Optional[int]
+    port: Optional[int]
 
     def __str__(self) -> str:
         return str(self.url())
@@ -186,9 +185,9 @@ class Api(Host):
 class DeviceInfo(BaseModel):
     identifier: str
     family: enums.DeviceFamily
-    comments: typing.List[str]
+    comments: List[str]
 
-    def product(self) -> typing.Optional[ua.Product]:
+    def product(self) -> Optional[ua.Product]:
         if self.family == enums.DeviceFamily.WEB:
             return ua.Product(
                 name=enums.Product.MOZILLA.value,
@@ -210,10 +209,10 @@ class ClientInfo(BaseModel):
     name: str
     version: str
     key: str
-    id: typing.Optional[int]
-    project: typing.Optional[str]
-    client: typing.Optional[str]
-    screen: typing.Optional[str]
+    id: Optional[int]
+    project: Optional[str]
+    client: Optional[str]
+    screen: Optional[str]
 
     def params(self) -> dict:
         return dict(
@@ -221,7 +220,7 @@ class ClientInfo(BaseModel):
             alt=enums.Alt.JSON.value,
         )
 
-    def context(self, locale: typing.Optional[Locale] = None) -> typing.Dict[str, str]:
+    def context(self, locale: Optional[Locale] = None) -> Dict[str, str]:
         return dict(
             clientName=self.name,
             clientVersion=self.version,
@@ -240,7 +239,7 @@ class Client(BaseModel):
     device: DeviceInfo
     service: ServiceInfo
 
-    def package(self) -> typing.Optional[str]:
+    def package(self) -> Optional[str]:
         if self.client.project:
             return ".".join(
                 (
@@ -251,7 +250,7 @@ class Client(BaseModel):
             )
 
     def product(self) -> ua.Product:
-        package: typing.Optional[str] = self.package()
+        package: Optional[str] = self.package()
 
         if package is None:
             return self.device.product()
@@ -260,7 +259,7 @@ class Client(BaseModel):
             name=package, version=self.client.version, comments=self.device.comments
         )
 
-    def headers(self, locale: typing.Optional[Locale] = None) -> typing.Dict[str, str]:
+    def headers(self, locale: Optional[Locale] = None) -> Dict[str, str]:
         return utils.filter(
             {
                 str(enums.YouTubeHeader.CLIENT_NAME): self.client.id
@@ -272,7 +271,7 @@ class Client(BaseModel):
             }
         )
 
-    def adaptor(self, locale: typing.Optional[Locale] = None) -> Adaptor:
+    def adaptor(self, locale: Optional[Locale] = None) -> Adaptor:
         return Adaptor(
             params=self.client.params(),
             context=self.client.context(locale=locale),

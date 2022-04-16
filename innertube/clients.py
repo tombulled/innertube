@@ -1,16 +1,12 @@
-import attr
-import addict
-import requests
-
-import roster
-
 import abc
 import typing
 
-from . import sessions
-from . import utils
-from . import models
-from . import errors
+import addict
+import attr
+import httpx
+import roster
+
+from . import errors, models, sessions, utils
 
 attrs = attr.s(
     auto_detect=True,
@@ -53,11 +49,13 @@ class BaseInnerTubeClient(BaseClient):
             return data
 
     def __call__(self, *args: typing.Any, **kwargs: typing.Any) -> addict.Dict:
-        response: requests.Response = self.session.post(*args, **kwargs)
+        response: httpx.Response = self.session.post(*args, **kwargs)
 
         response_data: addict.Dict = addict.Dict(response.json())
 
-        fingerprint: models.ResponseFingerprint = models.ResponseFingerprint.from_response(response)
+        fingerprint: models.ResponseFingerprint = (
+            models.ResponseFingerprint.from_response(response)
+        )
 
         parser: models.Parser = models.Parser.from_model(fingerprint)
 
