@@ -27,7 +27,7 @@ class InnerTube(clients.InnerTubeClient):
         )
 
         self.session.headers.update(adaptor.headers)
-        self.session.params.update(adaptor.params)
+        self.session.params = self.session.params.merge(adaptor.params)
         self.session.context.update(adaptor.context)
 
     @property
