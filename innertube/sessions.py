@@ -21,7 +21,7 @@ class JSONSession(BaseSession):
         )
 
         if content_type.subtype != mediatype.MediaTypeSubtype.JSON:
-            if not response.ok:
+            if not response.is_success:
                 raise errors.RequestError(models.Error.from_response(response))
 
             raise errors.ResponseError(
@@ -29,6 +29,8 @@ class JSONSession(BaseSession):
                     expected_type=mediatype.MediaType(
                         type=mediatype.MediaTypeType.APPLICATION,
                         subtype=mediatype.MediaTypeSubtype.JSON,
+                        suffix=None,
+                        parameters=None,
                     ).string(),
                     actual_type=content_type.string(
                         suffix=False,
