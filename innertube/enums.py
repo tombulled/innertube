@@ -1,72 +1,4 @@
-import furl
-
 import enumb
-
-
-class BaseDomain(enumb.StrEnum):
-    def reverse(self) -> str:
-        return ".".join(reversed(self.split(".")))
-
-    def url(self) -> str:
-        return str(
-            furl.furl(
-                scheme=Scheme.HTTPS,
-                host=self,
-                path="/",
-            )
-        )
-
-
-class Domain(BaseDomain):
-    _generate_next_value_ = lambda name, *_: name.replace("_", "").lower() + ".com"
-
-    GOOGLE: str
-    GOOGLE_APIS: str
-    YOUTUBE: str
-    YOUTUBE_KIDS: str
-
-
-class Host(BaseDomain):
-    YOUTUBEI: str = f"youtubei.{Domain.GOOGLE_APIS}"
-    SUGGEST_QUERIES: str = f"suggestqueries.{Domain.GOOGLE}"
-    YOUTUBE: str = f"www.{Domain.YOUTUBE}"
-    YOUTUBE_MUSIC: str = f"music.{Domain.YOUTUBE}"
-    YOUTUBE_STUDIO: str = f"studio.{Domain.YOUTUBE}"
-    YOUTUBE_KIDS: str = f"www.{Domain.YOUTUBE_KIDS}"
-    YOUTUBE_MOBILE: str = f"m.{Domain.YOUTUBE}"
-
-
-class ClientFormFactor(enumb.Macro):
-    UNKNOWN_FORM_FACTOR: str
-
-
-class ConnectionType(enumb.Macro):
-    CONN_CELLULAR_4G: str
-
-
-class PlayerType(enumb.Macro):
-    UNIPLAYER: str
-
-
-class UserInterfaceTheme(enumb.Macro):
-    LIGHT: str = "USER_INTERFACE_THEME_LIGHT"
-
-
-class OperatingSystem(enumb.Pascal):
-    ANDROID: str
-
-
-class Platform(enumb.Macro):
-    MOBILE: str
-    ANDROID: str
-
-
-class DeviceMake(enumb.Pascal):
-    GOOGLE: str
-
-
-class DeviceModel(enumb.Title):
-    NEXUS_5: str
 
 
 class Request(enumb.Pascal):
@@ -101,12 +33,19 @@ class RequestContext(enumb.Snake):
 class BrowseId(enumb.StrEnum):
     _generate_next_value_ = lambda name, *_: f"FE{name.lower()}"
 
+    # Youtube Music
     MUSIC_EXPLORE: str
     MUSIC_NEW_RELEASES: str
     MUSIC_CHARTS: str
     MUSIC_HOME: str
     MUSIC_MOODS_AND_GENRES: str
     MUSIC_MOODS_AND_GENRES_CATEGORY: str
+    # YouTube
+    WHAT_TO_WATCH: str
+    SHORTS: str
+    LIBRARY: str
+    # YouTube Kids
+    KIDS_HOME: str
 
 
 class ErrorStatus(enumb.Macro):
@@ -114,91 +53,6 @@ class ErrorStatus(enumb.Macro):
     INVALID_ARGUMENT: str
     FAILED_PRECONDITION: str
     NOT_FOUND: str
-
-
-class Company(enumb.Pascal):
-    GOOGLE: str
-
-
-class ProductName(enumb.Pascal):
-    MOZILLA: str
-
-
-class Product(enumb.StrEnum):
-    def __new__(cls, name, version):
-        obj = str.__new__(cls, name)
-
-        obj._value_ = name
-        obj.version = version
-
-        return obj
-
-    MOZILLA: str = ("Mozilla", "5.0")
-
-
-class FrontEnd(enumb.Kebab):
-    YOUTUBE: str
-    YOUTUBE_PEGASUS_WEB: str
-    YOUTUBE_MUSIC_ANDROID: str
-    YOUTUBE_MUSIC_IOS: str
-    YOUTUBE_LR: str
-    YOUTUBE_REDUCED: str
-
-
-class Device(enumb.Lower):
-    WEB: str
-    ANDROID: str
-    IOS: str
-    LR: str
-
-
-class DeviceFamily(enumb.Upper):
-    WEB: str
-    MOBILE: str
-
-
-class Service(enumb.Kebab):
-    YOUTUBE: str
-    YOUTUBE_MUSIC: str
-    YOUTUBE_KIDS: str
-    YOUTUBE_STUDIO: str
-
-
-class Client(enumb.Macro):
-    WEB: str
-    WEB_REMIX: str
-    WEB_KIDS: str
-    WEB_CREATOR: str
-    ANDROID: str
-    ANDROID_MUSIC: str
-    ANDROID_KIDS: str
-    ANDROID_CREATOR: str
-    IOS: str
-    IOS_MUSIC: str
-    IOS_KIDS: str
-    IOS_CREATOR: str
-    TVHTML5: str
-    MWEB: str
-    WEB_EMBEDDED_PLAYER: str
-    ANDROID_EMBEDDED_PLAYER: str
-    IOS_MESSAGES_EXTENSION: str
-
-
-class ClientId(enumb.IntEnum):
-    WEB: int = 1
-    MWEB: int = 2
-    ANDROID: int = 3
-    IOS: int = 5
-    ANDROID_CREATOR: int = 14
-    IOS_CREATOR: int = 15
-    ANDROID_MUSIC: int = 21
-    IOS_MUSIC: int = 26
-    ANDROID_EMBEDDED_PLAYER: int = 55
-    WEB_REMIX: int = 62
-    IOS_MESSAGES_EXTENSION: int = 66
-    WEB_KIDS: int = 67
-    WEB_CREATOR: int = 76
-    WEB_EMBEDDED_PLAYER: int = 56
 
 
 class ClientScreen(enumb.Macro):

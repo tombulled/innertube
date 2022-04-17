@@ -4,7 +4,7 @@ import addict
 import httpx
 import mediatype
 
-from . import enums, errors, infos, models
+from . import enums, errors, models
 
 
 class BaseSession(httpx.Client):
@@ -48,7 +48,7 @@ class InnerTubeSession(JSONSession):
     def __init__(
         self,
         *args,
-        base_url: str = str(infos.apis[enums.Host.YOUTUBEI]),
+        base_url: str = "https://youtubei.googleapis.com/youtubei/v1/",
         context: Optional[dict] = None,
         **kwargs,
     ):

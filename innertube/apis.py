@@ -1,11 +1,8 @@
-import attr
-
 import typing
 
-from . import clients
-from . import models
-from . import enums
-from . import infos
+import attr
+
+from . import clients, config, models
 
 
 @attr.s(
@@ -13,30 +10,24 @@ from . import infos
     auto_attribs=True,
 )
 class InnerTube(clients.InnerTubeClient):
-    client: enums.Client
+    client: str
     locale: typing.Optional[models.Locale] = None
 
     def __repr__(self) -> str:
-        return f"{type(self).__name__}({self.schema.client})"
+        return f"{type(self).__name__}({self.client!r})"
 
     def __attrs_post_init__(self) -> None:
         super().__attrs_post_init__()
 
-        adaptor: models.Adaptor = self.info.adaptor(
-            locale=self.locale,
-        )
+        context: models.Context = self.context
 
-        self.session.headers.update(adaptor.headers)
-        self.session.params = self.session.params.merge(adaptor.params)
-        self.session.context.update(adaptor.context)
+        self.session.headers.update(context.headers())
+        self.session.params = self.session.params.merge(context.params())
+        self.session.context.update(context.context())
 
     @property
-    def schema(self) -> typing.Optional[models.ClientSchema]:
-        schema: models.ClientSchema
-        for schema in infos.schemas:
-            if schema.client == self.client:
-                return schema
-
-    @property
-    def info(self) -> models.Client:
-        return infos.clients[self.client]
+    def context(self) -> typing.Optional[models.Context]:
+        context: models.Context
+        for context in config.contexts.values():
+            if context.client.name == self.client:
+                return context
