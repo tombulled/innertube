@@ -1,252 +1,189 @@
-from typing import Dict
+from typing import Dict, List
 
 from .models import Client, Context, Platform, Service
 
 services: Dict[str, Service] = dict(
     youtube=Service(
-        name="YouTube",
-        domain="www.youtube.com",
+        url="https://www.youtube.com/",
     ),
     youtube_music=Service(
-        name="YouTube Music",
-        domain="music.youtube.com",
+        url="https://music.youtube.com/",
     ),
     youtube_kids=Service(
-        name="YouTube Kids",
-        domain="www.youtubekids.com",
+        url="https://www.youtubekids.com/",
     ),
     youtube_studio=Service(
-        name="YouTube Studio",
-        domain="studio.youtube.com",
-    ),
-    youtube_tv=Service(
-        name="YouTube TV",
-        domain="tv.youtube.com",
+        url="https://studio.youtube.com/",
     ),
 )
 
 platforms: Dict[str, Platform] = dict(
     web=Platform(
-        name="Web",
         user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.157 Safari/537.36",
     ),
     android=Platform(
-        name="Android",
         user_agent="Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Mobile Safari/537.36",
     ),
     ios=Platform(
-        name="iOS",
         user_agent="Mozilla/5.0 (iPhone; CPU iPhone OS 15_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) FxiOS/98.2  Mobile/15E148 Safari/605.1.15",
     ),
     tv=Platform(
-        name="TV",
         user_agent="Mozilla/5.0 (PlayStation 4 5.55) AppleWebKit/601.2 (KHTML, like Gecko)",
     ),
 )
 
-clients: Dict[str, Client] = dict(
-    mweb=Client(
-        name="MWEB",
-        version="2.20211214.00.00",
-        key="AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8",
-        id=2,
-        front_end="youtube-reduced",
-    ),
-    web=Client(
-        name="WEB",
-        version="2.20210223.09.00",
-        key="AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8",
-        id=1,
-        front_end="youtube",
-    ),
-    web_remix=Client(
-        name="WEB_REMIX",
-        version="0.1",
-        key="AIzaSyC9XL3ZjWddXya6X74dJoCTL-WEYFDNX30",
-        id=62,
-    ),
-    web_kids=Client(
-        name="WEB_KIDS",
-        version="2.20220414.00.00",
-        key="AIzaSyBbZV_fZ3an51sF-mvs5w37OqqbsTOzwtU",
-        id=76,
-        front_end="youtube-pegasus-web",
-    ),
-    web_creator=Client(
-        name="WEB_CREATOR",
-        version="1.20210223.01.00",
-        key="AIzaSyBUPetSUmoZL-OhlxA7wSac5XinrygCqMo",
-        id=67,
-    ),
-    web_embedded_player=Client(
-        name="WEB_EMBEDDED_PLAYER",
-        version="1.20220413.01.00",
-        key="AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8",
-        id=56,
-    ),
-    android=Client(
-        name="ANDROID",
-        version="16.07.34",
-        key="AIzaSyA8eiZmM1FaDVjRy-df2KTyQ_vz_yYM39w",
-        id=3,
-        project="youtube",
-        front_end="youtube-android",
-    ),
-    android_music=Client(
-        name="ANDROID_MUSIC",
-        version="4.16.51",
-        key="AIzaSyAOghZGza2MQSZkY_zfZ370N-PUdXEo8AI",
-        id=21,
-        project="apps.youtube.music",
-        front_end="youtube-music-android",
-    ),
-    android_kids=Client(
-        name="ANDROID_KIDS",
-        version="6.02.3",
-        key="AIzaSyAxxQKWYcEX8jHlflLt2Qcbb-rlolzBhhk",
-        project="apps.youtube.kids",
-    ),
-    android_creator=Client(
-        name="ANDROID_CREATOR",
-        version="21.06.103",
-        key="AIzaSyD_qjV8zaaUMehtLkrKFgVeSX_Iqbtyws8",
-        id=14,
-        project="apps.youtube.creator",
-    ),
-    android_embedded_player=Client(
-        name="ANDROID_EMBEDDED_PLAYER",
-        version="16.20",
-        key="AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8",
-        id=55,
-    ),
-    ios=Client(
-        name="IOS",
-        version="17.14.2",
-        key="AIzaSyB-63vPrdThhKuerbB2N_l7Kwwcxj6yUAc",
-        id=5,
-        project="youtube",
-        front_end="youtube-ios",
-    ),
-    ios_music=Client(
-        name="IOS_MUSIC",
-        version="4.16.1",
-        key="AIzaSyBAETezhkwP0ZWA02RsqT1zu78Fpt0bC_s",
-        id=26,
-        project="youtubemusic",
-        front_end="youtube-music-ios",
-    ),
-    ios_kids=Client(
-        name="IOS_KIDS",
-        version="5.42.2",
-        key="AIzaSyA6_JWXwHaVBQnoutCv1-GvV97-rJ949Bc",
-        project="youtubekids",
-        front_end="ytios-pegasus",
-    ),
-    ios_creator=Client(
-        name="IOS_CREATOR",
-        version="20.47.100",
-        key="AIzaSyAPyF5GfQI-kOa6nZwO8EsNrGdEx9bioNs",
-        id=15,
-        project="ytcreator",
-    ),
-    ios_messages_extension=Client(
-        name="IOS_MESSAGES_EXTENSION",
-        version="16.20",
-        key="AIzaSyDCU8hByM-4DrUqRUYnGn-3llEO78bcxq8",
-        id=66,
-    ),
-    tvhtml5=Client(
-        name="TVHTML5",
-        version="7.20210224.00.00",
-        key="AIzaSyDCU8hByM-4DrUqRUYnGn-3llEO78bcxq8",
-        front_end="youtube-lr",
-    ),
-)
-
-contexts: Dict[str, Context] = dict(
-    mweb=Context(
-        client=clients["mweb"],
-        platform=platforms["android"],
-        service=services["youtube"],
-    ),
-    web=Context(
-        client=clients["web"],
+contexts: List[Context] = [
+    Context(
+        client=Client(
+            name="MWEB",
+            version="2.20211214.00.00",
+            key="AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8",
+        ),
         platform=platforms["web"],
         service=services["youtube"],
     ),
-    web_remix=Context(
-        client=clients["web_remix"],
+    Context(
+        client=Client(
+            name="WEB",
+            version="2.20210223.09.00",
+            key="AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8",
+        ),
+        platform=platforms["web"],
+        service=services["youtube"],
+    ),
+    Context(
+        client=Client(
+            name="WEB_REMIX",
+            version="0.1",
+            key="AIzaSyC9XL3ZjWddXya6X74dJoCTL-WEYFDNX30",
+        ),
         platform=platforms["web"],
         service=services["youtube_music"],
     ),
-    web_kids=Context(
-        client=clients["web_kids"],
+    Context(
+        client=Client(
+            name="WEB_KIDS",
+            version="2.20220414.00.00",
+            key="AIzaSyBbZV_fZ3an51sF-mvs5w37OqqbsTOzwtU",
+        ),
+        platform=platforms["web"],
+        service=services["youtube_kids"],
+    ),
+    Context(
+        client=Client(
+            name="WEB_CREATOR",
+            version="1.20210223.01.00",
+            key="AIzaSyBUPetSUmoZL-OhlxA7wSac5XinrygCqMo",
+        ),
+        platform=platforms["web"],
+        service=services["youtube_studio"],
+    ),
+    Context(
+        client=Client(
+            name="WEB_EMBEDDED_PLAYER",
+            version="1.20220413.01.00",
+            key="AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8",
+        ),
         platform=platforms["web"],
         service=services["youtube"],
     ),
-    web_creator=Context(
-        client=clients["web_creator"],
-        platform=platforms["web"],
-        service=services["youtube"],
-    ),
-    web_embedded_player=Context(
-        client=clients["web_embedded_player"],
-        platform=platforms["web"],
-        service=services["youtube"],
-    ),
-    android=Context(
-        client=clients["android"],
+    Context(
+        client=Client(
+            name="ANDROID",
+            version="16.07.34",
+            key="AIzaSyA8eiZmM1FaDVjRy-df2KTyQ_vz_yYM39w",
+        ),
         platform=platforms["android"],
         service=services["youtube"],
     ),
-    android_music=Context(
-        client=clients["android_music"],
+    Context(
+        client=Client(
+            name="ANDROID_MUSIC",
+            version="4.16.51",
+            key="AIzaSyAOghZGza2MQSZkY_zfZ370N-PUdXEo8AI",
+        ),
         platform=platforms["android"],
         service=services["youtube_music"],
     ),
-    android_kids=Context(
-        client=clients["android_kids"],
+    Context(
+        client=Client(
+            name="ANDROID_KIDS",
+            version="6.02.3",
+            key="AIzaSyAxxQKWYcEX8jHlflLt2Qcbb-rlolzBhhk",
+        ),
         platform=platforms["android"],
         service=services["youtube_kids"],
     ),
-    android_creator=Context(
-        client=clients["android_creator"],
+    Context(
+        client=Client(
+            name="ANDROID_CREATOR",
+            version="21.06.103",
+            key="AIzaSyD_qjV8zaaUMehtLkrKFgVeSX_Iqbtyws8",
+        ),
         platform=platforms["android"],
         service=services["youtube_studio"],
     ),
-    android_embedded_player=Context(
-        client=clients["android_embedded_player"],
+    Context(
+        client=Client(
+            name="ANDROID_EMBEDDED_PLAYER",
+            version="16.20",
+            key="AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8",
+        ),
         platform=platforms["android"],
         service=services["youtube"],
     ),
-    ios=Context(
-        client=clients["ios"],
+    Context(
+        client=Client(
+            name="IOS",
+            version="17.14.2",
+            key="AIzaSyB-63vPrdThhKuerbB2N_l7Kwwcxj6yUAc",
+        ),
         platform=platforms["ios"],
         service=services["youtube"],
     ),
-    ios_music=Context(
-        client=clients["ios_music"],
+    Context(
+        client=Client(
+            name="IOS_MUSIC",
+            version="4.16.1",
+            key="AIzaSyBAETezhkwP0ZWA02RsqT1zu78Fpt0bC_s",
+        ),
         platform=platforms["ios"],
         service=services["youtube_music"],
     ),
-    ios_kids=Context(
-        client=clients["ios_kids"],
+    Context(
+        client=Client(
+            name="IOS_KIDS",
+            version="5.42.2",
+            key="AIzaSyA6_JWXwHaVBQnoutCv1-GvV97-rJ949Bc",
+        ),
         platform=platforms["ios"],
         service=services["youtube_kids"],
     ),
-    ios_creator=Context(
-        client=clients["ios_creator"],
+    Context(
+        client=Client(
+            name="IOS_CREATOR",
+            version="20.47.100",
+            key="AIzaSyAPyF5GfQI-kOa6nZwO8EsNrGdEx9bioNs",
+        ),
         platform=platforms["ios"],
         service=services["youtube_studio"],
     ),
-    ios_messages_extension=Context(
-        client=clients["ios_messages_extension"],
+    Context(
+        client=Client(
+            name="IOS_MESSAGES_EXTENSION",
+            version="16.20",
+            key="AIzaSyDCU8hByM-4DrUqRUYnGn-3llEO78bcxq8",
+        ),
         platform=platforms["ios"],
         service=services["youtube"],
     ),
-    tvhtml5=Context(
-        client=clients["tvhtml5"],
+    Context(
+        client=Client(
+            name="TVHTML5",
+            version="7.20210224.00.00",
+            key="AIzaSyDCU8hByM-4DrUqRUYnGn-3llEO78bcxq8",
+        ),
         platform=platforms["tv"],
         service=services["youtube"],
     ),
-)
+]

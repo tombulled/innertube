@@ -1,28 +1,36 @@
-from . import clients, config
-from .models import Context, Locale
+from typing import Optional
+
+from . import clients
+from .models import Client, Context, Locale, Platform, Service
 
 
 class InnerTube(clients.InnerTubeClient):
-    locale: Locale
-
     def __init__(
         self,
         client_name: str,
-        locale: Locale = Locale("en", "GB"),
+        client_version: str,
+        *,
+        api_key: Optional[str] = None,
+        user_agent: Optional[str] = None,
+        referer: Optional[str] = None,
+        locale: Optional[Locale] = None,
     ):
         super().__init__()
 
-        identifier: str = client_name.lower()
+        context: Context = Context(
+            client=Client(name=client_name, version=client_version, key=api_key),
+            platform=(
+                Platform(user_agent=user_agent) if user_agent is not None else None
+            ),
+            service=(Service(url=referer) if referer is not None else None),
+            locale=locale,
+        )
 
-        if identifier not in config.contexts:
-            raise ValueError(f"Unrecognised client {client_name!r}")
-
-        self.locale = locale
-        context: Context = config.contexts[identifier]
-
-        self.session.headers.update(context.headers())
-        self.session.params = self.session.params.merge(context.params())
-        self.session.context.update(context.context())
+        context.prepare(self.session)
 
     def __repr__(self) -> str:
-        return f"{type(self).__name__}({self.context.client.name!r})"
+        return "{cls}({client_name!r}, {client_version!r})".format(
+            cls=type(self).__name__,
+            client_name=self.session.context["clientName"],
+            client_version=self.session.context["clientVersion"],
+        )
