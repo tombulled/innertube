@@ -53,13 +53,13 @@ class Context:
     platform: Platform
     service: Service
 
-    def params(self) -> dict:
+    def params(self) -> Dict[str, str]:
         return dict(
             key=self.client.key,
-            alt=enums.Alt.JSON.value,
+            alt=str(enums.Alt.JSON),
         )
 
-    def context(self) -> dict:
+    def context(self) -> Dict[str, str]:
         return dict(
             clientName=self.client.name,
             clientVersion=self.client.version,
@@ -98,12 +98,12 @@ class ResponseContext:
     browse_id: Optional[str] = None
     context: Optional[str] = None
     visitor_data: Optional[str] = None
-    client: Optional[Client] = dataclasses.field(default_factory=Client)
-    request: Optional[Request] = dataclasses.field(default_factory=Request)
-    flags: Optional[Flags] = dataclasses.field(default_factory=Flags)
+    client: Client = dataclasses.field(default_factory=Client)
+    request: Request = dataclasses.field(default_factory=Request)
+    flags: Flags = dataclasses.field(default_factory=Flags)
 
     @classmethod
-    def parse(cls, response_context: addict.Dict):
+    def parse(cls, response_context: addict.Dict) -> Self:
         services: addict.Dict = addict.Dict()
 
         tracker: addict.Dict
@@ -120,9 +120,9 @@ class ResponseContext:
         for key, val in services.CSI.items():
             result: Optional[parse.Result]
             if result := parse.parse("Get{id}_rid", key):
-                result: addict.Dict = addict.Dict(result.named)
+                named: addict.Dict = addict.Dict(result.named)
 
-                request_type = result.id
+                request_type = named.id
                 request_id = val
 
         return cls(
@@ -148,9 +148,13 @@ class ResponseContext:
     def from_response(cls, response: httpx.Response) -> Optional[Self]:
         response_data: addict.Dict = addict.Dict(response.json())
 
+        response_context: Optional[Self] = None
+
         context: addict.Dict
         if context := response_data.responseContext:
-            return cls.parse(context)
+            response_context = cls.parse(context)
+
+        return response_context
 
 
 @dataclasses.dataclass
@@ -164,15 +168,15 @@ class ResponseFingerprint:
 
     @classmethod
     def from_response(cls, response: httpx.Response, /) -> Self:
-        context: ResponseContext = ResponseContext.from_response(response)
+        context: Optional[ResponseContext] = ResponseContext.from_response(response)
 
         return cls(
             endpoint="/".join(furl.furl(response.url).path.segments[2:]),
-            request=context.request.type,
-            function=context.function,
-            browse_id=context.browse_id,
-            context=context.context,
-            client=context.client.name,
+            request=context.request.type if context is not None else None,
+            function=context.function if context is not None else None,
+            browse_id=context.browse_id if context is not None else None,
+            context=context.context if context is not None else None,
+            client=context.client.name if context is not None else None,
         )
 
 
@@ -239,11 +243,8 @@ class Parser:
 
 @dataclasses.dataclass
 class Error:
-    code: http.HTTPStatus
+    code: int
     message: str
-
-    def __repr__(self) -> str:
-        return f"<Error [{self.code} {self.reason}]>"
 
     def __str__(self) -> str:
         return f"{self.code} {self.reason}" + (
@@ -253,6 +254,18 @@ class Error:
     @property
     def reason(self) -> str:
         return http.client.responses[self.code]
+
+    @property
+    def phrase(self) -> str:
+        return self.status.phrase
+
+    @property
+    def description(self) -> str:
+        return self.status.description
+
+    @property
+    def status(self) -> http.HTTPStatus:
+        return http.HTTPStatus(self.code)
 
     @classmethod
     def from_response(cls, response: httpx.Response) -> Self:

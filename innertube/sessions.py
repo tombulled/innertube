@@ -47,10 +47,10 @@ class InnerTubeSession(JSONSession):
 
     def __init__(
         self,
-        *args,
+        *args: Any,
         base_url: str = "https://youtubei.googleapis.com/youtubei/v1/",
         context: Optional[dict] = None,
-        **kwargs,
+        **kwargs: Any,
     ):
         super().__init__(*args, base_url=base_url, **kwargs)
 
@@ -59,7 +59,7 @@ class InnerTubeSession(JSONSession):
     def __repr__(self) -> str:
         return f"{type(self).__name__}(base_url={str(self.base_url)!r}, context={self.context})"
 
-    def build_request(self, method: str, *args, json: Any = None, **kwargs):
+    def build_request(self, method: str, *args: Any, json: Any = None, **kwargs: Any):
         if method == enums.Method.POST and self.context:
             json = addict.Dict(json or {})
 

@@ -1,5 +1,5 @@
 import abc
-import typing
+from typing import Any, Callable, List, Optional
 
 import addict
 import attr
@@ -34,7 +34,7 @@ class BaseInnerTubeClient(BaseClient):
     )
 
     parsers: roster.Register[
-        typing.Callable[[addict.Dict], addict.Dict], models.Parser
+        Callable[[addict.Dict], addict.Dict], models.Parser
     ] = attr.ib(
         default=attr.Factory(roster.Register),
         repr=False,
@@ -42,13 +42,13 @@ class BaseInnerTubeClient(BaseClient):
     )
 
     def __attrs_post_init__(self) -> None:
-        parser = self.parsers.value(models.Parser)
+        parser: Callable = self.parsers.value(models.Parser)
 
         @parser()
         def identity(data: addict.Dict, /) -> addict.Dict:
             return data
 
-    def __call__(self, *args: typing.Any, **kwargs: typing.Any) -> addict.Dict:
+    def __call__(self, *args: Any, **kwargs: Any) -> addict.Dict:
         response: httpx.Response = self.session.post(*args, **kwargs)
 
         response_data: addict.Dict = addict.Dict(response.json())
@@ -62,7 +62,7 @@ class BaseInnerTubeClient(BaseClient):
         if response_data.responseContext:
             del response_data.responseContext
 
-        parse: typing.Callable[[addict.Dict], addict.Dict]
+        parse: Callable[[addict.Dict], addict.Dict]
         schema: models.Parser
         for parse, schema in reversed(self.parsers.items()):
             if not schema.any() or schema.intersect(parser).any():
@@ -91,10 +91,10 @@ class InnerTubeClient(BaseInnerTubeClient):
 
     def browse(
         self,
-        browse_id: typing.Optional[str] = None,
+        browse_id: Optional[str] = None,
         *,
-        params: typing.Optional[str] = None,
-        continuation: typing.Optional[str] = None,
+        params: Optional[str] = None,
+        continuation: Optional[str] = None,
     ) -> addict.Dict:
         return self(
             "browse",
@@ -110,10 +110,10 @@ class InnerTubeClient(BaseInnerTubeClient):
 
     def search(
         self,
-        query: typing.Optional[str] = None,
+        query: Optional[str] = None,
         *,
-        params: typing.Optional[str] = None,
-        continuation: typing.Optional[str] = None,
+        params: Optional[str] = None,
+        continuation: Optional[str] = None,
     ) -> addict.Dict:
         return self(
             "search",
@@ -129,12 +129,12 @@ class InnerTubeClient(BaseInnerTubeClient):
 
     def next(
         self,
-        video_id: typing.Optional[str] = None,
-        playlist_id: typing.Optional[str] = None,
+        video_id: Optional[str] = None,
+        playlist_id: Optional[str] = None,
         *,
-        params: typing.Optional[str] = None,
-        index: typing.Optional[int] = None,
-        continuation: typing.Optional[str] = None,
+        params: Optional[str] = None,
+        index: Optional[int] = None,
+        continuation: Optional[str] = None,
     ) -> addict.Dict:
         return self(
             "next",
@@ -149,7 +149,7 @@ class InnerTubeClient(BaseInnerTubeClient):
 
     def music_get_search_suggestions(
         self,
-        input: typing.Optional[None] = None,
+        input: Optional[None] = None,
     ) -> addict.Dict:
         return self(
             "music/get_search_suggestions",
@@ -161,8 +161,8 @@ class InnerTubeClient(BaseInnerTubeClient):
     def music_get_queue(
         self,
         *,
-        video_ids: typing.Optional[typing.List[str]] = None,
-        playlist_id: typing.Optional[str] = None,
+        video_ids: Optional[List[str]] = None,
+        playlist_id: Optional[str] = None,
     ) -> addict.Dict:
         return self(
             "music/get_queue",
