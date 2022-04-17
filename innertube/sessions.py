@@ -60,7 +60,7 @@ class InnerTubeSession(JSONSession):
         return f"{type(self).__name__}(base_url={str(self.base_url)!r}, context={self.context})"
 
     def build_request(self, method: str, *args: Any, json: Any = None, **kwargs: Any):
-        if method == enums.Method.POST and self.context:
+        if method == "POST" and self.context:
             json = addict.Dict(json or {})
 
             json.context.client.update(self.context)
