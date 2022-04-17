@@ -50,8 +50,8 @@ class Client:
 @dataclasses.dataclass
 class Context:
     client: Client
-    platform: Platform
-    service: Service
+    platform: Optional[Platform] = None
+    service: Optional[Service] = None
 
     def params(self) -> Dict[str, str]:
         return dict(
@@ -71,9 +71,9 @@ class Context:
                 str(enums.YouTubeHeader.CLIENT_NAME): self.client.id
                 and str(self.client.id),
                 str(enums.YouTubeHeader.CLIENT_VERSION): self.client.version,
-                str(enums.Header.USER_AGENT): self.platform.user_agent,
-                str(enums.Header.REFERER): self.service.url,
-                str(enums.Header.ACCEPT_LANGUAGE): locale and locale.accept_language(),
+                str(enums.Header.USER_AGENT): self.platform.user_agent if self.platform is not None else None,
+                str(enums.Header.REFERER): self.service.url if self.service is not None else None,
+                str(enums.Header.ACCEPT_LANGUAGE): locale.accept_language() if locale is not None else None,
             }
         )
 
