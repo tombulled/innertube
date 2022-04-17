@@ -1,16 +1,81 @@
 import dataclasses
 import http
 import http.client
-from typing import Dict, Iterable, List, Optional, Set
+from typing import Dict, Iterable, Optional, Set
 
 import addict
 import furl
 import httpx
 import parse
-import ua
 from typing_extensions import Self
 
 from . import enums, utils
+
+
+@dataclasses.dataclass
+class Locale:
+    hl: str
+    gl: Optional[str] = None
+
+    def accept_language(self) -> str:
+        return ",".join(item for item in (self.hl, self.gl) if item is not None)
+
+
+@dataclasses.dataclass
+class Service:
+    name: str
+    domain: str
+
+    @property
+    def url(self) -> str:
+        return f"https://{self.domain}/"
+
+
+@dataclasses.dataclass
+class Platform:
+    name: str
+    user_agent: str
+
+
+@dataclasses.dataclass
+class Client:
+    name: str
+    version: str
+    key: str
+    id: Optional[int] = None
+    project: Optional[str] = None
+    front_end: Optional[str] = None
+
+
+@dataclasses.dataclass
+class Context:
+    client: Client
+    platform: Platform
+    service: Service
+
+    def params(self) -> dict:
+        return dict(
+            key=self.client.key,
+            alt=enums.Alt.JSON.value,
+        )
+
+    def context(self) -> dict:
+        return dict(
+            clientName=self.client.name,
+            clientVersion=self.client.version,
+        )
+
+    def headers(self, locale: Optional[Locale] = None) -> Dict[str, str]:
+        return utils.filter(
+            {
+                str(enums.YouTubeHeader.CLIENT_NAME): self.client.id
+                and str(self.client.id),
+                str(enums.YouTubeHeader.CLIENT_VERSION): self.client.version,
+                str(enums.Header.USER_AGENT): self.platform.user_agent,
+                str(enums.Header.REFERER): self.service.url,
+                str(enums.Header.ACCEPT_LANGUAGE): locale and locale.accept_language(),
+            }
+        )
 
 
 @dataclasses.dataclass
@@ -173,15 +238,6 @@ class Parser:
 
 
 @dataclasses.dataclass
-class Locale:
-    hl: str
-    gl: Optional[str] = None
-
-    def accept_language(self) -> str:
-        return ",".join(item for item in (self.hl, self.gl) if item is not None)
-
-
-@dataclasses.dataclass
 class Error:
     code: http.HTTPStatus
     message: str
@@ -209,138 +265,3 @@ class Error:
 @dataclasses.dataclass
 class InnerTubeError(Error):
     status: enums.ErrorStatus
-
-
-@dataclasses.dataclass
-class Adaptor:
-    params: dict
-    headers: dict
-    context: dict
-
-
-@dataclasses.dataclass
-class Host:
-    domain: str
-    scheme: str = enums.Scheme.HTTPS
-    port: Optional[int] = None
-
-    def __str__(self) -> str:
-        return str(self.url())
-
-    def url(self) -> furl.furl:
-        return furl.furl(
-            scheme=self.scheme,
-            host=self.domain,
-            port=self.port,
-            path="/",
-        )
-
-
-@dataclasses.dataclass
-class Api(Host):
-    mount: str = "/"
-
-    def __str__(self) -> str:
-        return str(self.url() / self.mount)
-
-
-@dataclasses.dataclass
-class DeviceInfo:
-    identifier: str
-    family: enums.DeviceFamily
-    comments: List[str]
-
-    def product(self) -> Optional[ua.Product]:
-        if self.family == enums.DeviceFamily.WEB:
-            return ua.Product(
-                name=enums.Product.MOZILLA.value,
-                version=enums.Product.MOZILLA.version,
-                comments=self.comments,
-            )
-
-
-@dataclasses.dataclass
-class ServiceInfo:
-    domain: str
-
-    def host(self) -> Host:
-        return Host(
-            domain=self.domain,
-        )
-
-
-@dataclasses.dataclass
-class ClientInfo:
-    name: str
-    version: str
-    key: str
-    id: Optional[int] = None
-    project: Optional[str] = None
-    client: Optional[str] = None
-    screen: Optional[str] = None
-
-    def params(self) -> dict:
-        return dict(
-            key=self.key,
-            alt=enums.Alt.JSON.value,
-        )
-
-    def context(self, locale: Optional[Locale] = None) -> Dict[str, str]:
-        return dict(
-            clientName=self.name,
-            clientVersion=self.version,
-            **(locale.dict() if locale else {}),
-        )
-
-
-@dataclasses.dataclass
-class ClientSchema:
-    client: enums.Client
-    device: enums.Device
-    service: enums.Service
-
-
-@dataclasses.dataclass
-class Client:
-    client: ClientInfo
-    device: DeviceInfo
-    service: ServiceInfo
-
-    def package(self) -> Optional[str]:
-        if self.client.project:
-            return ".".join(
-                (
-                    enums.Domain.GOOGLE.reverse(),
-                    self.device.identifier,
-                    self.client.project,
-                ),
-            )
-
-    def product(self) -> ua.Product:
-        package: Optional[str] = self.package()
-
-        if package is None:
-            return self.device.product()
-
-        return ua.Product(
-            name=package, version=self.client.version, comments=self.device.comments
-        )
-
-    def headers(self, locale: Optional[Locale] = None) -> Dict[str, str]:
-        return utils.filter(
-            {
-                str(enums.YouTubeHeader.CLIENT_NAME): self.client.id
-                and str(self.client.id),
-                str(enums.YouTubeHeader.CLIENT_VERSION): self.client.version,
-                str(enums.Header.USER_AGENT): str(self.product()),
-                str(enums.Header.REFERER): str(self.service.host()),
-                str(enums.Header.ACCEPT_LANGUAGE): locale and locale.accept_language(),
-            }
-        )
-
-    def adaptor(self, locale: Optional[Locale] = None) -> Adaptor:
-        return Adaptor(
-            params=self.client.params(),
-            context=self.client.context(locale=locale),
-            headers=self.headers(locale=locale),
-        )

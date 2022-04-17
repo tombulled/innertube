@@ -1,11 +1,11 @@
 [tool.poetry]
 name = "innertube"
-version = "1.0.16"
+version = "1.0.17"
 description = "Python Client for Google's Private InnerTube API. Works with Youtube, YouTubeMusic etc."
 authors = ["Tom Bulled <26026015+tombulled@users.noreply.github.com>"]
 license = "MIT"
 readme = "README.md"
-homepage = "https://github.com/tombulled/innertube"
+homepage = "https://pypi.org/project/innertube/"
 repository = "https://github.com/tombulled/innertube"
 keywords = ["youtube", "innertube", "python", "api"]
 

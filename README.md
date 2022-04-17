@@ -17,7 +17,7 @@ $ pip install innertube
 
 ### Bleeding Edge
 ```console
-$ pip install git+https://github.com/tombulled/innertube
+$ pip install git+https://github.com/tombulled/innertube@main
 ```
 
 ## Usage
@@ -45,21 +45,20 @@ It's entirely up to you and your needs, however this library provides functional
 | No request limit                      | &check;      | &cross;          |
 | Clean, reliable, well-structured data | &cross;      | &check;          |
 
-### Wait a sec! What do you mean it's not clean, reliable and well-structured??
+### Wait a sec! What do you mean it's not clean, reliable and well-structured?
 Well, the private InnerTube API is not designed for consumption by users, it is used to render and operate the various YouTube services.
 
-### What does that mean?
 Simply put, the data returned by the InnerTube API will need to be parsed and sanitised to extract the usable data as it will contain a lot of fluff that is unlikely to be of any use. These higher-level clients are in the works!
 
 ## Clients
 This table shows all the devices and services that work with the InnerTube API. For example, you could query the API as if you were using the YouTube app on your Tv!
-|         | YouTube | YouTubeMusic  | YouTubeKids  | YouTubeStudio   |
-| ------- | ------- | ------------- | ------------ | --------------- |
-| Web     | WEB     | WEB_REMIX     | WEB_KIDS     | WEB_CREATOR     |
-| Android | ANDROID | ANDROID_MUSIC | ANDROID_KIDS | ANDROID_CREATOR |
-| iOS     | IOS     | IOS_MUSIC     | IOS_KIDS     | IOS_CREATOR     |
-| TV      | TVHTML5 |               |              |                 |
-| Mobile  | MWEB    |               |              |                 |
+|         | YouTube | YouTube (Embedded)      | YouTubeMusic  | YouTubeKids  | YouTubeStudio   |
+| ------- | ------- | ----------------------- | ------------- | ------------ | --------------- |
+| Web     | WEB     | WEB_EMBEDDED_PLAYER     | WEB_REMIX     | WEB_KIDS     | WEB_CREATOR     |
+| Android | ANDROID | ANDROID_EMBEDDED_PLAYER | ANDROID_MUSIC | ANDROID_KIDS | ANDROID_CREATOR |
+| iOS     | IOS     | IOS_MESSAGES_EXTENSION  | IOS_MUSIC     | IOS_KIDS     | IOS_CREATOR     |
+| TV      | TVHTML5 |                         |               |              |                 |
+| Mobile  | MWEB    |                         |               |              |                 |
 
 ## Endpoints
 Only the core, unauthenticated endpoints are currently implemented. However, between all of these you should be able to access all the data you need.
