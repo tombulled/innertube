@@ -59,25 +59,6 @@ class ClientScreen(enumb.Macro):
     EMBED: str
 
 
-class Alt(enumb.Lower):
-    JSON: str
-
-
-class Scheme(enumb.Lower):
-    HTTP: str
-    HTTPS: str
-
-
-class Method(enumb.Upper):
-    PUT: str
-    GET: str
-    POST: str
-    HEAD: str
-    PATCH: str
-    DELETE: str
-    OPTIONS: str
-
-
 class Header(enumb.Train):
     USER_AGENT: str
     REFERER: str

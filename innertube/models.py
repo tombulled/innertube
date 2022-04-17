@@ -9,7 +9,17 @@ import httpx
 import parse
 from typing_extensions import Self
 
-from . import enums, utils
+from . import enums
+
+
+@dataclasses.dataclass
+class Service:
+    url: str
+
+
+@dataclasses.dataclass
+class Platform:
+    user_agent: str
 
 
 @dataclasses.dataclass
@@ -22,29 +32,10 @@ class Locale:
 
 
 @dataclasses.dataclass
-class Service:
-    name: str
-    domain: str
-
-    @property
-    def url(self) -> str:
-        return f"https://{self.domain}/"
-
-
-@dataclasses.dataclass
-class Platform:
-    name: str
-    user_agent: str
-
-
-@dataclasses.dataclass
 class Client:
     name: str
     version: str
-    key: str
-    id: Optional[int] = None
-    project: Optional[str] = None
-    front_end: Optional[str] = None
+    key: Optional[str] = None
 
 
 @dataclasses.dataclass
@@ -52,12 +43,22 @@ class Context:
     client: Client
     platform: Optional[Platform] = None
     service: Optional[Service] = None
+    locale: Optional[Locale] = None
+
+    def prepare(self, session: httpx.Client) -> None:
+        session.headers.update(self.headers())
+        session.params = session.params.merge(self.params())
+        session.context.update(self.context())
 
     def params(self) -> Dict[str, str]:
-        return dict(
-            key=self.client.key,
-            alt=str(enums.Alt.JSON),
-        )
+        params: Dict[str, str] = {
+            "alt": "json",
+        }
+
+        if self.client.key is not None:
+            params["key"] = self.client.key
+
+        return params
 
     def context(self) -> Dict[str, str]:
         return dict(
@@ -65,17 +66,22 @@ class Context:
             clientVersion=self.client.version,
         )
 
-    def headers(self, locale: Optional[Locale] = None) -> Dict[str, str]:
-        return utils.filter(
-            {
-                str(enums.YouTubeHeader.CLIENT_NAME): self.client.id
-                and str(self.client.id),
-                str(enums.YouTubeHeader.CLIENT_VERSION): self.client.version,
-                str(enums.Header.USER_AGENT): self.platform.user_agent if self.platform is not None else None,
-                str(enums.Header.REFERER): self.service.url if self.service is not None else None,
-                str(enums.Header.ACCEPT_LANGUAGE): locale.accept_language() if locale is not None else None,
-            }
-        )
+    def headers(self) -> Dict[str, str]:
+        headers: Dict[str, str] = {
+            "X-Goog-Api-Format-Version": '1',
+            "X-Goog-Client-Version": self.client.version,
+        }
+
+        if self.platform is not None:
+            headers["User-Agent"] = self.platform.user_agent
+
+        if self.service is not None:
+            headers["Referer"] = self.service.url
+
+        if self.locale is not None:
+            headers["Accept-Language"] = self.locale.accept_language()
+
+        return headers
 
 
 @dataclasses.dataclass
