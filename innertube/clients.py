@@ -1,161 +1,169 @@
-import attr
-import addict
-import requests
+from dataclasses import dataclass, field
+from typing import List, Optional
 
-import roster
+import mediate
 
-import abc
-import typing
-
-from . import sessions
-from . import utils
-from . import models
-from . import errors
-
-attrs = attr.s(
-    auto_detect=True,
-    auto_attribs=True,
-)
+from . import api, utils
+from .adaptor import InnerTubeAdaptor
+from .enums import Endpoint
+from .models import ClientContext, Locale
+from .protocols import Adaptor
 
 
-@attrs
-class BaseClient(abc.ABC):
-    session: sessions.BaseSession = attr.ib()
+@dataclass
+class Client:
+    adaptor: Adaptor
 
-    @abc.abstractmethod
-    def __call__(self) -> addict.Dict:
-        ...
-
-    def __attrs_post_init__(self) -> None:
-        pass
-
-
-@attrs
-class BaseInnerTubeClient(BaseClient):
-    session: sessions.InnerTubeSession = attr.ib(
-        default=attr.Factory(sessions.InnerTubeSession),
-        init=False,
+    middleware: mediate.Middleware = field(
+        default_factory=mediate.Middleware, repr=False, init=False
     )
 
-    parsers: roster.Register[
-        typing.Callable[[addict.Dict], addict.Dict], models.Parser
-    ] = attr.ib(
-        default=attr.Factory(roster.Register),
-        repr=False,
-        init=False,
-    )
-
-    def __attrs_post_init__(self) -> None:
-        parser = self.parsers.value(models.Parser)
-
-        @parser()
-        def identity(data: addict.Dict, /) -> addict.Dict:
+    def __call__(
+        self, endpoint: str, params: Optional[dict] = None, body: Optional[dict] = None
+    ) -> dict:
+        @self.middleware.bind
+        def process(data: dict, /) -> dict:
             return data
 
-    def __call__(self, *args: typing.Any, **kwargs: typing.Any) -> addict.Dict:
-        response: requests.Response = self.session.post(*args, **kwargs)
-
-        response_data: addict.Dict = addict.Dict(response.json())
-
-        fingerprint: models.ResponseFingerprint = models.ResponseFingerprint.from_response(response)
-
-        parser: models.Parser = models.Parser.from_model(fingerprint)
-
-        if response_data.responseContext:
-            del response_data.responseContext
-
-        parse: typing.Callable[[addict.Dict], addict.Dict]
-        schema: models.Parser
-        for parse, schema in reversed(self.parsers.items()):
-            if not schema.any() or (schema & parser).any():
-                return parse(response_data)
-
-        raise errors.NoParserFound(
-            f"No parser found for response with fingerprint: {fingerprint!r}"
+        response: dict = process(
+            self.adaptor.dispatch(endpoint, params=params, body=body)
         )
 
+        response.pop("responseContext")
 
-@attrs
-class InnerTubeClient(BaseInnerTubeClient):
-    def config(self) -> addict.Dict:
-        return self("config")
+        return response
 
-    def guide(self) -> addict.Dict:
-        return self("guide")
 
-    def player(self, *, video_id: str) -> addict.Dict:
+@dataclass(init=False)
+class InnerTube(Client):
+    def __init__(
+        self,
+        client_name: str,
+        client_version: Optional[str] = None,
+        *,
+        api_key: Optional[str] = None,
+        user_agent: Optional[str] = None,
+        referer: Optional[str] = None,
+        locale: Optional[Locale] = None,
+        auto: bool = True,
+    ):
+        kwargs: dict = utils.filter(
+            dict(
+                api_key=api_key,
+                user_agent=user_agent,
+                referer=referer,
+                locale=locale,
+            )
+        )
+
+        if auto and client_version is None:
+            client_context: Optional[ClientContext] = api.get_context(client_name)
+
+            if client_context is not None:
+                client_version = client_context.client_version
+
+        if client_name is None:
+            raise ValueError("Precondition failed: Missing client name")
+        if client_version is None:
+            raise ValueError("Precondition failed: Missing client version")
+
+        context: ClientContext = ClientContext(
+            client_name=client_name,
+            client_version=client_version,
+            **kwargs,
+        )
+
+        super().__init__(adaptor=InnerTubeAdaptor(context))
+
+    def config(self) -> dict:
+        return self(Endpoint.CONFIG)
+
+    def guide(self) -> dict:
+        return self(Endpoint.GUIDE)
+
+    def player(self, video_id: str) -> dict:
         return self(
-            "player",
-            json=dict(
+            Endpoint.PLAYER,
+            body=dict(
                 videoId=video_id,
             ),
         )
 
     def browse(
         self,
-        browse_id: typing.Optional[str] = None,
+        browse_id: Optional[str] = None,
         *,
-        params: typing.Optional[str] = None,
-        continuation: typing.Optional[str] = None,
-    ) -> addict.Dict:
+        params: Optional[str] = None,
+        continuation: Optional[str] = None,
+    ) -> dict:
         return self(
-            "browse",
+            Endpoint.BROWSE,
             params=utils.filter(
-                continuation=continuation,
-                ctoken=continuation,
+                dict(
+                    continuation=continuation,
+                    ctoken=continuation,
+                )
             ),
-            json=utils.filter(
-                browseId=browse_id,
-                params=params,
+            body=utils.filter(
+                dict(
+                    browseId=browse_id,
+                    params=params,
+                )
             ),
         )
 
     def search(
         self,
-        query: typing.Optional[str] = None,
+        query: Optional[str] = None,
         *,
-        params: typing.Optional[str] = None,
-        continuation: typing.Optional[str] = None,
-    ) -> addict.Dict:
+        params: Optional[str] = None,
+        continuation: Optional[str] = None,
+    ) -> dict:
         return self(
-            "search",
+            Endpoint.SEARCH,
             params=utils.filter(
-                continuation=continuation,
-                ctoken=continuation,
+                dict(
+                    continuation=continuation,
+                    ctoken=continuation,
+                )
             ),
-            json=utils.filter(
-                query=query or "",
-                params=params,
+            body=utils.filter(
+                dict(
+                    query=query or "",
+                    params=params,
+                )
             ),
         )
 
     def next(
         self,
-        video_id: typing.Optional[str] = None,
-        playlist_id: typing.Optional[str] = None,
+        video_id: Optional[str] = None,
+        playlist_id: Optional[str] = None,
         *,
-        params: typing.Optional[str] = None,
-        index: typing.Optional[int] = None,
-        continuation: typing.Optional[str] = None,
-    ) -> addict.Dict:
+        params: Optional[str] = None,
+        index: Optional[int] = None,
+        continuation: Optional[str] = None,
+    ) -> dict:
         return self(
-            "next",
-            json=utils.filter(
-                params=params,
-                playlistId=playlist_id,
-                videoId=video_id,
-                index=index,
-                continuation=continuation,
+            Endpoint.NEXT,
+            body=utils.filter(
+                dict(
+                    params=params,
+                    playlistId=playlist_id,
+                    videoId=video_id,
+                    index=index,
+                    continuation=continuation,
+                )
             ),
         )
 
     def music_get_search_suggestions(
         self,
-        input: typing.Optional[None] = None,
-    ) -> addict.Dict:
+        input: Optional[None] = None,
+    ) -> dict:
         return self(
-            "music/get_search_suggestions",
-            json=dict(
+            Endpoint.MUSIC_GET_SEARCH_SUGGESTIONS,
+            body=dict(
                 input=input or "",
             ),
         )
@@ -163,13 +171,15 @@ class InnerTubeClient(BaseInnerTubeClient):
     def music_get_queue(
         self,
         *,
-        video_ids: typing.Optional[typing.List[str]] = None,
-        playlist_id: typing.Optional[str] = None,
-    ) -> addict.Dict:
+        video_ids: Optional[List[str]] = None,
+        playlist_id: Optional[str] = None,
+    ) -> dict:
         return self(
-            "music/get_queue",
-            json=utils.filter(
-                playlistId=playlist_id,
-                videoIds=video_ids or (None,),
+            Endpoint.MUSIC_GET_QUEUE,
+            body=utils.filter(
+                dict(
+                    playlistId=playlist_id,
+                    videoIds=video_ids or (None,),
+                )
             ),
         )
