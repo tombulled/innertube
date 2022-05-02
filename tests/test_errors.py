@@ -3,8 +3,10 @@ from innertube.models import Error
 
 
 def test_request_error() -> None:
-    error: Error = Error(code=400, message="Request contains an invalid argument.")
+    exception: RequestError = RequestError(
+        error=Error(
+            code=400, message="Precondition check failed.", reason="FAILED_PRECONDITION"
+        )
+    )
 
-    exception: RequestError = RequestError(error)
-
-    assert str(exception) == "400 Bad Request: Request contains an invalid argument."
+    assert str(exception) == "400 Bad Request: Precondition check failed."

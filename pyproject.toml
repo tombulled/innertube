@@ -1,32 +1,33 @@
 [tool.poetry]
 name = "innertube"
-version = "1.0.20"
-description = "Python Client for Google's Private InnerTube API. Works with Youtube, YouTubeMusic etc."
+version = "2.0.0"
+description = "Python Client for Google's Private InnerTube API. Works with Youtube, YouTube Music and more!"
 authors = ["Tom Bulled <26026015+tombulled@users.noreply.github.com>"]
 license = "MIT"
 readme = "README.md"
 homepage = "https://pypi.org/project/innertube/"
 repository = "https://github.com/tombulled/innertube"
-keywords = ["youtube", "innertube", "python", "api"]
+keywords = ["innertube", "youtube", "youtubei", "python", "api", "client"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-addict = "^2.4.0"
-furl = "^2.1.0"
-parse = "^1.19.0"
-attrs = "^21.2.0"
-enumb = "^0.1.5"
-mediatype = "^0.1.6"
-ua = "^0.1.5"
-roster = "^0.1.8"
 httpx = "^0.22.0"
-typing-extensions = "^4.1.1"
+mediate = "^0.1.2"
 
 [tool.poetry.dev-dependencies]
 black = "^22.1.0"
 mypy = "^0.941"
 pytest = "^7.1.1"
+Flask = "^2.1.2"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.mypy]
+check_untyped_defs = true
+ignore_missing_imports = true
+show_error_codes = true
+warn_redundant_casts = true
+warn_unused_configs = true
+warn_unused_ignores = true

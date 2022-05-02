@@ -1,23 +1,24 @@
 # innertube
-Python Client for Google's Private InnerTube API. Works with: **YouTube**, **YouTube Music**, **YouTube Kids**, **YouTube Studio**
+Python Client for Google's Private InnerTube API. Works with **YouTube**, **YouTube Music**, **YouTube Kids**, **YouTube Studio** and more!
 
 ## About
-This library handles low-level interactions with the InnerTube API that is used by each of the YouTube services.
-Google hasn't made much public about the API, and recently all App interactions use [protobuf](https://github.com/protocolbuffers/protobuf) making them hard to reverse-engineer. The only articles I could find online are:
+This library handles low-level interactions with the underlying InnerTube API used by each of the YouTube services.
+
+Here are a few articles available online relating to the InnerTube API:
 * [Gizmodo - How Project InnerTube Helped Pull YouTube Out of the Gutter](https://gizmodo.com/how-project-innertube-helped-pull-youtube-out-of-the-gu-1704946491)
 * [Fast Company - To Take On HBO And Netflix, YouTube Had To Rewire Itself](https://www.fastcompany.com/3044995/to-take-on-hbo-and-netflix-youtube-had-to-rewire-itself)
 
 ## Installation
-The `innertube` library uses [Poetry](https://github.com/python-poetry/poetry) and can easily be installed from source, or using *pip*
+`innertube` uses [Poetry](https://github.com/python-poetry/poetry) under the hood and can easily be installed from source or from PyPI using *pip*.
 
 ### Latest Release
 ```console
-$ pip install innertube
+pip install innertube
 ```
 
 ### Bleeding Edge
 ```console
-$ pip install git+https://github.com/tombulled/innertube@main
+pip install git+https://github.com/tombulled/innertube@develop
 ```
 
 ## Usage
@@ -25,54 +26,40 @@ $ pip install git+https://github.com/tombulled/innertube@main
 >>> import innertube
 >>>
 >>> # Construct a client
->>> client = innertube.InnerTube(innertube.Client.WEB)
+>>> client = innertube.InnerTube("WEB")
 >>>
 >>> # Get some data!
->>> data = client.search(query = 'foo fighters')
+>>> data = client.search(query="foo fighters")
 >>>
 >>> # Power user? No problem, dispatch requests yourself
->>> data = client('browse', json = {'browseId': 'FEwhat_to_watch'})
+>>> data = client("browse", body={"browseId": "FEwhat_to_watch"})
 >>>
 >>> # The core endpoints are implemented, so the above is equivalent to:
->>> data = client.browse('FEwhat_to_watch')
+>>> data = client.browse("FEwhat_to_watch")
 ```
 
-## Why not just use the [YouTube Data API](https://developers.google.com/youtube/v3/)?
-It's entirely up to you and your needs, however this library provides functionality you wont get from the Data API, but it comes at somewhat of a cost *(explained below)*
+## Comparison with the [YouTube Data API](https://developers.google.com/youtube/v3/)
+The InnerTube API provides access to data you can't get from the Data API, however it comes at somewhat of a cost *(explained below)*.
 |                                       | This Library | YouTube Data API |
 | ------------------------------------- | ------------ | ---------------- |
-| No Google account required            | &check;      | &cross;          |
-| No request limit                      | &check;      | &cross;          |
-| Clean, reliable, well-structured data | &cross;      | &check;          |
+| Google account required               | No           | Yes              |
+| Request limit                         | No           | Yes              |
+| Clean data                            | No           | Yes              |
 
-### Wait a sec! What do you mean it's not clean, reliable and well-structured?
-Well, the private InnerTube API is not designed for consumption by users, it is used to render and operate the various YouTube services.
-
-Simply put, the data returned by the InnerTube API will need to be parsed and sanitised to extract the usable data as it will contain a lot of fluff that is unlikely to be of any use. These higher-level clients are in the works!
-
-## Clients
-This table shows all the devices and services that work with the InnerTube API. For example, you could query the API as if you were using the YouTube app on your Tv!
-|         | YouTube | YouTube (Embedded)      | YouTubeMusic  | YouTubeKids  | YouTubeStudio   |
-| ------- | ------- | ----------------------- | ------------- | ------------ | --------------- |
-| Web     | WEB     | WEB_EMBEDDED_PLAYER     | WEB_REMIX     | WEB_KIDS     | WEB_CREATOR     |
-| Android | ANDROID | ANDROID_EMBEDDED_PLAYER | ANDROID_MUSIC | ANDROID_KIDS | ANDROID_CREATOR |
-| iOS     | IOS     | IOS_MESSAGES_EXTENSION  | IOS_MUSIC     | IOS_KIDS     | IOS_CREATOR     |
-| TV      | TVHTML5 |                         |               |              |                 |
-| Mobile  | MWEB    |                         |               |              |                 |
+As the InnerTube API is used by the variety of YouTube services and is not designed for consumption by users. Therefore, the data returned by the InnerTube API will need to be parsed and sanitised to extract data of interest.
 
 ## Endpoints
-Only the core, unauthenticated endpoints are currently implemented. However, between all of these you should be able to access all the data you need.
+Currently only the following core, unauthenticated endpoints are implemented:
 |                                | YouTube | YouTubeMusic | YouTubeKids | YouTubeStudio |
 | ------------------------------ | ------- | ------------ | ----------- | ------------- |
 | config                         | &check; | &check;      | &check;     | &check;       |
 | browse                         | &check; | &check;      | &check;     | &check;       |
 | player                         | &check; | &check;      | &check;     | &check;       |
-| next                           | &check; | &check;      | &check;     | &cross;       |
-| search                         | &check; | &check;      | &check;     | &cross;       |
-| guide                          | &check; | &check;      | &cross;     | &cross;       |
-| music/get_search_suggestions   | &cross; | &check;      | &cross;     | &cross;       |
-| music/get_queue                | &cross; | &check;      | &cross;     | &cross;       |
+| next                           | &check; | &check;      | &check;     |               |
+| search                         | &check; | &check;      | &check;     |               |
+| guide                          | &check; | &check;      |             |               |
+| music/get_search_suggestions   |         | &check;      |             |               |
+| music/get_queue                |         | &check;      |             |               |
 
-## What about Authentication?
-The InnerTube API uses OAuth2, however I have been unable to successfully implement authentication.
-Therefore, this library currently only provides unauthenticated access to the API.
+## Authentication
+The InnerTube API uses OAuth2, however this has not yet been implemented, therefore this library currently only provides unauthenticated API access.

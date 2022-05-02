@@ -1,11 +1,10 @@
 import dataclasses
-import http.client
 
 from . import models
 
 
 @dataclasses.dataclass
-class RequestError(http.client.HTTPException):
+class RequestError(Exception):
     error: models.Error
 
     def __str__(self) -> str:
@@ -13,8 +12,4 @@ class RequestError(http.client.HTTPException):
 
 
 class ResponseError(Exception):
-    pass
-
-
-class NoParserFound(Exception):
     pass
