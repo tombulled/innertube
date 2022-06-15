@@ -11,7 +11,7 @@ keywords = ["innertube", "youtube", "youtubei", "python", "api", "client"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-httpx = "^0.22.0"
+httpx = "^0.23.0"
 mediate = "^0.1.2"
 
 [tool.poetry.dev-dependencies]
