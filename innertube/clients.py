@@ -1,8 +1,9 @@
-from dataclasses import dataclass, field
 import dataclasses
-from typing import Dict, List, Optional
+from typing import List, Optional
 
+import httpx
 import mediate
+from httpx._types import ProxiesTypes
 
 from . import api, utils
 from .adaptor import InnerTubeAdaptor
@@ -12,11 +13,11 @@ from .models import ClientContext, Locale
 from .protocols import Adaptor
 
 
-@dataclass
+@dataclasses.dataclass
 class Client:
     adaptor: Adaptor
 
-    middleware: mediate.Middleware = field(
+    middleware: mediate.Middleware = dataclasses.field(
         default_factory=mediate.Middleware, repr=False, init=False
     )
 
@@ -36,7 +37,7 @@ class Client:
         return response
 
 
-@dataclass(init=False)
+@dataclasses.dataclass(init=False)
 class InnerTube(Client):
     def __init__(
         self,
@@ -48,7 +49,7 @@ class InnerTube(Client):
         referer: Optional[str] = None,
         locale: Optional[Locale] = None,
         auto: bool = True,
-        proxies: Optional[Dict[str, str]] = None,
+        proxies: ProxiesTypes = None,
     ):
         if client_name is None:
             raise ValueError("Precondition failed: Missing client name")
@@ -76,8 +77,10 @@ class InnerTube(Client):
             context = ClientContext(**kwargs)
 
         super().__init__(
-            adaptor=InnerTubeAdaptor(context),
-            session=Client(base_url=config.base_url, proxies=proxies)
+            adaptor=InnerTubeAdaptor(
+                context=context,
+                session=httpx.Client(base_url=config.base_url, proxies=proxies),
+            )
         )
 
     def config(self) -> dict:
