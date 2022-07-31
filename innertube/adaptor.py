@@ -12,11 +12,11 @@ class InnerTubeAdaptor:
     context: ClientContext
     session: Client
 
-    def __init__(self, context: ClientContext, session: Optional[Client] = None):
+    def __init__(self, context: ClientContext, session: Optional[Client] = None) -> None:
         self.context = context
         self.session = session or Client(base_url=config.base_url)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"{type(self).__name__}(context={self.context!r})"
 
     def _build_request(
