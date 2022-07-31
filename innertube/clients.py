@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 import dataclasses
-from typing import List, Optional
+from typing import Dict, List, Optional
 
 import mediate
 
@@ -47,6 +47,7 @@ class InnerTube(Client):
         referer: Optional[str] = None,
         locale: Optional[Locale] = None,
         auto: bool = True,
+        proxies: Optional[Dict[str, str]] = None,
     ):
         if client_name is None:
             raise ValueError("Precondition failed: Missing client name")
