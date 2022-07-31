@@ -6,6 +6,7 @@ import mediate
 
 from . import api, utils
 from .adaptor import InnerTubeAdaptor
+from .config import config
 from .enums import Endpoint
 from .models import ClientContext, Locale
 from .protocols import Adaptor
@@ -74,7 +75,10 @@ class InnerTube(Client):
 
             context = ClientContext(**kwargs)
 
-        super().__init__(adaptor=InnerTubeAdaptor(context))
+        super().__init__(
+            adaptor=InnerTubeAdaptor(context),
+            session=Client(base_url=config.base_url, proxies=proxies)
+        )
 
     def config(self) -> dict:
         return self(Endpoint.CONFIG)
