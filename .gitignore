@@ -136,3 +136,6 @@ tst.*.py
 _.*.py
 _.*/
 .ignore/
+
+# Visual Studio Code
+.vscode/
