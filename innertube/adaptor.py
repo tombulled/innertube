@@ -12,7 +12,9 @@ class InnerTubeAdaptor:
     context: ClientContext
     session: Client
 
-    def __init__(self, context: ClientContext, session: Optional[Client] = None) -> None:
+    def __init__(
+        self, context: ClientContext, session: Optional[Client] = None
+    ) -> None:
         self.context = context
         self.session = session or Client(base_url=config.base_url)
 
