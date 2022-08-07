@@ -1,0 +1,10 @@
+name: CD
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  cd:
+    name: CD
+    uses: tombulled/workflows/.github/workflows/cd.yaml@main
