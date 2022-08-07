@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "innertube"
-version = "2.0.0"
+version = "2.1.0"
 description = "Python Client for Google's Private InnerTube API. Works with Youtube, YouTube Music and more!"
 authors = ["Tom Bulled <26026015+tombulled@users.noreply.github.com>"]
 license = "MIT"
@@ -11,7 +11,7 @@ keywords = ["innertube", "youtube", "youtubei", "python", "api", "client"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-httpx = "^0.22.0"
+httpx = "^0.23.0"
 mediate = "^0.1.2"
 
 [tool.poetry.dev-dependencies]

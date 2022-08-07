@@ -9,7 +9,7 @@ from .models import ClientContext, ResponseContext
 def get_context(client_name: str, /) -> Optional[ClientContext]:
     context: ClientContext
     for context in config.clients:
-        if context.client_name == client_name:
+        if context.client_name.upper() == client_name.upper():
             return context
 
     return None

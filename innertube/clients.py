@@ -1,20 +1,23 @@
-from dataclasses import dataclass, field
+import dataclasses
 from typing import List, Optional
 
+import httpx
 import mediate
+from httpx._types import ProxiesTypes
 
 from . import api, utils
 from .adaptor import InnerTubeAdaptor
+from .config import config
 from .enums import Endpoint
 from .models import ClientContext, Locale
 from .protocols import Adaptor
 
 
-@dataclass
+@dataclasses.dataclass
 class Client:
     adaptor: Adaptor
 
-    middleware: mediate.Middleware = field(
+    middleware: mediate.Middleware = dataclasses.field(
         default_factory=mediate.Middleware, repr=False, init=False
     )
 
@@ -34,7 +37,7 @@ class Client:
         return response
 
 
-@dataclass(init=False)
+@dataclasses.dataclass(init=False)
 class InnerTube(Client):
     def __init__(
         self,
@@ -46,9 +49,15 @@ class InnerTube(Client):
         referer: Optional[str] = None,
         locale: Optional[Locale] = None,
         auto: bool = True,
-    ):
+        proxies: ProxiesTypes = None,
+    ) -> None:
+        if client_name is None:
+            raise ValueError("Precondition failed: Missing client name")
+
         kwargs: dict = utils.filter(
             dict(
+                client_name=client_name,
+                client_version=client_version,
                 api_key=api_key,
                 user_agent=user_agent,
                 referer=referer,
@@ -56,24 +65,23 @@ class InnerTube(Client):
             )
         )
 
-        if auto and client_version is None:
-            client_context: Optional[ClientContext] = api.get_context(client_name)
+        context: ClientContext
 
-            if client_context is not None:
-                client_version = client_context.client_version
+        auto_context: Optional[ClientContext]
+        if auto and (auto_context := api.get_context(client_name)):
+            context = dataclasses.replace(auto_context, **kwargs)
+        else:
+            if client_version is None:
+                raise ValueError("Precondition failed: Missing client version")
 
-        if client_name is None:
-            raise ValueError("Precondition failed: Missing client name")
-        if client_version is None:
-            raise ValueError("Precondition failed: Missing client version")
+            context = ClientContext(**kwargs)
 
-        context: ClientContext = ClientContext(
-            client_name=client_name,
-            client_version=client_version,
-            **kwargs,
+        super().__init__(
+            adaptor=InnerTubeAdaptor(
+                context=context,
+                session=httpx.Client(base_url=config.base_url, proxies=proxies),
+            )
         )
-
-        super().__init__(adaptor=InnerTubeAdaptor(context))
 
     def config(self) -> dict:
         return self(Endpoint.CONFIG)
