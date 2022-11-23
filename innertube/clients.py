@@ -22,7 +22,7 @@ class Client:
     )
 
     def __call__(
-        self, endpoint: str, params: Optional[dict] = None, body: Optional[dict] = None
+            self, endpoint: str, params: Optional[dict] = None, body: Optional[dict] = None
     ) -> dict:
         @self.middleware.bind
         def process(data: dict, /) -> dict:
@@ -40,16 +40,16 @@ class Client:
 @dataclasses.dataclass(init=False)
 class InnerTube(Client):
     def __init__(
-        self,
-        client_name: str,
-        client_version: Optional[str] = None,
-        *,
-        api_key: Optional[str] = None,
-        user_agent: Optional[str] = None,
-        referer: Optional[str] = None,
-        locale: Optional[Locale] = None,
-        auto: bool = True,
-        proxies: ProxiesTypes = None,
+            self,
+            client_name: str,
+            client_version: Optional[str] = None,
+            *,
+            api_key: Optional[str] = None,
+            user_agent: Optional[str] = None,
+            referer: Optional[str] = None,
+            locale: Optional[Locale] = None,
+            auto: bool = True,
+            proxies: ProxiesTypes = None,
     ) -> None:
         if client_name is None:
             raise ValueError("Precondition failed: Missing client name")
@@ -97,12 +97,35 @@ class InnerTube(Client):
             ),
         )
 
+    def caption(
+            self,
+            browse_id: Optional[str] = None,
+            *,
+            params: Optional[str] = None,
+            continuation: Optional[str] = None,
+    ) -> dict:
+        return self(
+            Endpoint.CAPTION,
+            params=utils.filter(
+                dict(
+                    continuation=continuation,
+                    ctoken=continuation,
+                )
+            ),
+            body=utils.filter(
+                dict(
+                    browseId=browse_id,
+                    params=params,
+                )
+            ),
+        )
+
     def browse(
-        self,
-        browse_id: Optional[str] = None,
-        *,
-        params: Optional[str] = None,
-        continuation: Optional[str] = None,
+            self,
+            browse_id: Optional[str] = None,
+            *,
+            params: Optional[str] = None,
+            continuation: Optional[str] = None,
     ) -> dict:
         return self(
             Endpoint.BROWSE,
@@ -121,11 +144,11 @@ class InnerTube(Client):
         )
 
     def search(
-        self,
-        query: Optional[str] = None,
-        *,
-        params: Optional[str] = None,
-        continuation: Optional[str] = None,
+            self,
+            query: Optional[str] = None,
+            *,
+            params: Optional[str] = None,
+            continuation: Optional[str] = None,
     ) -> dict:
         return self(
             Endpoint.SEARCH,
@@ -144,13 +167,13 @@ class InnerTube(Client):
         )
 
     def next(
-        self,
-        video_id: Optional[str] = None,
-        playlist_id: Optional[str] = None,
-        *,
-        params: Optional[str] = None,
-        index: Optional[int] = None,
-        continuation: Optional[str] = None,
+            self,
+            video_id: Optional[str] = None,
+            playlist_id: Optional[str] = None,
+            *,
+            params: Optional[str] = None,
+            index: Optional[int] = None,
+            continuation: Optional[str] = None,
     ) -> dict:
         return self(
             Endpoint.NEXT,
@@ -166,8 +189,8 @@ class InnerTube(Client):
         )
 
     def music_get_search_suggestions(
-        self,
-        input: Optional[None] = None,
+            self,
+            input: Optional[None] = None,
     ) -> dict:
         return self(
             Endpoint.MUSIC_GET_SEARCH_SUGGESTIONS,
@@ -177,10 +200,10 @@ class InnerTube(Client):
         )
 
     def music_get_queue(
-        self,
-        *,
-        video_ids: Optional[List[str]] = None,
-        playlist_id: Optional[str] = None,
+            self,
+            *,
+            video_ids: Optional[List[str]] = None,
+            playlist_id: Optional[str] = None,
     ) -> dict:
         return self(
             Endpoint.MUSIC_GET_QUEUE,

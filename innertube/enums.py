@@ -14,6 +14,7 @@ class Endpoint(StrEnum):
     NEXT: str = "next"
     MUSIC_GET_SEARCH_SUGGESTIONS: str = "music/get_search_suggestions"
     MUSIC_GET_QUEUE: str = "music/get_queue"
+    CAPTION: str = "get_transcript"
 
 
 class Request(StrEnum):
