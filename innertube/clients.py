@@ -165,6 +165,19 @@ class InnerTube(Client):
             ),
         )
 
+    def get_transcript(
+        self,
+        params: str,
+    ) -> dict:
+        return self(
+            Endpoint.GET_TRANSCRIPT,
+            body=utils.filter(
+                dict(
+                    params=params,
+                )
+            ),
+        )
+
     def music_get_search_suggestions(
         self,
         input: Optional[None] = None,

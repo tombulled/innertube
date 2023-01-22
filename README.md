@@ -46,7 +46,7 @@ The InnerTube API provides access to data you can't get from the Data API, howev
 | Request limit                         | No           | Yes              |
 | Clean data                            | No           | Yes              |
 
-As the InnerTube API is used by the variety of YouTube services and is not designed for consumption by users. Therefore, the data returned by the InnerTube API will need to be parsed and sanitised to extract data of interest.
+The InnerTube API is used by a variety of YouTube services and is not designed for consumption by users. Therefore, the data returned by the InnerTube API will need to be parsed and sanitised to extract data of interest.
 
 ## Endpoints
 Currently only the following core, unauthenticated endpoints are implemented:
@@ -58,6 +58,7 @@ Currently only the following core, unauthenticated endpoints are implemented:
 | next                           | &check; | &check;      | &check;     |               |
 | search                         | &check; | &check;      | &check;     |               |
 | guide                          | &check; | &check;      |             |               |
+| get_transcript                 | &check; |              |             |               |
 | music/get_search_suggestions   |         | &check;      |             |               |
 | music/get_queue                |         | &check;      |             |               |
 
