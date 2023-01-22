@@ -12,6 +12,7 @@ class Endpoint(StrEnum):
     BROWSE: str = "browse"
     SEARCH: str = "search"
     NEXT: str = "next"
+    GET_TRANSCRIPT: str = "get_transcript"
     MUSIC_GET_SEARCH_SUGGESTIONS: str = "music/get_search_suggestions"
     MUSIC_GET_QUEUE: str = "music/get_queue"
 
