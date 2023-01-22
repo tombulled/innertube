@@ -128,6 +128,9 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+# Visual Studio Code
+.vscode/
+
 # Custom
 app.py
 app.*.py
@@ -136,6 +139,3 @@ tst.*.py
 _.*.py
 _.*/
 .ignore/
-
-# Visual Studio Code
-.vscode/
