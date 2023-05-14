@@ -32,9 +32,11 @@ transcript_params = extract_transcript_params(data)
 
 transcript = client.get_transcript(transcript_params)
 
-transcript_segments = transcript["actions"][0]["updateEngagementPanelAction"]["content"][
-    "transcriptRenderer"
-]["content"]["transcriptSearchPanelRenderer"]["body"]["transcriptSegmentListRenderer"][
+transcript_segments = transcript["actions"][0]["updateEngagementPanelAction"][
+    "content"
+]["transcriptRenderer"]["content"]["transcriptSearchPanelRenderer"]["body"][
+    "transcriptSegmentListRenderer"
+][
     "initialSegments"
 ]
 
