@@ -159,7 +159,7 @@ class InnerTube(Client):
                     params=params,
                     playlistId=playlist_id,
                     videoId=video_id,
-                    index=index,
+                    playlistIndex=index,
                     continuation=continuation,
                 )
             ),
