@@ -27,7 +27,7 @@ config: Config = Config(
         ClientContext(
             client_id=1,
             client_name="WEB",
-            client_version="2.20210223.09.00",
+            client_version="2.20230728.00.00",
             user_agent=USER_AGENT_WEB,
             referer=REFERER_YOUTUBE,
             api_key="AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8",
