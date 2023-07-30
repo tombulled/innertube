@@ -12,13 +12,26 @@ from httpx import Response
 from innertube import InnerTube
 
 """
-TODO: Redesign the system - can be simpler
-
-* Locate an album using YouTube Music, e.g. Silhouettes by Aquilo - https://music.youtube.com/playlist?list=OLAK5uy_khNLsz9s6ueH8YHdzORuy4PORu6tWvMrY
-* Look up the album as a playlist using YouTube, e.g. https://www.youtube.com/playlist?list=OLAK5uy_khNLsz9s6ueH8YHdzORuy4PORu6tWvMrY
-* YouTube provides the full set of songs for that album
-* Get a full-res image from YouTube as well
-
+TODO:
+    Air Review
+    alt-J
+    Arctic Monkeys
+    AWOLNATION
+    Bad Suns
+    Bag Raiders
+    Band of Horses <---
+    Bastille
+    Bear's Den
+    Bleachers
+    Blossoms
+    Borns
+    Cage the Elephant
+    Circa Waves
+    Daft Punk
+    Death Cab for Cutie
+    Declan McKenna
+    ...
+    Still Woozy <--
 """
 
 
@@ -27,54 +40,37 @@ def delay() -> None:
 
     time.sleep(timeout)
 
+ALBUM_BROWSE_IDS: Sequence[str] = (
+    # Air Review
+    # "OLAK5uy_nGYEmLIPZQAFGT8WvfaYVzQzti3ut1psE", # Landmarks
+    # "OLAK5uy_m-H-QaroA92wigoIwc13fqYWk4s-r_h_8", # Low Wishes
+    # "OLAK5uy_nr2rAZQWxYhPlhg9YEer4vMDQXgA3cUPo", # How We Got By
 
-# ARTIST_ID: str = "UCnX0L9QiftAcWdzeBx31xCw"  # Twenty One Pilots
-# ALBUM_BROWSE_ID: str = "MPREb_X7QffEAYTTO"  # Blurryface
-# ALBUM_BROWSE_ID: str = "MPREb_ScQaLIaWEv5"  # Vessel (with Bonus Tracks)
+    # Amber Run
+    # "OLAK5uy_lqinhYxeDfCZtbt8N1GdI6aqlj44ThfMU" # Spark EP
+    # "OLAK5uy_nB_qEA_pG8EZia0z58eDE25v1i0fpSNH0" # Pilot EP
+    # "OLAK5uy_kEH-J7dPuErmAozzG-CTVDOklQIG_xP6g" # 5AM (Expanded Edition)
+    # "OLAK5uy_mMR_VYCeV0xhW_Nfo3U2qukj9Y_I0T-wE" # For A Moment, I Was Lost
+    # "OLAK5uy_kQrMjMljbR28Ge-EwC8AmTmoN4e1qx24w" # Acoustic EP
+    # "OLAK5uy_n0oZXFeNxRvK0ZV6P-_qm2EiEOOoBe_wI" # The Assembly
+    # "OLAK5uy_k-nVhxfuIQFO2ZE9EvqPKKM4__S3aOb_Y" # Philophobia
+    # "OLAK5uy_kHykDXcCDzpye0foS6E1crEZJRW8uo58A" # The Search (Act I)
+    # "OLAK5uy_mL2zfBIO9DFJlHguE0XFv0sZdmar3Wv58" # The Start (Act II)
+    # "OLAK5uy_lPqeK5z74imJPGxul-pU_U_6-s0qOctug" # How To Be Human
 
-# ARTIST_ID: str = "UCG_7ydxEUqxJlIL9_Uy-Z4Q"  # Seafret
-# ALBUM_BROWSE_ID: str = "MPREb_MCxFDUkd9VE"  # Tell Me It's Real (Expanded Edition)
-
-# ARTIST_ID: str = "UCMO-CgAtd1jI2m2CrXcP2sQ"  # Amber Run
-# ALBUM_PLAYLIST_ID: str = "OLAK5uy_lqinhYxeDfCZtbt8N1GdI6aqlj44ThfMU" # Spark EP
-# ALBUM_PLAYLIST_ID: str = "OLAK5uy_nB_qEA_pG8EZia0z58eDE25v1i0fpSNH0" # Pilot EP
-# ALBUM_PLAYLIST_ID: str = "OLAK5uy_kEH-J7dPuErmAozzG-CTVDOklQIG_xP6g" # 5AM (Expanded Edition)
-# ALBUM_PLAYLIST_ID: str = "OLAK5uy_mMR_VYCeV0xhW_Nfo3U2qukj9Y_I0T-wE" # For A Moment, I Was Lost
-# ALBUM_PLAYLIST_ID: str = "OLAK5uy_kQrMjMljbR28Ge-EwC8AmTmoN4e1qx24w" # Acoustic EP
-# ALBUM_PLAYLIST_ID: str = "OLAK5uy_n0oZXFeNxRvK0ZV6P-_qm2EiEOOoBe_wI" # The Assembly
-# ALBUM_PLAYLIST_ID: str = "OLAK5uy_k-nVhxfuIQFO2ZE9EvqPKKM4__S3aOb_Y" # Philophobia
-# ALBUM_PLAYLIST_ID: str = "OLAK5uy_kHykDXcCDzpye0foS6E1crEZJRW8uo58A" # The Search (Act I)
-# ALBUM_PLAYLIST_ID: str = "OLAK5uy_mL2zfBIO9DFJlHguE0XFv0sZdmar3Wv58" # The Start (Act II)
-# ALBUM_PLAYLIST_ID: str = "OLAK5uy_lPqeK5z74imJPGxul-pU_U_6-s0qOctug" # How To Be Human
-# ALBUM_BROWSE_ID: str = "MPREb_r8YGYkwyp1n"  # 5AM (Expanded Edition)
-# ALBUM_BROWSE_ID: str = "MPREb_JHECxKJ1QJ0"  # For A Moment, I Was Lost
-# ALBUM_BROWSE_ID: str = "MPREb_9JEV6UNu4aT"  # Philophobia
-# ALBUM_BROWSE_ID: str = "MPREb_Xt0H2hDGuqA"  # The Search (Act I)
-
-# ARTIST_ID: str = "UCItuxDxh9AO1P2Miiso_0tg"  # Aquilo
-# ALBUM_PLAYLIST_ID: str = "OLAK5uy_mdZx9ip6w7LcOwL4LsLJY1ewjoERMeJGs" # In The Low Light (Live)
-# ALBUM_PLAYLIST_ID: str = "OLAK5uy_m9x1ATvvF-BHUVbEW0XyTdrzbtC_WxsrM" # Live From RAK Studios
-# ALBUM_PLAYLIST_ID: str = "OLAK5uy_nCyEX0Zzgd22KA07Z8LUZ3STLktKMbWYQ" # Aquilo
-# ALBUM_PLAYLIST_ID: str = "OLAK5uy_lnohUgmn9QftycLEqIqQZli57FSf2AvWY" # Human
-# ALBUM_PLAYLIST_ID: str = "OLAK5uy_nx04vFkplXV9X85by-8mP46JLmTNqweW0" # Calling Me
-# ALBUM_PLAYLIST_ID: str = "OLAK5uy_msaMtkKquZeUqQ6sMOr0kk6TQydo9cZYY" # Midnight (Live EP)
-# ALBUM_PLAYLIST_ID: str = "OLAK5uy_khNLsz9s6ueH8YHdzORuy4PORu6tWvMrY" # Silhouettes
-# ALBUM_PLAYLIST_ID: str = "OLAK5uy_nAHK5zWEf-pf-3KXSj93NA8ZGyjTBfJUg" # ii
-# ALBUM_PLAYLIST_ID: str = "OLAK5uy_lW66eJCF7wQ4hhtHkTYjYy1Wh-ctYE8lY" # ii (Reworks)
-# ALBUM_PLAYLIST_ID: str = "OLAK5uy_kRjXobVjFEz323V44CIfuKCKRngWX-Ogg" # A Safe Place To Be
-ALBUM_PLAYLIST_ID: str = "OLAK5uy_ndMEnXwNd0HkeljYKBuzKHoHpJB3NX8mU" # Sober EP
-# ALBUM_BROWSE_ID: str = "MPREb_XEoOYtkwx3X"  # ii
-# ALBUM_BROWSE_ID: str = "MPREb_eHA1ouWw7fU"  # Silhouettes
-# ALBUM_BROWSE_ID: str = "MPREb_5s8ufeIeDGW"  # Sober EP
-
-# ARTIST_ID: str = "UC8Yu1_yfN5qPh601Y4btsYw"  # Arctic Monkeys
-# ALBUM_BROWSE_ID: str = "MPREb_m7saomf2NFN"  # AM
-# ALBUM_BROWSE_ID: str = "MPREb_1X7jgKSpSz7"  # Whatever People Say I Am, That's What I Am Not
-
-# ARTIST_ID: str = "UCLEJF57HPNem3bdqXSiIo3Q"  # Band of Horses
-# ALBUM_BROWSE_ID: str = "MPREb_ij6eHbvH9FF"  # Why Are You OK
-# ALBUM_BROWSE_ID: str = "MPREb_ISeBtatD8ky"  # Cease to Begin
-# ALBUM_BROWSE_ID: str = "MPREb_ctJ5HEJw8pg"  # Everything All The Time
+    # Aquilo
+    # "OLAK5uy_mdZx9ip6w7LcOwL4LsLJY1ewjoERMeJGs" # In The Low Light (Live)
+    # "OLAK5uy_m9x1ATvvF-BHUVbEW0XyTdrzbtC_WxsrM" # Live From RAK Studios
+    # "OLAK5uy_nCyEX0Zzgd22KA07Z8LUZ3STLktKMbWYQ" # Aquilo
+    # "OLAK5uy_lnohUgmn9QftycLEqIqQZli57FSf2AvWY" # Human
+    # "OLAK5uy_nx04vFkplXV9X85by-8mP46JLmTNqweW0" # Calling Me
+    # "OLAK5uy_msaMtkKquZeUqQ6sMOr0kk6TQydo9cZYY" # Midnight (Live EP)
+    # "OLAK5uy_khNLsz9s6ueH8YHdzORuy4PORu6tWvMrY" # Silhouettes
+    # "OLAK5uy_nAHK5zWEf-pf-3KXSj93NA8ZGyjTBfJUg" # ii
+    # "OLAK5uy_lW66eJCF7wQ4hhtHkTYjYy1Wh-ctYE8lY" # ii (Reworks)
+    # "OLAK5uy_kRjXobVjFEz323V44CIfuKCKRngWX-Ogg" # A Safe Place To Be
+    # "OLAK5uy_ndMEnXwNd0HkeljYKBuzKHoHpJB3NX8mU" # Sober EP
+)
 
 
 @dataclass
@@ -397,71 +393,48 @@ def download(url: str, path: Path) -> None:
         for data in response.iter_bytes(chunk_size=8196):
             file.write(data)
 
+album_index: int
+album_playlist_id: str
+for album_index, album_playlist_id in enumerate(ALBUM_BROWSE_IDS):
+    if album_index > 0:
+        delay()
 
-# artist_page: ArtistPage = get_artist_page(ARTIST_ID)
+    playlist: PlaylistPage = get_yt_playlist_page(album_playlist_id)
 
-# delay()
+    rich.print(f"Downloading: {playlist.name!r} by {playlist.channel_name!r}")
 
-# top_songs = get_playlist_page(artist_page.songs_playlist_id)
+    music_dir: Path = Path.home() / "Music"
 
-# albums: MutableMapping[str, MutableSequence[PlaylistSong]] = {}
+    album_dir: Path = music_dir / Path(f"{playlist.channel_name} - {playlist.name}")
 
-# song: PlaylistSong
-# for song in top_songs.songs:
-#     if song.album is None:
-#         continue
+    if not album_dir.exists():
+        album_dir.mkdir()
 
-#     albums.setdefault(song.album.browse_id, []).append(song)
+    album_thumbnail_path: Path = album_dir.joinpath("thumbnail.jpg")
 
-# album_songs: Mapping[str, str] = {
-#     album_song.name: album_song.id for album_song in albums[ALBUM_BROWSE_ID]
-# }
+    if not album_thumbnail_path.exists():
+        download(playlist.thumbnail, album_thumbnail_path)
 
-# delay()
-# album: Album = get_album(ALBUM_BROWSE_ID)
+    total_tracks: int = len(playlist.songs)
 
-# fixed_album_tracks: Sequence[Song] = [
-#     Song(name=album_track.name, video_id=album_songs[album_track.name])
-#     for album_track in album.tracks
-# ]
+    index: int
+    track: PlaylistSong
+    for index, track in enumerate(playlist.songs):
+        track_path: Path = album_dir.joinpath(f"{str(index+1).zfill(2)} - {track.name}.m4a")
 
-playlist: PlaylistPage = get_yt_playlist_page(ALBUM_PLAYLIST_ID)
+        if track_path.exists():
+            continue
 
-rich.print(f"Downloading: {playlist.name!r} by {playlist.channel_name!r}")
+        delay()
+        track_url: Optional[str] = get_video_stream_url(track.id)
 
-music_dir: Path = Path.home() / "Music"
+        if track_url is None:
+            continue
 
-album_dir: Path = music_dir / Path(f"{playlist.channel_name} - {playlist.name}")
+        rich.print(f"\t ({str(index+1).zfill(2)}/{str(total_tracks).zfill(2)}) {track.name!r}")
 
-if not album_dir.exists():
-    album_dir.mkdir()
+        delay()
 
-album_thumbnail_path: Path = album_dir.joinpath("thumbnail.jpg")
+        import os
 
-if not album_thumbnail_path.exists():
-    download(playlist.thumbnail, album_thumbnail_path)
-
-total_tracks: int = len(playlist.songs)
-
-index: int
-track: PlaylistSong
-for index, track in enumerate(playlist.songs):
-    track_path: Path = album_dir.joinpath(f"{str(index+1).zfill(2)} - {track.name}.m4a")
-
-    if track_path.exists():
-        continue
-
-    delay()
-    track_url: Optional[str] = get_video_stream_url(track.id)
-
-    if track_url is None:
-        continue
-
-    rich.print(f"\t ({str(index+1).zfill(2)}/{str(total_tracks).zfill(2)}) {track.name!r}")
-
-    delay()
-    # download(track_url, track_path)
-
-    import os
-
-    os.system(f'wget -q "{track_url}" -O "{track_path}"')
+        os.system(f'wget -q "{track_url}" -O "{track_path}"')
