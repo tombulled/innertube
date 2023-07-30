@@ -45,7 +45,7 @@ def delay() -> None:
 # ALBUM_PLAYLIST_ID: str = "OLAK5uy_k-nVhxfuIQFO2ZE9EvqPKKM4__S3aOb_Y" # Philophobia
 # ALBUM_PLAYLIST_ID: str = "OLAK5uy_kHykDXcCDzpye0foS6E1crEZJRW8uo58A" # The Search (Act I)
 # ALBUM_PLAYLIST_ID: str = "OLAK5uy_mL2zfBIO9DFJlHguE0XFv0sZdmar3Wv58" # The Start (Act II)
-ALBUM_PLAYLIST_ID: str = "OLAK5uy_lPqeK5z74imJPGxul-pU_U_6-s0qOctug" # How To Be Human
+# ALBUM_PLAYLIST_ID: str = "OLAK5uy_lPqeK5z74imJPGxul-pU_U_6-s0qOctug" # How To Be Human
 # ALBUM_BROWSE_ID: str = "MPREb_r8YGYkwyp1n"  # 5AM (Expanded Edition)
 # ALBUM_BROWSE_ID: str = "MPREb_JHECxKJ1QJ0"  # For A Moment, I Was Lost
 # ALBUM_BROWSE_ID: str = "MPREb_9JEV6UNu4aT"  # Philophobia
@@ -62,6 +62,7 @@ ALBUM_PLAYLIST_ID: str = "OLAK5uy_lPqeK5z74imJPGxul-pU_U_6-s0qOctug" # How To Be
 # ALBUM_PLAYLIST_ID: str = "OLAK5uy_nAHK5zWEf-pf-3KXSj93NA8ZGyjTBfJUg" # ii
 # ALBUM_PLAYLIST_ID: str = "OLAK5uy_lW66eJCF7wQ4hhtHkTYjYy1Wh-ctYE8lY" # ii (Reworks)
 # ALBUM_PLAYLIST_ID: str = "OLAK5uy_kRjXobVjFEz323V44CIfuKCKRngWX-Ogg" # A Safe Place To Be
+ALBUM_PLAYLIST_ID: str = "OLAK5uy_ndMEnXwNd0HkeljYKBuzKHoHpJB3NX8mU" # Sober EP
 # ALBUM_BROWSE_ID: str = "MPREb_XEoOYtkwx3X"  # ii
 # ALBUM_BROWSE_ID: str = "MPREb_eHA1ouWw7fU"  # Silhouettes
 # ALBUM_BROWSE_ID: str = "MPREb_5s8ufeIeDGW"  # Sober EP
@@ -428,7 +429,9 @@ playlist: PlaylistPage = get_yt_playlist_page(ALBUM_PLAYLIST_ID)
 
 rich.print(f"Downloading: {playlist.name!r} by {playlist.channel_name!r}")
 
-album_dir: Path = Path(f"{playlist.channel_name} - {playlist.name}")
+music_dir: Path = Path.home() / "Music"
+
+album_dir: Path = music_dir / Path(f"{playlist.channel_name} - {playlist.name}")
 
 if not album_dir.exists():
     album_dir.mkdir()
