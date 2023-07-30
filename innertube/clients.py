@@ -106,16 +106,11 @@ class InnerTube(Client):
     ) -> dict:
         return self(
             Endpoint.BROWSE,
-            params=utils.filter(
-                dict(
-                    continuation=continuation,
-                    ctoken=continuation,
-                )
-            ),
             body=utils.filter(
                 dict(
                     browseId=browse_id,
                     params=params,
+                    continuation=continuation,
                 )
             ),
         )
