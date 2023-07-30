@@ -3,6 +3,7 @@ import time
 
 from innertube import InnerTube
 
+
 def delay():
     # A random duration between 2s and 5s
     secs = random.randint(2000, 5000) / 1000
@@ -44,9 +45,9 @@ def list_videos(channel_id=None, /, *, continuation=None):
         # Fetch more videos by using the continuation token
         continued_videos_data = client.browse(continuation=continuation)
 
-        contents = continued_videos_data[
-            "onResponseReceivedActions"
-        ][0]["appendContinuationItemsAction"]["continuationItems"]
+        contents = continued_videos_data["onResponseReceivedActions"][0][
+            "appendContinuationItemsAction"
+        ]["continuationItems"]
 
     # Extract the rich video items and the continuation item
     *rich_items, continuation_item = contents
