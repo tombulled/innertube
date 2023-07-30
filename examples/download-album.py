@@ -36,14 +36,34 @@ def delay() -> None:
 # ALBUM_BROWSE_ID: str = "MPREb_MCxFDUkd9VE"  # Tell Me It's Real (Expanded Edition)
 
 # ARTIST_ID: str = "UCMO-CgAtd1jI2m2CrXcP2sQ"  # Amber Run
+# ALBUM_PLAYLIST_ID: str = "OLAK5uy_lqinhYxeDfCZtbt8N1GdI6aqlj44ThfMU" # Spark EP
+# ALBUM_PLAYLIST_ID: str = "OLAK5uy_nB_qEA_pG8EZia0z58eDE25v1i0fpSNH0" # Pilot EP
+# ALBUM_PLAYLIST_ID: str = "OLAK5uy_kEH-J7dPuErmAozzG-CTVDOklQIG_xP6g" # 5AM (Expanded Edition)
+# ALBUM_PLAYLIST_ID: str = "OLAK5uy_mMR_VYCeV0xhW_Nfo3U2qukj9Y_I0T-wE" # For A Moment, I Was Lost
+# ALBUM_PLAYLIST_ID: str = "OLAK5uy_kQrMjMljbR28Ge-EwC8AmTmoN4e1qx24w" # Acoustic EP
+# ALBUM_PLAYLIST_ID: str = "OLAK5uy_n0oZXFeNxRvK0ZV6P-_qm2EiEOOoBe_wI" # The Assembly
+# ALBUM_PLAYLIST_ID: str = "OLAK5uy_k-nVhxfuIQFO2ZE9EvqPKKM4__S3aOb_Y" # Philophobia
+# ALBUM_PLAYLIST_ID: str = "OLAK5uy_kHykDXcCDzpye0foS6E1crEZJRW8uo58A" # The Search (Act I)
+# ALBUM_PLAYLIST_ID: str = "OLAK5uy_mL2zfBIO9DFJlHguE0XFv0sZdmar3Wv58" # The Start (Act II)
+ALBUM_PLAYLIST_ID: str = "OLAK5uy_lPqeK5z74imJPGxul-pU_U_6-s0qOctug" # How To Be Human
 # ALBUM_BROWSE_ID: str = "MPREb_r8YGYkwyp1n"  # 5AM (Expanded Edition)
 # ALBUM_BROWSE_ID: str = "MPREb_JHECxKJ1QJ0"  # For A Moment, I Was Lost
 # ALBUM_BROWSE_ID: str = "MPREb_9JEV6UNu4aT"  # Philophobia
 # ALBUM_BROWSE_ID: str = "MPREb_Xt0H2hDGuqA"  # The Search (Act I)
 
-ARTIST_ID: str = "UCItuxDxh9AO1P2Miiso_0tg"  # Aquilo
+# ARTIST_ID: str = "UCItuxDxh9AO1P2Miiso_0tg"  # Aquilo
+# ALBUM_PLAYLIST_ID: str = "OLAK5uy_mdZx9ip6w7LcOwL4LsLJY1ewjoERMeJGs" # In The Low Light (Live)
+# ALBUM_PLAYLIST_ID: str = "OLAK5uy_m9x1ATvvF-BHUVbEW0XyTdrzbtC_WxsrM" # Live From RAK Studios
+# ALBUM_PLAYLIST_ID: str = "OLAK5uy_nCyEX0Zzgd22KA07Z8LUZ3STLktKMbWYQ" # Aquilo
+# ALBUM_PLAYLIST_ID: str = "OLAK5uy_lnohUgmn9QftycLEqIqQZli57FSf2AvWY" # Human
+# ALBUM_PLAYLIST_ID: str = "OLAK5uy_nx04vFkplXV9X85by-8mP46JLmTNqweW0" # Calling Me
+# ALBUM_PLAYLIST_ID: str = "OLAK5uy_msaMtkKquZeUqQ6sMOr0kk6TQydo9cZYY" # Midnight (Live EP)
+# ALBUM_PLAYLIST_ID: str = "OLAK5uy_khNLsz9s6ueH8YHdzORuy4PORu6tWvMrY" # Silhouettes
+# ALBUM_PLAYLIST_ID: str = "OLAK5uy_nAHK5zWEf-pf-3KXSj93NA8ZGyjTBfJUg" # ii
+# ALBUM_PLAYLIST_ID: str = "OLAK5uy_lW66eJCF7wQ4hhtHkTYjYy1Wh-ctYE8lY" # ii (Reworks)
+# ALBUM_PLAYLIST_ID: str = "OLAK5uy_kRjXobVjFEz323V44CIfuKCKRngWX-Ogg" # A Safe Place To Be
 # ALBUM_BROWSE_ID: str = "MPREb_XEoOYtkwx3X"  # ii
-ALBUM_BROWSE_ID: str = "MPREb_eHA1ouWw7fU"  # Silhouettes
+# ALBUM_BROWSE_ID: str = "MPREb_eHA1ouWw7fU"  # Silhouettes
 # ALBUM_BROWSE_ID: str = "MPREb_5s8ufeIeDGW"  # Sober EP
 
 # ARTIST_ID: str = "UC8Yu1_yfN5qPh601Y4btsYw"  # Arctic Monkeys
@@ -106,6 +126,7 @@ class PlaylistPage:
     name: str
     thumbnail: str
     songs: Sequence[PlaylistSong]
+    channel_name: Optional[str] = None
 
 
 def get_artist_page(artist_browse_id: str, /) -> ArtistPage:
@@ -231,6 +252,61 @@ def get_playlist_page(
     )
 
 
+def get_yt_playlist_page(playlist_id: str, /) -> PlaylistPage:
+    client: InnerTube = InnerTube("WEB")
+
+    data: dict = client.browse("VL" + playlist_id)
+
+    playlist_video_list_renderer: dict = data["contents"]["twoColumnBrowseResultsRenderer"]["tabs"][0]["tabRenderer"]["content"]["sectionListRenderer"]["contents"][0]["itemSectionRenderer"]["contents"][0]["playlistVideoListRenderer"]
+    playlist_header_renderer: dict = data["header"]["playlistHeaderRenderer"]
+    playlist_sidebar_primary_info_renderer: dict = data["sidebar"]["playlistSidebarRenderer"]["items"][0]["playlistSidebarPrimaryInfoRenderer"]
+    microformat_data_renderer: dict = data["microformat"]["microformatDataRenderer"]
+
+    phr_playlist_id: str = playlist_header_renderer["playlistId"]
+    phr_thumbnail_url: str = playlist_header_renderer["playlistHeaderBanner"]["heroPlaylistThumbnailRenderer"]["thumbnail"]["thumbnails"][-1]["url"]
+    phr_title: str = playlist_header_renderer["title"]["simpleText"]
+    phr_subtitle: str = playlist_header_renderer["subtitle"]["simpleText"]
+
+    pspir_thumbnail_url: str = playlist_sidebar_primary_info_renderer["thumbnailRenderer"]["playlistCustomThumbnailRenderer"]["thumbnail"]["thumbnails"][-1]["url"]
+
+    mf_thumbnail_url: str = microformat_data_renderer["thumbnail"]["thumbnails"][-1]["url"]
+
+    pvlr_playlist_id: str = playlist_video_list_renderer["playlistId"]
+
+    pvlr_songs = []
+
+    for playlist_video_renderer in playlist_video_list_renderer["contents"]:
+        playlist_video_renderer = playlist_video_renderer["playlistVideoRenderer"]
+
+        pvr_video_id: str = playlist_video_renderer["videoId"]
+        pvr_thumbnail_url: str = playlist_video_renderer["thumbnail"]["thumbnails"][-1]["url"]
+        pvr_title: str = playlist_video_renderer["title"]["runs"][0]["text"]
+        pvr_index: str = playlist_video_renderer["index"]["simpleText"]
+        pvr_channel_name: str = playlist_video_renderer["shortBylineText"]["runs"][0]["text"]
+        pvr_channel_id: str = playlist_video_renderer["shortBylineText"]["runs"][0]["navigationEndpoint"]["browseEndpoint"]["browseId"]
+        pvr_length: str = playlist_video_renderer["lengthSeconds"]
+
+        pvlr_songs.append(
+            PlaylistSong(
+                id=pvr_video_id,
+                name=pvr_title,
+                thumbnail=pvr_thumbnail_url,
+                artist=Artist(
+                    name=pvr_channel_name,
+                    browse_id=pvr_channel_id,
+                ),
+            )
+        )
+
+    return PlaylistPage(
+        id=phr_playlist_id,
+        name=phr_title.split(" - ", 1)[1],
+        channel_name=phr_subtitle.split(" • ", 1)[0],
+        thumbnail=phr_thumbnail_url,
+        songs=pvlr_songs,
+    )
+
+
 def get_album(browse_id: str, /) -> Album:
     client: InnerTube = InnerTube("IOS_MUSIC")
 
@@ -321,35 +397,38 @@ def download(url: str, path: Path) -> None:
             file.write(data)
 
 
-artist_page: ArtistPage = get_artist_page(ARTIST_ID)
+# artist_page: ArtistPage = get_artist_page(ARTIST_ID)
 
-delay()
-top_songs = get_playlist_page(artist_page.songs_playlist_id)
+# delay()
 
-albums: MutableMapping[str, MutableSequence[PlaylistSong]] = {}
+# top_songs = get_playlist_page(artist_page.songs_playlist_id)
 
-song: PlaylistSong
-for song in top_songs.songs:
-    if song.album is None:
-        continue
+# albums: MutableMapping[str, MutableSequence[PlaylistSong]] = {}
 
-    albums.setdefault(song.album.browse_id, []).append(song)
+# song: PlaylistSong
+# for song in top_songs.songs:
+#     if song.album is None:
+#         continue
 
-album_songs: Mapping[str, str] = {
-    album_song.name: album_song.id for album_song in albums[ALBUM_BROWSE_ID]
-}
+#     albums.setdefault(song.album.browse_id, []).append(song)
 
-delay()
-album: Album = get_album(ALBUM_BROWSE_ID)
+# album_songs: Mapping[str, str] = {
+#     album_song.name: album_song.id for album_song in albums[ALBUM_BROWSE_ID]
+# }
 
-fixed_album_tracks: Sequence[Song] = [
-    Song(name=album_track.name, video_id=album_songs[album_track.name])
-    for album_track in album.tracks
-]
+# delay()
+# album: Album = get_album(ALBUM_BROWSE_ID)
 
-rich.print(f"Downloading Album: {album.name!r} by {album.artist.name!r}")
+# fixed_album_tracks: Sequence[Song] = [
+#     Song(name=album_track.name, video_id=album_songs[album_track.name])
+#     for album_track in album.tracks
+# ]
 
-album_dir: Path = Path(f"{album.artist.name} - {album.name}")
+playlist: PlaylistPage = get_yt_playlist_page(ALBUM_PLAYLIST_ID)
+
+rich.print(f"Downloading: {playlist.name!r} by {playlist.channel_name!r}")
+
+album_dir: Path = Path(f"{playlist.channel_name} - {playlist.name}")
 
 if not album_dir.exists():
     album_dir.mkdir()
@@ -357,31 +436,29 @@ if not album_dir.exists():
 album_thumbnail_path: Path = album_dir.joinpath("thumbnail.jpg")
 
 if not album_thumbnail_path.exists():
-    download(album.thumbnail, album_thumbnail_path)
+    download(playlist.thumbnail, album_thumbnail_path)
 
-total_tracks: int = len(album.tracks)
+total_tracks: int = len(playlist.songs)
 
 index: int
-track: Song
-for index, track in enumerate(fixed_album_tracks):
+track: PlaylistSong
+for index, track in enumerate(playlist.songs):
     track_path: Path = album_dir.joinpath(f"{str(index+1).zfill(2)} - {track.name}.m4a")
 
     if track_path.exists():
         continue
 
     delay()
-    track_url: Optional[str] = get_video_stream_url(track.video_id)
-
-    print(track_url)
+    track_url: Optional[str] = get_video_stream_url(track.id)
 
     if track_url is None:
         continue
 
-    rich.print(f"Downloading Track: {track.name!r} ({index+1}/{total_tracks})")
+    rich.print(f"\t ({str(index+1).zfill(2)}/{str(total_tracks).zfill(2)}) {track.name!r}")
 
     delay()
     # download(track_url, track_path)
 
     import os
 
-    os.system(f'wget "{track_url}" -O "{track_path}"')
+    os.system(f'wget -q "{track_url}" -O "{track_path}"')
