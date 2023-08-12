@@ -13,6 +13,8 @@ keywords = ["innertube", "youtube", "youtubei", "python", "api", "client"]
 python = "^3.8"
 httpx = "^0.23.3"
 mediate = "^0.1.2"
+pydantic = "^2.1.1"
+pyhumps = "^3.8.0"
 
 [tool.poetry.dev-dependencies]
 black = "^22.1.0"

@@ -132,10 +132,5 @@ dmypy.json
 .vscode/
 
 # Custom
-app.py
-app.*.py
-tst.py
-tst.*.py
 _.*.py
-_.*/
 .ignore/
