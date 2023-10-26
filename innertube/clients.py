@@ -124,16 +124,11 @@ class InnerTube(Client):
     ) -> dict:
         return self(
             Endpoint.SEARCH,
-            params=utils.filter(
-                dict(
-                    continuation=continuation,
-                    ctoken=continuation,
-                )
-            ),
             body=utils.filter(
                 dict(
                     query=query or "",
                     params=params,
+                    continuation=continuation,
                 )
             ),
         )
