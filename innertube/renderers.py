@@ -3,23 +3,10 @@ from typing_extensions import Annotated, TypeAlias
 
 import humps
 import pydantic
-import rich
 
 from .raw_enums import ButtonStyle, IconType
 
 from . import utils
-
-
-def build_abs_key(field: Union[str, int], parent: Optional[str]) -> str:
-    sep: str = "." if isinstance(field, str) else ""
-
-    if isinstance(field, int):
-        field = f"[{field}]"
-
-    if parent is None:
-        return field
-
-    return f"{parent}{sep}{field}"
 
 
 DataMap: TypeAlias = Mapping[str, Mapping[str, Any]]
@@ -27,26 +14,19 @@ DataSeq: TypeAlias = Sequence[DataMap]
 Data: TypeAlias = Union[DataMap, DataSeq]
 
 
-def parse_renderable(data: Data, /, *, parent: Optional[str] = None):
+def parse_renderable(data: Data, /):
     assert utils.is_renderable(data)
 
     if isinstance(data, Sequence):
-        return [
-            parse_renderable(item, parent=build_abs_key(index, parent))
-            for index, item in enumerate(data)
-        ]
+        return [parse_renderable(item) for item in data]
 
     key = next(iter(data))
     value = data[key]
 
-    abs_key: str = build_abs_key(key, parent)
-
     if key not in RENDERERS:
-        raise Exception(f"No renderer available for {key!r} ({abs_key})")
+        raise Exception(f"No renderer available for {key!r}")
 
     render_cls: type = RENDERERS[key]
-
-    rich.print(f"{abs_key} -> render({key!r}, {set(value.keys())})")
 
     return render_cls.model_validate(value)
 
