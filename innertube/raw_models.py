@@ -32,17 +32,21 @@ class WebResponseContextExtensionData(BaseModel):
 class ResponseContext(BaseModel):
     visitor_data: str
     service_tracking_params: Sequence[ServiceTrackingParams]
-    max_age_seconds: int
+    max_age_seconds: Optional[int] = None
     main_app_web_response_context: Optional[MainAppWebResponseContext] = None
     web_response_context_extension_data: Optional[
         WebResponseContextExtensionData
     ] = None
 
 
-class Response(BaseModel):
-    response_context: ResponseContext
-
-
 class ShareEntityEndpoint(BaseModel):
     serialized_share_entity: str
     share_panel_type: SharePanelType
+
+class Response(BaseModel):
+    response_context: ResponseContext
+    tracking_params: str
+
+# class GetBrowseArtistDetailPageResponse(Response):
+#     contents: SingleColumnBrowseResultsRenderer
+#     header: MusicImmersiveHeaderRenderer
