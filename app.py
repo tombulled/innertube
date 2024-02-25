@@ -48,7 +48,7 @@ def parse_response(response: dict, /):
             # parsed[key] = value
             continue
 
-        parsed[key] = parse_renderable(value, parent=key)
+        parsed[key] = parse_renderable(value)
 
     return parsed
 
