@@ -49,7 +49,7 @@ class InnerTube(Client):
         referer: Optional[str] = None,
         locale: Optional[Locale] = None,
         auto: bool = True,
-        proxies: ProxiesTypes = None,
+        proxies: Optional[ProxiesTypes] = None,
     ) -> None:
         if client_name is None:
             raise ValueError("Precondition failed: Missing client name")
