@@ -55,14 +55,14 @@ config: Config = Config(
         ClientContext(
             client_id=3,
             client_name="ANDROID",
-            client_version="17.13.3",
+            client_version="19.17.34",
             user_agent=USER_AGENT_ANDROID,
             api_key="AIzaSyA8eiZmM1FaDVjRy-df2KTyQ_vz_yYM39w",
         ),
         ClientContext(
             client_id=5,
             client_name="IOS",
-            client_version="17.14.2",
+            client_version="19.16.3",
             user_agent=USER_AGENT_IOS,
             api_key="AIzaSyB-63vPrdThhKuerbB2N_l7Kwwcxj6yUAc",
         ),
