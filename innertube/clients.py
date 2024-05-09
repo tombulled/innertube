@@ -170,7 +170,7 @@ class InnerTube(Client):
 
     def music_get_search_suggestions(
         self,
-        input: Optional[None] = None,
+        input: Optional[str] = None,
     ) -> dict:
         return self(
             Endpoint.MUSIC_GET_SEARCH_SUGGESTIONS,
