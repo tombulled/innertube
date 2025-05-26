@@ -79,7 +79,7 @@ class InnerTube(Client):
         super().__init__(
             adaptor=InnerTubeAdaptor(
                 context=context,
-                session=httpx.Client(base_url=config.base_url, proxies=proxies),
+                session=httpx.Client(base_url=config.base_url, proxies=proxies, timeout=httpx.Timeout(15)),
             )
         )
 
