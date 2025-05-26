@@ -39,7 +39,7 @@ class ClientContext:
     locale: Optional[Locale] = None
 
     def params(self) -> Dict[str, str]:
-        return utils.filter(
+        return utils.removeNoneValues(
             {
                 "key": self.api_key,
                 "alt": "json",
@@ -53,7 +53,7 @@ class ClientContext:
         )
 
     def headers(self) -> Dict[str, str]:
-        return utils.filter(
+        return utils.removeNoneValues(
             {
                 "X-Goog-Api-Format-Version": "1",
                 "X-YouTube-Client-Name": str(self.client_id),

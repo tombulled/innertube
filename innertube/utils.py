@@ -1,4 +1,5 @@
-def filter(dictionary: dict, /) -> dict:
+def removeNoneValues(dictionary: dict, /) -> dict:
+    """Removes None values from a dictionary."""
     return {key: value for key, value in dictionary.items() if value is not None}
 
 
