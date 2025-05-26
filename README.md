@@ -61,6 +61,7 @@ Currently only the following core, unauthenticated endpoints are implemented:
 | get_transcript                 | &check; |              |             |               |
 | music/get_search_suggestions   |         | &check;      |             |               |
 | music/get_queue                |         | &check;      |             |               |
+| navigation/resolve_url         |         |              |             |               |
 
 ## Authentication
 The InnerTube API uses OAuth2, however this has not yet been implemented, therefore this library currently only provides unauthenticated API access.
