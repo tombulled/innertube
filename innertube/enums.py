@@ -15,6 +15,7 @@ class Endpoint(StrEnum):
     GET_TRANSCRIPT: str = "get_transcript"
     MUSIC_GET_SEARCH_SUGGESTIONS: str = "music/get_search_suggestions"
     MUSIC_GET_QUEUE: str = "music/get_queue"
+    RESOLVE_URL: str = "navigation/resolve_url"
 
 
 class Request(StrEnum):
