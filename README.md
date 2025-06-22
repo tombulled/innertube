@@ -40,11 +40,11 @@ pip install git+https://github.com/tombulled/innertube@develop
 
 ## Comparison with the [YouTube Data API](https://developers.google.com/youtube/v3/)
 The InnerTube API provides access to data you can't get from the Data API, however it comes at somewhat of a cost *(explained below)*.
-|                                       | This Library | YouTube Data API |
-| ------------------------------------- | ------------ | ---------------- |
-| Google account required               | No           | Yes              |
-| Request limit                         | No           | Yes              |
-| Clean data                            | No           | Yes              |
+|                                       | This Library  | YouTube Data API |
+| ------------------------------------- | ------------- | ---------------- |
+| Google account required               | No            | Yes              |
+| Request limit                         | Imperceptible | Annoyingly low   |
+| Clean data                            | No            | Yes              |
 
 The InnerTube API is used by a variety of YouTube services and is not designed for consumption by users. Therefore, the data returned by the InnerTube API will need to be parsed and sanitised to extract data of interest.
 
