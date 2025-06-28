@@ -3,12 +3,6 @@ from .api import contextualise, error, fingerprint, get_context, get_response_co
 from .clients import Client, InnerTube
 from .config import config
 from .enums import Endpoint, Request
-from .models import (
-    ClientContext,
-    Config,
-    Error,
-    Locale,
-    ResponseContext,
-    ResponseFingerprint,
-)
+from .locale import Language, Locale, Location
+from .models import ClientContext, Config, Error, ResponseContext, ResponseFingerprint
 from .protocols import Adaptor

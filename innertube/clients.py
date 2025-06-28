@@ -9,7 +9,8 @@ from . import api, utils
 from .adaptor import InnerTubeAdaptor
 from .config import config
 from .enums import Endpoint
-from .models import ClientContext, Locale
+from .locale import Locale
+from .models import ClientContext
 from .protocols import Adaptor
 
 

@@ -3,15 +3,7 @@ import http
 from typing import Dict, List, Optional
 
 from . import utils
-
-
-@dataclasses.dataclass
-class Locale:
-    hl: str
-    gl: Optional[str] = None
-
-    def accept_language(self) -> str:
-        return ",".join(item for item in (self.hl, self.gl) if item is not None)
+from .locale import Locale
 
 
 @dataclasses.dataclass
@@ -47,9 +39,13 @@ class ClientContext:
         )
 
     def context(self) -> Dict[str, str]:
-        return dict(
-            clientName=self.client_name,
-            clientVersion=self.client_version,
+        return utils.filter(
+            {
+                "clientName": self.client_name,
+                "clientVersion": self.client_version,
+                "gl": self.locale.location if self.locale is not None else None,
+                "hl": self.locale.language if self.locale is not None else None,
+            }
         )
 
     def headers(self) -> Dict[str, str]:
@@ -60,7 +56,9 @@ class ClientContext:
                 "X-YouTube-Client-Version": self.client_version,
                 "User-Agent": self.user_agent,
                 "Referer": self.referer,
-                "Accept-Language": self.locale and self.locale.accept_language(),
+                "Accept-Language": (
+                    self.locale.accept_language() if self.locale is not None else None
+                ),
             }
         )
 
