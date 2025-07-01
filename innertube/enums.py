@@ -2,7 +2,8 @@ import enum
 
 
 class StrEnum(str, enum.Enum):
-    pass
+    def __str__(self) -> str:
+        return self.value
 
 
 class Endpoint(StrEnum):
