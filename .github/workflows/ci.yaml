@@ -5,4 +5,4 @@ on: push
 jobs:
   ci:
     name: CI
-    uses: tombulled/workflows/.github/workflows/ci.yaml@main
+    uses: tombulled/workflows/.github/workflows/ci.yaml@bugfix/update-actions-cache

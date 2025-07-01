@@ -7,4 +7,4 @@ on:
 jobs:
   cd:
     name: CD
-    uses: tombulled/workflows/.github/workflows/cd.yaml@main
+    uses: tombulled/workflows/.github/workflows/cd.yaml@bugfix/update-actions-cache
