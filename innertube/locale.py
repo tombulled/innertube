@@ -146,7 +146,9 @@ class Language(Enum):
     language_name: str
     language_name_native: str
 
-    def __init__(self, language_code: str, language_name: str, language_name_native: str) -> None:
+    def __init__(
+        self, language_code: str, language_name: str, language_name_native: str
+    ) -> None:
         self.language_code = language_code
         self.language_name = language_name
         self.language_name_native = language_name_native

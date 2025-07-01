@@ -21,6 +21,7 @@ def test_language() -> None:
     assert Language.from_code("az") == language
     assert Language.from_code("invalid") is None
 
+
 def test_locale() -> None:
     locale: Locale = Locale("en", "GB")
 
