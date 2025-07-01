@@ -1,12 +1,6 @@
 import http
 
-from innertube import models
-
-
-def test_locale() -> None:
-    locale: models.Locale = models.Locale("en", "GB")
-
-    assert locale.accept_language() == "en,GB"
+from innertube import models, locale
 
 
 def test_error() -> None:
@@ -26,13 +20,15 @@ def test_client_context() -> None:
         api_key="fake_api_key",
         user_agent="FakeUserAgent/1.0",
         referer="https://fake.referer.com/",
-        locale=models.Locale("en", "GB"),
+        locale=locale.Locale("en", "GB"),
     )
 
     assert client_context.params() == {"key": "fake_api_key", "alt": "json"}
     assert client_context.context() == {
         "clientName": "FAKE_CLIENT",
         "clientVersion": "1.0",
+        "hl": "en",
+        "gl": "GB",
     }
     assert client_context.headers() == {
         "X-Goog-Api-Format-Version": "1",
@@ -40,5 +36,5 @@ def test_client_context() -> None:
         "X-YouTube-Client-Version": "1.0",
         "User-Agent": "FakeUserAgent/1.0",
         "Referer": "https://fake.referer.com/",
-        "Accept-Language": models.Locale("en", "GB").accept_language(),
+        "Accept-Language": locale.Locale("en", "GB").accept_language(),
     }
