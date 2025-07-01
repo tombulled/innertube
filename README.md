@@ -43,8 +43,13 @@ The InnerTube API provides access to data you can't get from the Data API, howev
 |                                       | This Library | YouTube Data API |
 | ------------------------------------- | ------------ | ---------------- |
 | Google account required               | No           | Yes              |
-| Request limit                         | No           | Yes              |
+| Request limit                         | No*          | Yes**            |
 | Clean data                            | No           | Yes              |
+
+_\*Even the InnerTube API has some request limits, however these are so high that you'll likely never hit them._
+
+_\*\*The YouTube Data API has a default quota allocation of 10,000 units per day. You can read more [here](https://developers.google.com/youtube/v3/determine_quota_cost)._
+
 
 The InnerTube API is used by a variety of YouTube services and is not designed for consumption by users. Therefore, the data returned by the InnerTube API will need to be parsed and sanitised to extract data of interest.
 
